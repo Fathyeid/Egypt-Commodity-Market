@@ -9,6 +9,8 @@ import {
   uuid,
   index,
   uniqueIndex,
+  jsonb,
+  primaryKey,
 } from "drizzle-orm/pg-core";
 
 /* ------------------------------------------------------------------ */
@@ -186,6 +188,96 @@ export const activityEvents = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   },
   (t) => [index("activity_user_time_idx").on(t.userId, t.createdAt)],
+);
+
+/* ------------------------------------------------------------------ */
+/* Phase 2: placement, skill levels, lessons                           */
+/* ------------------------------------------------------------------ */
+
+export const placementTests = pgTable(
+  "placement_tests",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    trackId: uuid("track_id")
+      .notNull()
+      .references(() => learningTracks.id, { onDelete: "cascade" }),
+    language: text("language").notNull(),
+    selfLevel: levelEnum("self_level").notNull(),
+    status: text("status").notNull().default("in_progress"), // in_progress | completed
+    result: jsonb("result"),
+    startedAt: timestamp("started_at", { withTimezone: true }).defaultNow().notNull(),
+    completedAt: timestamp("completed_at", { withTimezone: true }),
+  },
+  (t) => [index("placement_user_track_idx").on(t.userId, t.trackId)],
+);
+
+export const placementResponses = pgTable(
+  "placement_responses",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    testId: uuid("test_id")
+      .notNull()
+      .references(() => placementTests.id, { onDelete: "cascade" }),
+    itemId: text("item_id").notNull(),
+    skill: text("skill").notNull(),
+    level: text("level").notNull(),
+    correct: boolean("correct").notNull(),
+    answer: smallint("answer").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [uniqueIndex("placement_response_uq").on(t.testId, t.itemId)],
+);
+
+/** Current CEFR estimate per skill for a track. Updated by placement now, by lessons/AI later. */
+export const skillLevels = pgTable(
+  "skill_levels",
+  {
+    trackId: uuid("track_id")
+      .notNull()
+      .references(() => learningTracks.id, { onDelete: "cascade" }),
+    skill: text("skill").notNull(),
+    level: text("level").notNull(),
+    source: text("source").notNull(), // placement | lessons | tutor
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.trackId, t.skill] })],
+);
+
+export const lessonProgress = pgTable(
+  "lesson_progress",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    lessonId: text("lesson_id").notNull(),
+    bestScore: smallint("best_score").notNull(), // 0–100
+    attempts: integer("attempts").notNull().default(1),
+    completedAt: timestamp("completed_at", { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [uniqueIndex("lesson_progress_user_lesson_uq").on(t.userId, t.lessonId)],
+);
+
+/** Every graded answer. Feeds the error log and adaptive plan in later phases. */
+export const exerciseAttempts = pgTable(
+  "exercise_attempts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    lessonId: text("lesson_id").notNull(),
+    exerciseId: text("exercise_id").notNull(),
+    tag: text("tag"),
+    correct: boolean("correct").notNull(),
+    answer: text("answer").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [index("attempts_user_time_idx").on(t.userId, t.createdAt)],
 );
 
 export const authSchema = { user, session, account, verification };

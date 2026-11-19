@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { notFound, redirect } from "next/navigation";
-import { BookOpenCheck, Clock, Flame, Gauge, Layers } from "lucide-react";
+import { BookOpen, BookOpenCheck, Clock, Flame, Gauge, Layers } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { TrackSwitcher } from "@/components/dashboard/TrackSwitcher";
 import { getDictionary, type Dictionary } from "@/lib/i18n";
@@ -11,6 +11,9 @@ import { requireUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { getDashboardStats, getProfile, listLanguages, listTracks } from "@/lib/learner/repo";
 import { serviceStatus, type ServiceKey } from "@/lib/services";
+import { getProgress, getSkillLevels, latestPlacement } from "@/lib/learner/study";
+import { coursesFor, lessonIds, placementAvailable, findLesson } from "@/content";
+import { StartPlacementButton } from "@/components/placement/StartPlacementButton";
 
 export default async function DashboardPage({ params }: PageProps<"/[lang]/dashboard">) {
   const { lang } = await params;
@@ -34,7 +37,20 @@ async function Dashboard({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const active = tracks.find((t) => t.isActive) ?? null;
   if (!profile?.onboardedAt || !active) redirect(`/${lang}/onboarding`);
 
-  const stats = await getDashboardStats(db, user.id, active.id);
+  const [stats, skillRows, placement] = await Promise.all([
+    getDashboardStats(db, user.id, active.id),
+    getSkillLevels(db, user.id, active.id),
+    latestPlacement(db, user.id, active.id),
+  ]);
+  const course = coursesFor(active.targetLanguage)[0] ?? null;
+  const ids = course ? lessonIds(course) : [];
+  const progress = await getProgress(db, user.id, ids);
+  // Words introduced in lessons the learner has completed (spaced repetition arrives in Phase 5).
+  const wordsLearned = [...progress.keys()].reduce((n, id) => n + (findLesson(id)?.lesson.vocabulary.length ?? 0), 0);
+  const nextLessonId = ids.find((id) => !progress.has(id)) ?? null;
+  const nextLesson = nextLessonId ? findLesson(nextLessonId)?.lesson ?? null : null;
+  const SKILLS = ["vocabulary", "grammar", "reading", "listening", "writing", "speaking", "pronunciation"] as const;
+  const SCALE = ["A0", "A1", "A2", "B1", "B2", "C1", "C2"];
   const t = dict.dashboard;
   const langOf = (code: string) => langs.find((l) => l.code === code);
   const langName = (code: string) => {
@@ -47,7 +63,7 @@ async function Dashboard({ lang, dict }: { lang: Locale; dict: Dictionary }) {
 
   const kpis = [
     { icon: Gauge, label: t.level, value: level ?? active.selfLevel, sub: level ? null : t.levelSelf },
-    { icon: Layers, label: t.words, value: String(stats.wordsLearned) },
+    { icon: Layers, label: t.words, value: String(wordsLearned) },
     { icon: Flame, label: t.streak, value: String(stats.streak) },
     { icon: Clock, label: t.minutes, value: String(stats.minutesThisWeek), sub: fmt(t.dailyGoal, { n: active.dailyMinutes }) },
   ];
@@ -73,19 +89,38 @@ async function Dashboard({ lang, dict }: { lang: Locale; dict: Dictionary }) {
       {!hasActivity && <p className="rounded-xl bg-surface-2 px-4 py-3 text-sm text-muted">{t.emptyActivity}</p>}
 
       <div className="grid gap-5 lg:grid-cols-3">
-        <section className="card p-5 sm:p-6 lg:col-span-2">
-          <div className="flex items-start gap-4">
-            <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand">
-              <BookOpenCheck className="size-6" aria-hidden />
-            </span>
-            <div className="flex-1">
-              <h2 className="text-lg font-semibold">{t.placementTitle}</h2>
-              <p className="mt-1 text-muted">{t.placementBody}</p>
-              <button type="button" className="btn-primary mt-4" disabled>
-                {t.placementCta} · {fmt(dict.common.comingPhase, { n: 2 })}
-              </button>
+        <section className="card space-y-5 p-5 sm:p-6 lg:col-span-2">
+          {placementAvailable(active.targetLanguage) && (
+            <div className="flex items-start gap-4">
+              <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand">
+                <BookOpenCheck className="size-6" aria-hidden />
+              </span>
+              <div className="flex-1">
+                <h2 className="text-lg font-semibold">{placement?.status === "completed" && level ? fmt(t.placementDone, { level }) : t.placementTitle}</h2>
+                {!(placement?.status === "completed") && <p className="mt-1 text-muted">{t.placementBody}</p>}
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {placement?.status === "completed" ? (
+                    <Link href={`/${lang}/placement`} className="btn-ghost">{t.placementResult}</Link>
+                  ) : (
+                    <StartPlacementButton lang={lang} label={placement?.status === "in_progress" ? dict.placement.resume : t.placementCta} errorText={dict.errors.generic} />
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
+          )}
+          {nextLesson && (
+            <div className="flex items-start gap-4 border-t border-line pt-5 first:border-0 first:pt-0">
+              <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-accent-soft text-accent">
+                <BookOpen className="size-6" aria-hidden />
+              </span>
+              <div className="flex-1">
+                <h2 className="text-lg font-semibold">{t.continueTitle}</h2>
+                <p className="mt-1 text-muted">{nextLesson.title[lang]}</p>
+                <Link href={`/${lang}/learn/${nextLessonId}`} className="btn-primary mt-3">{t.continueCta}</Link>
+              </div>
+            </div>
+          )}
+          {!course && <p className="text-muted">{dict.learn.noCourse}</p>}
         </section>
 
         <section className="card p-5 sm:p-6">
@@ -99,6 +134,28 @@ async function Dashboard({ lang, dict }: { lang: Locale; dict: Dictionary }) {
           />
         </section>
       </div>
+
+      <section className="card p-5 sm:p-6">
+        <h2 className="mb-3 font-semibold">{t.skillsTitle}</h2>
+        {skillRows.length === 0 ? (
+          <p className="text-sm text-muted">{t.skillsEmpty}</p>
+        ) : (
+          <ul className="grid gap-x-8 gap-y-2.5 sm:grid-cols-2">
+            {SKILLS.map((s) => {
+              const row = skillRows.find((r) => r.skill === s);
+              return (
+                <li key={s} className="grid grid-cols-[7rem_1fr_2.75rem] items-center gap-3 text-sm">
+                  <span className={row ? "font-semibold" : "text-muted"}>{dict.skills[s]}</span>
+                  <span className="h-2 overflow-hidden rounded-full bg-surface-2">
+                    {row && <span className="block h-full rounded-full bg-brand" style={{ width: `${((SCALE.indexOf(row.level) + 1) / SCALE.length) * 100}%` }} />}
+                  </span>
+                  <span className="rounded-md bg-surface-2 py-0.5 text-center text-xs font-bold">{row?.level ?? "—"}</span>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </section>
 
       <section className="card p-5 sm:p-6">
         <h2 className="mb-3 font-semibold">{t.servicesTitle}</h2>

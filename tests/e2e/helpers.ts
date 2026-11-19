@@ -22,7 +22,7 @@ export async function onboard(page: Page, o: { native: string; target: string; g
   await next.click();
   await page.getByRole("button", { name: o.goal }).click();
   await next.click();
-  await page.getByRole("button", { name: o.minutes }).click();
+  await page.getByRole("button", { name: new RegExp(`^${o.minutes}`) }).click();
   await next.click();
   await page.getByRole("button", { name: o.level }).click();
   await next.click();

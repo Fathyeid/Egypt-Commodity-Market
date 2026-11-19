@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, UserRound, House } from "lucide-react";
+import { BookOpen, LayoutDashboard, UserRound, House } from "lucide-react";
 
-const ICONS = { home: House, dashboard: LayoutDashboard, profile: UserRound } as const;
+const ICONS = { home: House, dashboard: LayoutDashboard, learn: BookOpen, profile: UserRound } as const;
 type Item = { href: string; label: string; icon: keyof typeof ICONS };
 
 export function NavLinks({ items, variant }: { items: Item[]; variant: "top" | "bottom" }) {

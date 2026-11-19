@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { Logo } from "@/components/ui/Logo";
-import { LangSwitch } from "./LangSwitch";
+import { LangSwitch, LangSwitchFallback } from "./LangSwitch";
 import { ThemeToggle } from "./ThemeToggle";
 import { NavLinks } from "./NavLinks";
 import { SignOutButton } from "./SignOutButton";
@@ -19,7 +19,10 @@ export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
           <Suspense fallback={<div className="h-10 w-24" aria-hidden />}>
             <UserArea lang={lang} dict={dict} />
           </Suspense>
-          <LangSwitch lang={lang} label={dict.nav.switchLang} />
+          {/* usePathname is request data on dynamic routes; the fallback links to the other locale's home. */}
+          <Suspense fallback={<LangSwitchFallback lang={lang} label={dict.nav.switchLang} />}>
+            <LangSwitch lang={lang} label={dict.nav.switchLang} />
+          </Suspense>
           <ThemeToggle label={dict.nav.theme} />
         </div>
       </div>
@@ -45,6 +48,7 @@ async function MobileNav({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         items={[
           { href: `/${lang}`, label: dict.nav.home, icon: "home" },
           { href: `/${lang}/dashboard`, label: dict.nav.dashboard, icon: "dashboard" },
+          { href: `/${lang}/learn`, label: dict.nav.learn, icon: "learn" },
           { href: `/${lang}/profile`, label: dict.nav.profile, icon: "profile" },
         ]}
       />
@@ -68,6 +72,7 @@ async function UserArea({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   }
   const items = [
     { href: `/${lang}/dashboard`, label: dict.nav.dashboard, icon: "dashboard" as const },
+    { href: `/${lang}/learn`, label: dict.nav.learn, icon: "learn" as const },
     { href: `/${lang}/profile`, label: dict.nav.profile, icon: "profile" as const },
   ];
   return (

@@ -14,7 +14,7 @@ async function makeUser(id: string) {
 const base = { goal: "travel", dailyMinutes: 15, selfLevel: "A1" } as const;
 
 beforeEach(async () => {
-  await sql`truncate "user", activity_events, learning_tracks, profiles cascade`;
+  await sql`truncate "user", activity_events, learning_tracks, profiles, placement_tests, lesson_progress, exercise_attempts cascade`;
 });
 afterAll(async () => {
   await sql.end();

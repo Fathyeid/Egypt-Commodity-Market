@@ -2,7 +2,9 @@
 
 AI-powered language learning platform (Arabic RTL / English LTR, light design with optional dark mode).
 
-**Status:** Phase 1 complete: visual identity, landing page, sign-up/sign-in, onboarding, profile, learning tracks, and a dashboard built on real data.
+**Status:** Phases 1–2 complete.
+- **Phase 1:** visual identity, landing page, sign-up/sign-in, onboarding, profile, learning tracks, and a dashboard built on real data.
+- **Phase 2:** adaptive placement test (EN/DE), lesson engine with 8 sections and 7 exercise types, and the first A1 lessons for English and German.
 See [`docs/plan/implementation-plan.md`](docs/plan/implementation-plan.md) for all phases and [`docs/research/`](docs/research) for the competitor research.
 
 ## Stack
@@ -51,6 +53,8 @@ src/lib/db/            Drizzle schema, client, seed data (12 languages)
 src/lib/learner/       user-scoped data access (every query filtered by userId)
 src/lib/actions.ts     server actions (zod-validated)
 src/lib/i18n/          ar/en dictionaries (en is type-checked against ar)
+src/content/           placement banks + courses (answers stay server-side)
+src/lib/placement/     adaptive placement engine
 src/proxy.ts           locale redirect + optimistic auth redirect
 drizzle/               SQL migrations
 tests/unit, tests/e2e  test suites
