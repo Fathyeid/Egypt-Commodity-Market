@@ -14,6 +14,7 @@ import { serviceStatus, type ServiceKey } from "@/lib/services";
 import { getProgress, getSkillLevels, latestPlacement } from "@/lib/learner/study";
 import { coursesFor, lessonIds, placementAvailable, findLesson } from "@/content";
 import { StartPlacementButton } from "@/components/placement/StartPlacementButton";
+import { recurringErrors } from "@/lib/learner/conversations";
 
 export default async function DashboardPage({ params }: PageProps<"/[lang]/dashboard">) {
   const { lang } = await params;
@@ -37,10 +38,11 @@ async function Dashboard({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const active = tracks.find((t) => t.isActive) ?? null;
   if (!profile?.onboardedAt || !active) redirect(`/${lang}/onboarding`);
 
-  const [stats, skillRows, placement] = await Promise.all([
+  const [stats, skillRows, placement, errorsTop] = await Promise.all([
     getDashboardStats(db, user.id, active.id),
     getSkillLevels(db, user.id, active.id),
     latestPlacement(db, user.id, active.id),
+    recurringErrors(db, user.id, active.id),
   ]);
   const course = coursesFor(active.targetLanguage)[0] ?? null;
   const ids = course ? lessonIds(course) : [];
@@ -153,6 +155,26 @@ async function Dashboard({ lang, dict }: { lang: Locale; dict: Dictionary }) {
                 </li>
               );
             })}
+          </ul>
+        )}
+      </section>
+
+      <section className="card p-5 sm:p-6">
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="font-semibold">{t.errorsTitle}</h2>
+          <Link href={`/${lang}/tutor`} className="text-sm text-brand hover:underline">{t.practiceWithTutor}</Link>
+        </div>
+        {errorsTop.length === 0 ? (
+          <p className="text-sm text-muted">{t.errorsEmpty}</p>
+        ) : (
+          <ul className="divide-y divide-line" data-testid="recurring-errors">
+            {errorsTop.map((e) => (
+              <li key={e.tag} className="flex flex-wrap items-center gap-x-3 gap-y-1 py-2.5 text-sm">
+                <span className="chip">{e.tag}</span>
+                <span dir="auto" lang={active.targetLanguage}><s className="text-danger">{e.example.original}</s> → <b className="text-ok">{e.example.corrected}</b></span>
+                <span className="ms-auto font-semibold">×{e.count}</span>
+              </li>
+            ))}
           </ul>
         )}
       </section>

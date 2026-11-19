@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { getSessionCookie } from "better-auth/cookies";
 import { defaultLocale, isLocale, LOCALE_COOKIE, type Locale } from "@/lib/i18n/config";
 
-const PROTECTED = ["/dashboard", "/profile", "/onboarding", "/placement", "/learn"];
+const PROTECTED = ["/dashboard", "/profile", "/onboarding", "/placement", "/learn", "/tutor"];
 
 function preferredLocale(req: NextRequest): Locale {
   const saved = req.cookies.get(LOCALE_COOKIE)?.value;

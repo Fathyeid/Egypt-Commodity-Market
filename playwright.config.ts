@@ -11,7 +11,7 @@ export default defineConfig({
   use: { baseURL: `http://localhost:${PORT}`, trace: "off" },
   webServer: {
     command: `npm run start -- -p ${PORT}`,
-    env: { AUTH_RATE_LIMIT: "off", BETTER_AUTH_URL: `http://localhost:${PORT}` },
+    env: { AUTH_RATE_LIMIT: "off", BETTER_AUTH_URL: `http://localhost:${PORT}`, AI_PROVIDER: "fake" },
     url: `http://localhost:${PORT}/ar`,
     reuseExistingServer: false,
     timeout: 120_000,

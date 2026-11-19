@@ -280,4 +280,83 @@ export const exerciseAttempts = pgTable(
   (t) => [index("attempts_user_time_idx").on(t.userId, t.createdAt)],
 );
 
+/* ------------------------------------------------------------------ */
+/* Phase 3: AI tutor, roleplay, error memory, AI usage                 */
+/* ------------------------------------------------------------------ */
+
+export const conversations = pgTable(
+  "conversations",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    trackId: uuid("track_id")
+      .notNull()
+      .references(() => learningTracks.id, { onDelete: "cascade" }),
+    kind: text("kind").notNull(), // tutor | roleplay
+    persona: text("persona"), // tutor persona id
+    scenario: text("scenario"), // roleplay scenario id
+    status: text("status").notNull().default("active"), // active | completed
+    report: jsonb("report"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [index("conversations_user_idx").on(t.userId, t.updatedAt)],
+);
+
+export const conversationMessages = pgTable(
+  "conversation_messages",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    conversationId: uuid("conversation_id")
+      .notNull()
+      .references(() => conversations.id, { onDelete: "cascade" }),
+    role: text("role").notNull(), // user | assistant
+    content: text("content").notNull(),
+    corrections: jsonb("corrections"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [index("conv_messages_conv_idx").on(t.conversationId, t.createdAt)],
+);
+
+/** The tutor's memory of mistakes: every correction the AI makes is stored here. */
+export const errorLog = pgTable(
+  "error_log",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    trackId: uuid("track_id")
+      .notNull()
+      .references(() => learningTracks.id, { onDelete: "cascade" }),
+    source: text("source").notNull(), // tutor | roleplay
+    category: text("category").notNull(),
+    ruleTag: text("rule_tag").notNull(),
+    original: text("original").notNull(),
+    corrected: text("corrected").notNull(),
+    explanation: text("explanation").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [index("error_log_user_track_idx").on(t.userId, t.trackId, t.createdAt)],
+);
+
+/** Every model call, with tokens and cost, for limits and the admin dashboard. */
+export const aiUsage = pgTable(
+  "ai_usage",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id").references(() => user.id, { onDelete: "set null" }),
+    feature: text("feature").notNull(), // tutor | roleplay | roleplay_report
+    model: text("model").notNull(),
+    inputTokens: integer("input_tokens").notNull(),
+    outputTokens: integer("output_tokens").notNull(),
+    /** Cost in micro-dollars (1e-6 USD) to keep integer math. */
+    costMicros: integer("cost_micros").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [index("ai_usage_time_idx").on(t.createdAt), index("ai_usage_user_time_idx").on(t.userId, t.createdAt)],
+);
+
 export const authSchema = { user, session, account, verification };

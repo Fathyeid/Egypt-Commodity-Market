@@ -173,3 +173,61 @@ export async function submitQuizAction(lessonId: string, answers: unknown, durat
     return fail(e) as { ok: false; error: string };
   }
 }
+
+/* ------------------------- Phase 3: AI tutor & role-play ------------------------- */
+
+import * as convo from "@/lib/learner/conversations";
+import { PERSONA_IDS, SCENARIO_IDS } from "@/lib/ai/catalog";
+
+function convoFail(e: unknown): { ok: false; error: string } {
+  if (e instanceof convo.ConversationFailure) return { ok: false, error: e.code };
+  return fail(e) as { ok: false; error: string };
+}
+
+export async function startConversationAction(lang: string, kind: "tutor" | "roleplay", id: string): Promise<ActionResult> {
+  const userId = await uid();
+  if (!userId) return { ok: false, error: "unauthorized" };
+  const locale: Locale = isLocale(lang) ? lang : "ar";
+  const valid = kind === "tutor" ? (PERSONA_IDS as string[]).includes(id) : kind === "roleplay" && (SCENARIO_IDS as string[]).includes(id);
+  if (!valid) return { ok: false, error: "invalid" };
+  let conversationId: string;
+  try {
+    const c = await convo.startConversation(db, userId, locale, kind === "tutor" ? { kind, persona: id as (typeof PERSONA_IDS)[number] } : { kind: "roleplay", scenario: id as (typeof SCENARIO_IDS)[number] });
+    conversationId = c.id;
+  } catch (e) {
+    return convoFail(e);
+  }
+  redirect(`/${locale}/tutor/${conversationId}`);
+}
+
+export async function sendMessageAction(lang: string, conversationId: string, text: string) {
+  const userId = await uid();
+  if (!userId) return { ok: false as const, error: "unauthorized" };
+  const id = z.uuid().safeParse(conversationId);
+  const body = z.string().trim().min(1).max(1000).safeParse(text);
+  if (!id.success || !body.success) return { ok: false as const, error: "invalid" };
+  try {
+    const r = await convo.sendMessage(db, userId, id.data, body.data, isLocale(lang) ? lang : "ar");
+    return {
+      ok: true as const,
+      userMessage: { id: r.userMessage.id, content: r.userMessage.content, corrections: r.corrections },
+      assistantMessage: { id: r.assistantMessage.id, content: r.assistantMessage.content, newWords: r.newWords },
+    };
+  } catch (e) {
+    return convoFail(e);
+  }
+}
+
+export async function finishRoleplayAction(lang: string, conversationId: string): Promise<ActionResult> {
+  const userId = await uid();
+  if (!userId) return { ok: false, error: "unauthorized" };
+  const id = z.uuid().safeParse(conversationId);
+  if (!id.success) return { ok: false, error: "invalid" };
+  try {
+    await convo.finishRoleplay(db, userId, id.data, isLocale(lang) ? lang : "ar");
+  } catch (e) {
+    return convoFail(e);
+  }
+  revalidatePath("/[lang]", "layout");
+  return { ok: true };
+}

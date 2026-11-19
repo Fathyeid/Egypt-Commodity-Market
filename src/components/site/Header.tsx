@@ -49,6 +49,7 @@ async function MobileNav({ lang, dict }: { lang: Locale; dict: Dictionary }) {
           { href: `/${lang}`, label: dict.nav.home, icon: "home" },
           { href: `/${lang}/dashboard`, label: dict.nav.dashboard, icon: "dashboard" },
           { href: `/${lang}/learn`, label: dict.nav.learn, icon: "learn" },
+          { href: `/${lang}/tutor`, label: dict.nav.tutor, icon: "tutor" },
           { href: `/${lang}/profile`, label: dict.nav.profile, icon: "profile" },
         ]}
       />
@@ -73,6 +74,7 @@ async function UserArea({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const items = [
     { href: `/${lang}/dashboard`, label: dict.nav.dashboard, icon: "dashboard" as const },
     { href: `/${lang}/learn`, label: dict.nav.learn, icon: "learn" as const },
+    { href: `/${lang}/tutor`, label: dict.nav.tutor, icon: "tutor" as const },
     { href: `/${lang}/profile`, label: dict.nav.profile, icon: "profile" as const },
   ];
   return (
