@@ -1,0 +1,18 @@
+# Render Blueprint: one-click deploy (Dashboard → New → Blueprint → pick this repo).
+# The database is any PostgreSQL URL (e.g. a free Neon database); paste it into DATABASE_URL.
+services:
+  - type: web
+    name: lisan
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npm run db:migrate && npm run db:seed && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: DATABASE_URL
+        sync: false
+      - key: BETTER_AUTH_SECRET
+        generateValue: true
+      - key: BETTER_AUTH_URL
+        sync: false
