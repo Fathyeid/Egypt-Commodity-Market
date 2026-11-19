@@ -1,12 +1,57 @@
-# Lisan (working name): AI-Powered Language Learning Platform
+# لسان · Lisan
 
-> This repository currently holds the **research and planning phase** of the platform.
+AI-powered language learning platform (Arabic RTL / English LTR, light design with optional dark mode).
 
-| Document | Contents |
+**Status:** Phase 1 complete: visual identity, landing page, sign-up/sign-in, onboarding, profile, learning tracks, and a dashboard built on real data.
+See [`docs/plan/implementation-plan.md`](docs/plan/implementation-plan.md) for all phases and [`docs/research/`](docs/research) for the competitor research.
+
+## Stack
+
+| Layer | Choice |
 |---|---|
-| [`docs/research/competitor-report.md`](docs/research/competitor-report.md) | Competitor analysis covering 40 platforms (Arabic) |
-| [`docs/research/competitors.csv`](docs/research/competitors.csv) | Comparison database: features, pricing, strengths, weaknesses, opportunities |
-| [`docs/plan/implementation-plan.md`](docs/plan/implementation-plan.md) | Architecture, data model, 8 phases with acceptance criteria |
-| [`design/prototype.html`](design/prototype.html) | Initial design prototype: landing, onboarding, dashboard (AR RTL / EN LTR, light/dark) |
+| App | Next.js 16 (App Router, Cache Components, `proxy.ts`), React 19, TypeScript |
+| UI | Tailwind CSS v4, IBM Plex Sans Arabic, lucide icons |
+| Database | **PostgreSQL** (any host) via Drizzle ORM |
+| Auth | better-auth: email + password, Google (optional), password reset via Resend (optional) |
+| Tests | Vitest (DB integration), Playwright (E2E, desktop + mobile) |
 
-Open `design/prototype.html` directly in a browser to view the prototype.
+No vendor lock-in: the database is a plain `DATABASE_URL`. That can be a local Postgres, Neon/Railway/Render free tiers, or your own server.
+
+## Run locally
+
+```bash
+cp .env.example .env            # set DATABASE_URL and BETTER_AUTH_SECRET
+npm install
+npm run db:migrate && npm run db:seed
+npm run dev                     # http://localhost:3000 → redirects to /ar or /en
+```
+
+## Checks
+
+```bash
+npm run typecheck && npm run lint
+npm test                        # needs a lisan_test database (TEST_DATABASE_URL)
+npm run build && npm run test:e2e
+```
+
+## Optional integrations (honest states)
+
+Every external service is off until configured, and the UI says so:
+
+- **Google sign-in:** set `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` (redirect URI: `<BETTER_AUTH_URL>/api/auth/callback/google`).
+- **Email (password reset):** set `RESEND_API_KEY` and `EMAIL_FROM`.
+- **AI tutor, speech, payments:** later phases, enabled only after owner approval.
+
+## Layout
+
+```
+src/app/[lang]/        pages (landing, auth, onboarding, dashboard, profile)
+src/app/api/auth/      better-auth handler
+src/lib/db/            Drizzle schema, client, seed data (12 languages)
+src/lib/learner/       user-scoped data access (every query filtered by userId)
+src/lib/actions.ts     server actions (zod-validated)
+src/lib/i18n/          ar/en dictionaries (en is type-checked against ar)
+src/proxy.ts           locale redirect + optimistic auth redirect
+drizzle/               SQL migrations
+tests/unit, tests/e2e  test suites
+```
