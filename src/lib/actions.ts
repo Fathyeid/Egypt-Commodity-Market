@@ -7,6 +7,7 @@ import { getSession } from "@/lib/auth/session";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import * as repo from "@/lib/learner/repo";
 import * as srs from "@/lib/learner/srs";
+import * as checkpoint from "@/lib/learner/checkpoint";
 import { z } from "zod";
 import { onboardingInput, profileInput, trackInput } from "@/lib/validation";
 
@@ -302,4 +303,18 @@ export async function reviewWordAction(id: unknown, grade: unknown): Promise<Act
     return fail(e);
   }
   return { ok: true };
+}
+
+export async function submitCheckpointAction(unitId: unknown, answers: unknown) {
+  const userId = await uid();
+  if (!userId) return { ok: false as const, error: "unauthorized" };
+  const parsed = z.object({ unitId: z.string().min(1).max(120), answers: z.record(z.string().max(30), answerSchema) }).safeParse({ unitId, answers });
+  if (!parsed.success) return { ok: false as const, error: "invalid" };
+  try {
+    const result = await checkpoint.submitCheckpoint(db, userId, parsed.data.unitId, parsed.data.answers);
+    revalidatePath("/[lang]", "layout");
+    return { ok: true as const, result };
+  } catch (e) {
+    return fail(e) as { ok: false; error: string };
+  }
 }

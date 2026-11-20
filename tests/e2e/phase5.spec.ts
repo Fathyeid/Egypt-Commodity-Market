@@ -35,3 +35,19 @@ test("spaced review: a saved word is due, graded, then scheduled away; dashboard
   await expect(page.getByTestId("review-cta")).toContainText("1 كلمة في مجموعتك");
   await expect(page.getByTestId("badges").locator('[data-earned="true"]')).toHaveCount(0);
 });
+
+test("learning path shows connected lessons and a unit test at the end of each unit", async ({ page }) => {
+  await signUp(page, "en", "Pat", uniqueEmail("path"));
+  await onboard(page, { native: "Arabic", target: "German", goal: "Daily life", minutes: "15 min", level: "A1" });
+  await page.goto("/en/learn");
+  const unit = page.getByTestId("unit-de-a1-u1");
+  await expect(unit).toHaveAttribute("open", "");
+  await expect(unit.locator('[data-testid^="lesson-"]').first()).toContainText("Start");
+  await unit.getByTestId("checkpoint-de-a1-u1").click();
+  await page.waitForURL("**/en/learn/checkpoint/de-a1-u1");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Unit test");
+  await expect(page.getByTestId("cp-0")).toBeVisible();
+  await expect(page.getByTestId("cp-submit")).toBeDisabled();
+  await page.goto("/en/learn/checkpoint/not-a-unit");
+  await expect(page.getByTestId("cp-0")).toHaveCount(0);
+});
