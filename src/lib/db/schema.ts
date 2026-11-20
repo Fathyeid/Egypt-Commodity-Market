@@ -6,6 +6,7 @@ import {
   boolean,
   integer,
   smallint,
+  real,
   uuid,
   index,
   uniqueIndex,
@@ -397,8 +398,15 @@ export const savedWords = pgTable(
     meaning: text("meaning"),
     source: text("source").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    /* Spaced repetition (Phase 5): SM-2 style scheduling. */
+    dueAt: timestamp("due_at", { withTimezone: true }).defaultNow().notNull(),
+    intervalDays: real("interval_days").notNull().default(0),
+    ease: real("ease").notNull().default(2.5),
+    reps: integer("reps").notNull().default(0),
+    lapses: integer("lapses").notNull().default(0),
+    lastReviewedAt: timestamp("last_reviewed_at", { withTimezone: true }),
   },
-  (t) => [uniqueIndex("saved_words_user_lang_term_uq").on(t.userId, t.language, t.term)],
+  (t) => [uniqueIndex("saved_words_user_lang_term_uq").on(t.userId, t.language, t.term), index("saved_words_due_idx").on(t.userId, t.language, t.dueAt)],
 );
 
 export const writingSubmissions = pgTable(

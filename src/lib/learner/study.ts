@@ -2,6 +2,7 @@
  * Placement tests and lesson progress. Every function is scoped by the
  * authenticated userId; tests/tracks belonging to other users are not_found.
  */
+import { addLessonWords } from "./srs";
 import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import type { PgDatabase } from "drizzle-orm/pg-core";
 import {
@@ -152,7 +153,7 @@ export async function checkExercise(db: Db, userId: string, lessonId: string, ex
 }
 
 /** Grade the whole end-of-lesson quiz on the server, save progress and XP. */
-export async function submitQuiz(db: Db, userId: string, lessonId: string, answers: Record<string, ExerciseAnswer>, durationSeconds: number) {
+export async function submitQuiz(db: Db, userId: string, lessonId: string, answers: Record<string, ExerciseAnswer>, durationSeconds: number, uiLocale: "ar" | "en" = "ar") {
   const { lesson, language, track } = await resolveLesson(db, userId, lessonId);
   const results = lesson.quiz.map((q) => ({ id: q.id, ...gradeExercise(q, answers[q.id] ?? "", language) }));
   const correct = results.filter((r) => r.correct).length;
@@ -171,6 +172,8 @@ export async function submitQuiz(db: Db, userId: string, lessonId: string, answe
       });
     await tx.insert(activityEvents).values({ userId, trackId: track.id, kind: "lesson", durationSeconds: clampDuration(durationSeconds), xp });
   });
+  // The lesson's words join the learner's spaced-repetition deck.
+  await addLessonWords(db, userId, language, lessonId, lesson.vocabulary.map((v) => ({ term: v.term, meaning: v.meaning[uiLocale] })));
   return { score, correct, total: lesson.quiz.length, xp, results };
 }
 

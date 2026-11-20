@@ -252,7 +252,7 @@ function Quiz({ lesson, lang, language, labels, t, getStarted }: { lesson: Publi
           onClick={() =>
             start(async () => {
               const payload = Object.fromEntries(lesson.quiz.map((q) => [q.id, orderToText(q, values[q.id])]));
-              const r = await submitQuizAction(lesson.id, payload, (Date.now() - getStarted()) / 1000);
+              const r = await submitQuizAction(lesson.id, payload, (Date.now() - getStarted()) / 1000, lang);
               if (r.ok) setOutcome(r.result);
             })
           }

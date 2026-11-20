@@ -61,7 +61,8 @@ test("lesson: 8 sections, practice feedback, server-graded quiz, progress saved"
 
   await page.goto("/ar/dashboard");
   const words = page.locator("section[aria-label=KPIs] > div").nth(1);
-  await expect(words).toContainText("6"); // 6 words from the completed lesson
+  await expect(words).toContainText("0"); // learned only after surviving a day of spaced review
+  await expect(page.getByTestId("review-cta")).toContainText("6"); // the lesson's 6 words are due for review
   await expect(page.getByText("لا يوجد نشاط مسجّل بعد")).toHaveCount(0);
 });
 
