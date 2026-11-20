@@ -7,6 +7,8 @@ import { isLocale, type Locale } from "@/lib/i18n/config";
 import { requireUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { getProfile, listLanguages, listTracks } from "@/lib/learner/repo";
+import Link from "next/link";
+import { isAdminEmail } from "@/lib/admin";
 
 export default async function ProfilePage({ params }: PageProps<"/[lang]/profile">) {
   const { lang } = await params;
@@ -33,6 +35,9 @@ async function Profile({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const t = { profile: dict.profile, common: dict.common, errors: dict.errors, goals: dict.goals, levels: dict.levels, dashboard: dict.dashboard, auth: dict.auth };
   return (
     <div className="animate-fade-up space-y-6">
+      {isAdminEmail(user.email) && (
+        <Link href={`/${lang}/admin`} className="btn-ghost" data-testid="admin-link">{dict.admin.adminLink}</Link>
+      )}
       <section className="card p-5 sm:p-6">
         <h2 className="mb-4 text-lg font-semibold">{dict.profile.account}</h2>
         <AccountForm lang={lang} t={t} email={profile.email} name={profile.name} nativeLanguage={profile.nativeLanguage} languages={languages} />

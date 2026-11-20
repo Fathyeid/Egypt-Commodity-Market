@@ -13,7 +13,8 @@ import {
   placementTests,
   skillLevels,
 } from "@/lib/db/schema";
-import { findLesson, getPlacementBank, getPlacementItem, gradeExercise, placementAvailable, toPublicItem, type ExerciseAnswer } from "@/content";
+import { getPlacementBank, getPlacementItem, gradeExercise, placementAvailable, toPublicItem, type ExerciseAnswer } from "@/content";
+import { getLesson } from "@/lib/curriculum";
 import { computeResult, nextItem, TOTAL_ITEMS, type PlacementResult, type Response } from "@/lib/placement/engine";
 import { DomainError, getActiveTrack } from "./repo";
 
@@ -124,11 +125,10 @@ export async function getSkillLevels(db: Db, userId: string, trackId: string) {
 
 /* ------------------------------ Lessons ------------------------------ */
 
-/** The lesson must exist and be in the user's active track language. */
+/** The lesson must be published and in the user's active track language. */
 export async function resolveLesson(db: Db, userId: string, lessonId: string) {
-  const found = findLesson(lessonId);
-  const track = await getActiveTrack(db, userId);
-  if (!found || !track || found.course.language !== track.targetLanguage) throw new DomainError("not_found");
+  const [found, track] = await Promise.all([getLesson(db, lessonId), getActiveTrack(db, userId)]);
+  if (!found || !track || found.language !== track.targetLanguage) throw new DomainError("not_found");
   return { ...found, track };
 }
 
@@ -143,18 +143,18 @@ export async function getProgress(db: Db, userId: string, lessonIdsList: string[
 
 /** Grade one practice exercise and log the attempt. */
 export async function checkExercise(db: Db, userId: string, lessonId: string, exerciseId: string, answer: ExerciseAnswer) {
-  const { lesson, course } = await resolveLesson(db, userId, lessonId);
+  const { lesson, language } = await resolveLesson(db, userId, lessonId);
   const ex = lesson.exercises.find((e) => e.id === exerciseId);
   if (!ex) throw new DomainError("not_found");
-  const result = gradeExercise(ex, answer, course.language);
+  const result = gradeExercise(ex, answer, language);
   await db.insert(exerciseAttempts).values({ userId, lessonId, exerciseId, tag: ex.tag ?? null, correct: result.correct, answer: String(answer).slice(0, 200) });
   return result;
 }
 
 /** Grade the whole end-of-lesson quiz on the server, save progress and XP. */
 export async function submitQuiz(db: Db, userId: string, lessonId: string, answers: Record<string, ExerciseAnswer>, durationSeconds: number) {
-  const { lesson, course, track } = await resolveLesson(db, userId, lessonId);
-  const results = lesson.quiz.map((q) => ({ id: q.id, ...gradeExercise(q, answers[q.id] ?? "", course.language) }));
+  const { lesson, language, track } = await resolveLesson(db, userId, lessonId);
+  const results = lesson.quiz.map((q) => ({ id: q.id, ...gradeExercise(q, answers[q.id] ?? "", language) }));
   const correct = results.filter((r) => r.correct).length;
   const score = Math.round((correct / lesson.quiz.length) * 100);
   const xp = 10 + correct * 2;

@@ -7,9 +7,10 @@ export function normalize(input: string, language?: string): string {
     .normalize("NFC")
     .toLowerCase()
     .replace(/[’‘`´]/g, "'")
-    .replace(/[.,!?;:"“”„«»()]/g, " ")
+    .replace(/[.,!?;:"“”„«»()¿¡…。！？、，；：「」『』（）]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+  if (language === "zh" || language === "ja") s = s.replace(/\s+/g, "");
   if (language === "de") {
     s = s.replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss");
   }

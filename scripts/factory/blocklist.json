@@ -1,0 +1,10 @@
+{
+  "comment": "English words (matched whole-word, case-insensitive, in a sentence's English text) that keep a sentence out of lessons: sexual content, profanity, drugs, self-harm, graphic violence, and alcohol/pork for a family-friendly, culturally considerate course.",
+  "words": [
+    "sex", "sexy", "sexual", "sexually", "naked", "nude", "nudity", "nipple", "nipples", "breast", "breasts", "boobs", "penis", "vagina", "condom", "condoms", "porn", "porno", "pornography", "orgasm", "erection", "horny", "masturbate", "masturbating", "rape", "raped", "rapist", "prostitute", "prostitutes", "whore", "slut", "bitch", "fuck", "fucking", "fucked", "shit", "asshole", "bastard", "dick", "cock", "pussy", "boner", "kiss me", "making love", "make love", "made love", "in bed with", "slept with", "sleep with", "lover", "mistress", "seduce", "seduced", "underwear", "panties", "bra",
+    "suicide", "kill myself", "killed himself", "killed herself", "hang myself", "self-harm",
+    "cocaine", "heroin", "marijuana", "weed", "drugs", "drug dealer", "meth", "stoned",
+    "kill", "kills", "killed", "killing", "killer", "murder", "murdered", "murderer", "stab", "stabbed", "shoot", "shot", "gun", "guns", "pistol", "corpse", "corpses", "torture", "tortured", "bomb", "terrorist", "behead", "blood", "bloody", "slaughter",
+    "beer", "beers", "wine", "vodka", "whisky", "whiskey", "alcohol", "alcoholic", "drunk", "booze", "liquor", "champagne", "cocktail", "pork", "bacon", "ham", "pig", "pigs"
+  ]
+}

@@ -53,6 +53,7 @@ export function ExerciseInput({ ex, value, onChange, ui, language, labels, disab
       return (
         <div className="space-y-3">
           {ex.type === "fill" && <p dir="auto" lang={language} className="text-lg font-semibold">{ex.prompt}</p>}
+          {ex.type === "fill" && ex.hint && <p className="text-sm text-muted"><Bidi text={l(ex.hint)} /></p>}
           {ex.type === "translate" && <p className="text-lg font-semibold"><Bidi text={l(ex.prompt)} /></p>}
           {ex.type === "dictation" && <SpeakButton text={ex.audio} language={language} label={labels.listen} noVoiceLabel={labels.noVoice} />}
           <input
@@ -71,7 +72,12 @@ export function ExerciseInput({ ex, value, onChange, ui, language, labels, disab
         </div>
       );
     case "order":
-      return <OrderInput words={ex.words} value={Array.isArray(value) ? value : []} onChange={onChange} labels={labels} language={language} disabled={disabled} />;
+      return (
+        <div className="space-y-2">
+          {ex.hint && <p className="font-semibold"><Bidi text={l(ex.hint)} /></p>}
+          <OrderInput words={ex.words} value={Array.isArray(value) ? value : []} onChange={onChange} labels={labels} language={language} disabled={disabled} />
+        </div>
+      );
     case "match":
       return <MatchInput left={ex.left} right={ex.right} value={Array.isArray(value) ? value : []} onChange={onChange} ui={ui} labels={labels} language={language} disabled={disabled} />;
   }
@@ -83,14 +89,14 @@ function OrderInput({ words, value, onChange, labels, language, disabled }: { wo
   return (
     <div className="space-y-3">
       <p className="text-sm text-muted">{labels.tapWords}</p>
-      <div dir="ltr" lang={language} className="flex min-h-12 flex-wrap gap-2 rounded-xl border border-dashed border-line bg-surface-2 p-2">
+      <div dir={language === "ar" ? "rtl" : "ltr"} lang={language} className="flex min-h-12 flex-wrap gap-2 rounded-xl border border-dashed border-line bg-surface-2 p-2">
         {picked.map((i, pos) => (
           <button key={pos} type="button" disabled={disabled} onClick={() => onChange(value.filter((_, p) => p !== pos))} className="rounded-lg bg-brand px-3 py-1.5 font-semibold text-brand-ink">
             {words[i]}
           </button>
         ))}
       </div>
-      <div dir="ltr" lang={language} className="flex flex-wrap gap-2">
+      <div dir={language === "ar" ? "rtl" : "ltr"} lang={language} className="flex flex-wrap gap-2">
         {words.map((w, i) =>
           picked.includes(i) ? null : (
             <button key={i} type="button" disabled={disabled} onClick={() => onChange([...value, String(i)])} className="rounded-lg border border-line bg-surface px-3 py-1.5 font-semibold hover:bg-surface-2">

@@ -1,0 +1,42 @@
+name: Content factory (Tatoeba corpus)
+
+# Downloads Tatoeba's open exports (CC BY 2.0 FR) and commits a compact,
+# attributed sentence corpus to data/tatoeba/. Runs here because the dev
+# sandbox can't reach downloads.tatoeba.org. Re-runs when the script changes.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/factory/extract_tatoeba.py"
+      - ".github/workflows/content-factory.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: content-factory-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  corpus:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build corpus
+        run: python3 -I scripts/factory/extract_tatoeba.py data/tatoeba
+      - name: Commit corpus
+        run: |
+          du -sh data/tatoeba && ls -la data/tatoeba
+          git config user.name "lisan-content-factory"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/tatoeba
+          if git diff --cached --quiet; then echo "No change"; exit 0; fi
+          git commit -m "Content factory: refresh Tatoeba corpus (CC BY 2.0 FR)"
+          for i in 1 2 3; do git pull --rebase origin "${{ github.ref_name }}" && git push origin "HEAD:${{ github.ref_name }}" && exit 0; sleep 5; done
+          exit 1

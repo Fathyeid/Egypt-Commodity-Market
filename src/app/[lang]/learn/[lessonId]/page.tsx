@@ -10,7 +10,9 @@ import { requireUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { resolveLesson } from "@/lib/learner/study";
 import { DomainError } from "@/lib/learner/repo";
-import { lessonIds, toPublicLesson, findLesson } from "@/content";
+import { toPublicLesson } from "@/content";
+import { getLesson, nextLessonId, type LessonAttribution } from "@/lib/curriculum";
+import { TopicPanel } from "@/components/learn/TopicPanel";
 
 export default async function LessonPage({ params }: PageProps<"/[lang]/learn/[lessonId]">) {
   // Static root param for the shell; the lesson id is read inside <Suspense>.
@@ -32,7 +34,7 @@ export default async function LessonPage({ params }: PageProps<"/[lang]/learn/[l
 async function Player({ lang, dict, params }: { lang: Locale; dict: Dictionary; params: PageProps<"/[lang]/learn/[lessonId]">["params"] }) {
   const { lessonId } = await params;
   const user = await requireUser(lang, `/${lang}/learn/${lessonId}`);
-  if (!findLesson(lessonId)) notFound();
+  if (!(await getLesson(db, lessonId))) notFound();
   let found;
   try {
     found = await resolveLesson(db, user.id, lessonId);
@@ -47,17 +49,17 @@ async function Player({ lang, dict, params }: { lang: Locale; dict: Dictionary; 
     }
     throw e;
   }
-  const ids = lessonIds(found.course);
-  const nextId = ids[ids.indexOf(lessonId) + 1] ?? null;
+  const nextId = await nextLessonId(db, found.courseId, found.position);
   return (
     <>
       <div className="mx-auto mb-5 max-w-3xl">
-        <Link href={`/${lang}/learn`} className="text-sm text-brand hover:underline">← {found.course.units[found.unitIndex].title[lang]}</Link>
+        <Link href={`/${lang}/learn`} className="text-sm text-brand hover:underline">← {found.unitTitle[lang]}</Link>
         <h1 className="mt-1 text-2xl font-bold sm:text-3xl">{found.lesson.title[lang]}</h1>
       </div>
+      {found.topic && (found.topic.videoId || found.topic.explanation) && <TopicPanel topic={found.topic} lang={lang} label={dict.lesson.topicVideo} />}
       <LessonPlayer
         lang={lang}
-        language={found.course.language}
+        language={found.language}
         lesson={toPublicLesson(found.lesson)}
         t={dict.lesson}
         common={dict.common}
@@ -66,6 +68,26 @@ async function Player({ lang, dict, params }: { lang: Locale; dict: Dictionary; 
         nextHref={nextId ? `/${lang}/learn/${nextId}` : null}
         nextLabel={dict.learn.next}
       />
+      {found.attribution && <Attribution a={found.attribution} label={dict.lesson.attribution} />}
     </>
+  );
+}
+
+function Attribution({ a, label }: { a: LessonAttribution; label: string }) {
+  const people = [...new Set(a.sentences.map((s) => s.by).filter(Boolean))].slice(0, 8);
+  return (
+    <footer className="mx-auto mt-6 max-w-3xl text-xs text-faint" data-testid="attribution">
+      {label}{" "}
+      <a href="https://tatoeba.org" className="underline" target="_blank" rel="noopener noreferrer">Tatoeba</a>{" "}
+      (<a href="https://creativecommons.org/licenses/by/2.0/fr/" className="underline" target="_blank" rel="noopener noreferrer">{a.license}</a>)
+      {people.length > 0 && <> — <span dir="auto">{people.join("، ")}</span></>}
+      {" · "}
+      {a.sentences.slice(0, 10).map((s, i) => (
+        <span key={s.id}>
+          {i > 0 && " "}
+          <a href={`https://tatoeba.org/sentences/show/${s.id}`} className="underline" target="_blank" rel="noopener noreferrer">#{s.id}</a>
+        </span>
+      ))}
+    </footer>
   );
 }

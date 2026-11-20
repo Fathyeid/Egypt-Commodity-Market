@@ -4,6 +4,17 @@ import { dePlacement } from "./placement/de";
 import { enA1 } from "./courses/en-a1";
 import { deA1 } from "./courses/de-a1";
 import { matchesAny } from "@/lib/grading";
+import { enTexts } from "./texts/en";
+import { deTexts } from "./texts/de";
+import type { TextItem } from "./texts/types";
+
+const TEXTS: TextItem[] = [...enTexts, ...deTexts];
+export const textsFor = (language: string, kind: TextItem["kind"]) => TEXTS.filter((x) => x.language === language && x.kind === kind);
+export const findText = (id: string) => TEXTS.find((x) => x.id === id) ?? null;
+export type PublicTextItem = Omit<TextItem, "questions"> & { questions: { id: string; prompt: TextItem["questions"][number]["prompt"]; options: string[] }[] };
+export function toPublicText(item: TextItem): PublicTextItem {
+  return { ...item, questions: item.questions.map(({ id, prompt, options }) => ({ id, prompt, options })) };
+}
 
 const PLACEMENT: Record<string, PlacementItem[]> = { en: enPlacement, de: dePlacement };
 const COURSES: Course[] = [enA1, deA1];

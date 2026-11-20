@@ -1,0 +1,34 @@
+name: Content sources probe
+
+# Checks which open-licensed data sources are reachable from GitHub's runners
+# (this project's dev sandbox can't reach them). Read-only: downloads nothing big.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/content-probe.yml"
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Probe Tatoeba per-language exports
+        run: |
+          for l in eng deu fra spa ita por tur rus cmn jpn kor ara; do
+            for f in "${l}_sentences.tsv.bz2" "${l}_links.tsv.bz2"; do
+              url="https://downloads.tatoeba.org/exports/per_language/${l}/${f}"
+              code=$(curl -s -o /dev/null -w "%{http_code} %{size_download}" -r 0-0 "$url")
+              size=$(curl -sI "$url" | awk 'tolower($1)=="content-length:"{print $2}' | tr -d '\r')
+              echo "$f -> HTTP ${code%% *}, ${size:-?} bytes"
+            done
+          done
+      - name: Probe other sources
+        run: |
+          for url in \
+            https://downloads.tatoeba.org/exports/links.tar.bz2 \
+            https://downloads.tatoeba.org/exports/sentences_detailed.tar.bz2 \
+            https://kaikki.org/dictionary/rawdata.html \
+            https://www.youtube.com/ ; do
+            echo "$url -> $(curl -s -o /dev/null -w '%{http_code}' -I "$url")"
+          done

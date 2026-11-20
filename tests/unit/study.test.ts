@@ -18,7 +18,7 @@ async function learner(id: string, target = "en") {
 }
 
 beforeEach(async () => {
-  await sql`truncate "user", activity_events, learning_tracks, profiles, placement_tests, lesson_progress, exercise_attempts, conversations, error_log, ai_usage cascade`;
+  await sql`truncate "user", activity_events, learning_tracks, profiles, placement_tests, lesson_progress, exercise_attempts, conversations, error_log, ai_usage, saved_words, writing_submissions, pron_attempts cascade`;
 });
 afterAll(async () => {
   await sql.end();

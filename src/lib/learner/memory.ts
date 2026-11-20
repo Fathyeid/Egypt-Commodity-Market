@@ -6,7 +6,7 @@
 import { and, desc, eq, gte, sql } from "drizzle-orm";
 import type { PgDatabase } from "drizzle-orm/pg-core";
 import { errorLog, exerciseAttempts, languages, learningTracks, lessonProgress, profiles, skillLevels } from "@/lib/db/schema";
-import { findLesson } from "@/content";
+import { lessonVocabulary } from "@/lib/curriculum";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Db = PgDatabase<any, any, any>;
@@ -64,10 +64,10 @@ export async function buildMemory(db: Db, userId: string, trackId: string, uiLoc
     .sort((a, b) => b.count - a.count)
     .slice(0, 6);
 
-  const knownWords = done
-    .map((d) => findLesson(d.lessonId))
-    .filter((f) => f && f.course.language === track.targetLanguage)
-    .flatMap((f) => f!.lesson.vocabulary.map((v) => v.term))
+  const vocab = await lessonVocabulary(db, done.map((d) => d.lessonId));
+  const knownWords = [...vocab.values()]
+    .filter((v) => v.language === track.targetLanguage)
+    .flatMap((v) => v.terms)
     .slice(0, 30);
 
   const native = profile?.nativeLanguage ?? null;

@@ -359,4 +359,140 @@ export const aiUsage = pgTable(
   (t) => [index("ai_usage_time_idx").on(t.createdAt), index("ai_usage_user_time_idx").on(t.userId, t.createdAt)],
 );
 
+/* ------------------------------------------------------------------ */
+/* Phase 4: pronunciation, listening/reading, writing                  */
+/* ------------------------------------------------------------------ */
+
+/** Pronunciation attempts scored by the speech provider (never invented). */
+export const pronAttempts = pgTable(
+  "pron_attempts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    trackId: uuid("track_id")
+      .notNull()
+      .references(() => learningTracks.id, { onDelete: "cascade" }),
+    referenceText: text("reference_text").notNull(),
+    locale: text("locale").notNull(),
+    provider: text("provider").notNull(), // azure | test
+    scores: jsonb("scores").notNull(),
+    words: jsonb("words").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [index("pron_user_time_idx").on(t.userId, t.createdAt)],
+);
+
+/** Words the learner saved from listening/reading (feeds spaced repetition in Phase 5). */
+export const savedWords = pgTable(
+  "saved_words",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    language: text("language").notNull(),
+    term: text("term").notNull(),
+    meaning: text("meaning"),
+    source: text("source").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [uniqueIndex("saved_words_user_lang_term_uq").on(t.userId, t.language, t.term)],
+);
+
+export const writingSubmissions = pgTable(
+  "writing_submissions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    trackId: uuid("track_id")
+      .notNull()
+      .references(() => learningTracks.id, { onDelete: "cascade" }),
+    taskId: text("task_id").notNull(),
+    text: text("text").notNull(),
+    feedback: jsonb("feedback").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [index("writing_user_time_idx").on(t.userId, t.createdAt)],
+);
+
+/* ------------------------------------------------------------------ */
+/* Curriculum in the database (scales to thousands of lessons)         */
+/* ------------------------------------------------------------------ */
+
+/** A grammar/vocabulary/skill topic. One explanation and one video serve every lesson on the topic. */
+export const curriculumTopics = pgTable(
+  "curriculum_topics",
+  {
+    id: text("id").primaryKey(), // e.g. en-a1-g-to-be
+    language: text("language").notNull(),
+    level: text("level").notNull(),
+    kind: text("kind").notNull(), // grammar | vocabulary | skill
+    title: jsonb("title").notNull(), // L10n
+    explanation: jsonb("explanation"), // L10n, null until written
+    videoId: text("video_id"), // YouTube id
+    videoTitle: text("video_title"),
+    videoStatus: text("video_status").notNull().default("none"), // none | suggested | approved | rejected
+    status: text("status").notNull().default("draft"), // draft | published
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [index("topics_lang_level_idx").on(t.language, t.level)],
+);
+
+export const curriculumCourses = pgTable("curriculum_courses", {
+  id: text("id").primaryKey(), // e.g. en-a1
+  language: text("language").notNull(),
+  level: text("level").notNull(),
+  title: jsonb("title").notNull(),
+  sortOrder: smallint("sort_order").notNull().default(0),
+});
+
+export const curriculumUnits = pgTable(
+  "curriculum_units",
+  {
+    id: text("id").primaryKey(),
+    courseId: text("course_id")
+      .notNull()
+      .references(() => curriculumCourses.id, { onDelete: "cascade" }),
+    position: integer("position").notNull(),
+    title: jsonb("title").notNull(),
+  },
+  (t) => [index("units_course_idx").on(t.courseId, t.position)],
+);
+
+export const curriculumLessons = pgTable(
+  "curriculum_lessons",
+  {
+    id: text("id").primaryKey(),
+    courseId: text("course_id")
+      .notNull()
+      .references(() => curriculumCourses.id, { onDelete: "cascade" }),
+    unitId: text("unit_id")
+      .notNull()
+      .references(() => curriculumUnits.id, { onDelete: "cascade" }),
+    position: integer("position").notNull(),
+    title: jsonb("title").notNull(),
+    goal: jsonb("goal").notNull(),
+    topicId: text("topic_id").references(() => curriculumTopics.id, { onDelete: "set null" }),
+    /** Lesson body: explanation, vocabulary, pronunciation, examples, grammar, exercises, quiz, review. */
+    content: jsonb("content").notNull(),
+    source: text("source").notNull(), // handwritten | factory | ai
+    status: text("status").notNull().default("draft"), // draft | published | rejected
+    attribution: jsonb("attribution"),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [index("lessons_course_pos_idx").on(t.courseId, t.position), index("lessons_status_idx").on(t.status)],
+);
+
+/** One row per imported content source, so a build re-imports only when the data changed. */
+export const contentImports = pgTable("content_imports", {
+  source: text("source").primaryKey(), // e.g. tatoeba:de
+  hash: text("hash").notNull(),
+  lessons: integer("lessons").notNull(),
+  importedAt: timestamp("imported_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
 export const authSchema = { user, session, account, verification };
