@@ -359,4 +359,64 @@ export const aiUsage = pgTable(
   (t) => [index("ai_usage_time_idx").on(t.createdAt), index("ai_usage_user_time_idx").on(t.userId, t.createdAt)],
 );
 
+/* ------------------------------------------------------------------ */
+/* Phase 4: pronunciation, listening/reading, writing                  */
+/* ------------------------------------------------------------------ */
+
+/** Pronunciation attempts scored by the speech provider (never invented). */
+export const pronAttempts = pgTable(
+  "pron_attempts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    trackId: uuid("track_id")
+      .notNull()
+      .references(() => learningTracks.id, { onDelete: "cascade" }),
+    referenceText: text("reference_text").notNull(),
+    locale: text("locale").notNull(),
+    provider: text("provider").notNull(), // azure | test
+    scores: jsonb("scores").notNull(),
+    words: jsonb("words").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [index("pron_user_time_idx").on(t.userId, t.createdAt)],
+);
+
+/** Words the learner saved from listening/reading (feeds spaced repetition in Phase 5). */
+export const savedWords = pgTable(
+  "saved_words",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    language: text("language").notNull(),
+    term: text("term").notNull(),
+    meaning: text("meaning"),
+    source: text("source").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [uniqueIndex("saved_words_user_lang_term_uq").on(t.userId, t.language, t.term)],
+);
+
+export const writingSubmissions = pgTable(
+  "writing_submissions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    trackId: uuid("track_id")
+      .notNull()
+      .references(() => learningTracks.id, { onDelete: "cascade" }),
+    taskId: text("task_id").notNull(),
+    text: text("text").notNull(),
+    feedback: jsonb("feedback").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [index("writing_user_time_idx").on(t.userId, t.createdAt)],
+);
+
 export const authSchema = { user, session, account, verification };

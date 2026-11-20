@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { notFound, redirect } from "next/navigation";
-import { CheckCircle2, Circle, PlayCircle } from "lucide-react";
+import { CheckCircle2, Circle, PlayCircle, Headphones, BookOpen, PenLine, AudioLines } from "lucide-react";
+import { listSavedWords } from "@/lib/learner/skills";
+import { SavedWords } from "@/components/practice/SavedWords";
 import { Header } from "@/components/site/Header";
 import { getDictionary, type Dictionary } from "@/lib/i18n";
 import { isLocale, type Locale } from "@/lib/i18n/config";
@@ -28,6 +30,45 @@ export default async function LearnPage({ params }: PageProps<"/[lang]/learn">) 
   );
 }
 
+function Centers({ lang, dict }: { lang: Locale; dict: Dictionary }) {
+  const t = dict.practice;
+  const items = [
+    { key: "listening", icon: Headphones },
+    { key: "reading", icon: BookOpen },
+    { key: "writing", icon: PenLine },
+    { key: "pronunciation", icon: AudioLines },
+  ] as const;
+  return (
+    <section>
+      <h2 className="mb-3 font-semibold">{t.centersTitle}</h2>
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {items.map(({ key, icon: Icon }) => (
+          <Link key={key} href={`/${lang}/learn/${key}`} className="card p-4 transition-shadow hover:shadow-card" data-testid={`center-${key}`}>
+            <Icon className="size-6 text-brand" aria-hidden />
+            <h3 className="mt-2 font-semibold">{t[key][0]}</h3>
+            <p className="mt-0.5 text-xs text-muted">{t[key][1]}</p>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+async function Words({ lang, dict, userId, language }: { lang: Locale; dict: Dictionary; userId: string; language: string }) {
+  const words = await listSavedWords(db, userId, language);
+  return (
+    <section className="card p-5 sm:p-6">
+      <h2 className="mb-2 font-semibold">{dict.practice.myWords}</h2>
+      {words.length === 0 ? (
+        <p className="text-sm text-muted">{dict.practice.myWordsEmpty}</p>
+      ) : (
+        <SavedWords words={words} language={language} labels={{ remove: dict.practice.remove, listen: dict.placement.listen, noVoice: dict.lesson.noVoice }} />
+      )}
+      <span className="sr-only">{lang}</span>
+    </section>
+  );
+}
+
 async function Course({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const user = await requireUser(lang, `/${lang}/learn`);
   const track = await getActiveTrack(db, user.id);
@@ -36,10 +77,11 @@ async function Course({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const courses = coursesFor(track.targetLanguage);
   if (!courses.length) {
     return (
-      <>
-        <h1 className="mb-6 text-2xl font-bold sm:text-3xl">{t.title}</h1>
+      <div className="space-y-6">
+        <h1 className="text-2xl font-bold sm:text-3xl">{t.title}</h1>
         <p className="card p-5 text-muted">{t.noCourse}</p>
-      </>
+        <Centers lang={lang} dict={dict} />
+      </div>
     );
   }
   const course = courses[0];
@@ -55,6 +97,7 @@ async function Course({ lang, dict }: { lang: Locale; dict: Dictionary }) {
           <div className="h-full rounded-full bg-brand" style={{ width: `${(progress.size / ids.length) * 100}%` }} />
         </div>
       </div>
+      <Centers lang={lang} dict={dict} />
       {course.units.map((unit) => (
         <section key={unit.id} className="card p-5 sm:p-6">
           <h2 className="mb-3 font-semibold">{unit.title[lang]}</h2>
@@ -86,6 +129,7 @@ async function Course({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         </section>
       ))}
       <p className="text-sm text-faint">{t.moreSoon}</p>
+      <Words lang={lang} dict={dict} userId={user.id} language={track.targetLanguage} />
     </div>
   );
 }

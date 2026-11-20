@@ -32,3 +32,16 @@ export function fakeReport(turns: number): RoleplayReport {
     next_steps: ["[test] Practise have/has."],
   };
 }
+
+export function fakeWriting(text: string): import("./schemas").WritingFeedback {
+  return {
+    corrected_text: text.replace(/\bI has\b/g, "I have"),
+    errors: detect(text),
+    improved_version: "[test] Improved version.",
+    professional_version: "[test] Professional version.",
+    task_fit: "[test] Scripted task-fit feedback.",
+    estimated_level: "A2",
+    strengths: ["[test] Clear structure."],
+    next_steps: ["[test] Practise have/has."],
+  };
+}

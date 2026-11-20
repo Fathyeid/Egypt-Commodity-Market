@@ -1,5 +1,6 @@
 import "server-only";
 import { aiStatus } from "./ai/provider";
+import { speechStatus } from "./speech/provider";
 
 /**
  * Single source of truth for which external integrations are configured.
@@ -14,7 +15,7 @@ export function serviceStatus(): Record<ServiceKey, boolean> {
     google: has("GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"),
     email: has("RESEND_API_KEY", "EMAIL_FROM"),
     ai: aiStatus() === "live", // live only once the owner sets ANTHROPIC_API_KEY
-    speech: false, // Phase 4 — awaiting owner approval
+    speech: speechStatus() === "live", // live once the owner sets AZURE_SPEECH_KEY + AZURE_SPEECH_REGION
     payments: false, // Phase 6 — awaiting owner approval
   };
 }

@@ -11,13 +11,22 @@ export default defineConfig({
   use: { baseURL: `http://localhost:${PORT}`, trace: "off" },
   webServer: {
     command: `npm run start -- -p ${PORT}`,
-    env: { AUTH_RATE_LIMIT: "off", BETTER_AUTH_URL: `http://localhost:${PORT}`, AI_PROVIDER: "fake" },
+    env: { AUTH_RATE_LIMIT: "off", BETTER_AUTH_URL: `http://localhost:${PORT}`, AI_PROVIDER: "fake", SPEECH_PROVIDER: "fake" },
     url: `http://localhost:${PORT}/ar`,
     reuseExistingServer: false,
     timeout: 120_000,
   },
   projects: [
-    { name: "desktop", use: { ...devices["Desktop Chrome"], viewport: { width: 1280, height: 860 } } },
+    {
+      name: "desktop",
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 1280, height: 860 },
+        // Fake microphone so the pronunciation pipeline (record → WAV → API) runs end to end.
+        permissions: ["microphone"],
+        launchOptions: { args: ["--use-fake-ui-for-media-stream", "--use-fake-device-for-media-stream"] },
+      },
+    },
     { name: "mobile", use: { ...devices["Pixel 7"] }, testMatch: /responsive\.spec\.ts/ },
   ],
 });

@@ -2,10 +2,11 @@
 
 AI-powered language learning platform (Arabic RTL / English LTR, light design with optional dark mode).
 
-**Status:** Phases 1–3 complete.
+**Status:** Phases 1–4 complete.
 - **Phase 1:** visual identity, landing page, sign-up/sign-in, onboarding, profile, learning tracks, and a dashboard built on real data.
 - **Phase 2:** adaptive placement test (EN/DE), lesson engine with 8 sections and 7 exercise types, and the first A1 lessons for English and German.
 - **Phase 3:** AI tutor (5 personas, instant corrections, learner memory) and 10 role-play scenarios with reports, via Claude. Off until `ANTHROPIC_API_KEY` is set.
+- **Phase 4:** listening and reading centres (tap-to-translate, saved words, graded questions), AI writing assistant, and pronunciation coach (Azure Speech; off until `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` are set).
 See [`docs/plan/implementation-plan.md`](docs/plan/implementation-plan.md) for all phases and [`docs/research/`](docs/research) for the competitor research.
 
 ## Stack
@@ -44,7 +45,8 @@ Every external service is off until configured, and the UI says so:
 - **Google sign-in:** set `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` (redirect URI: `<BETTER_AUTH_URL>/api/auth/callback/google`).
 - **Email (password reset):** set `RESEND_API_KEY` and `EMAIL_FROM`.
 - **AI tutor & role-play:** set `ANTHROPIC_API_KEY` (optionally `AI_MODEL`, `AI_EFFORT`, `AI_DAILY_MESSAGES_PER_USER`, `AI_MONTHLY_BUDGET_USD`).
-- **Speech assessment, payments:** later phases, enabled only after owner approval.
+- **Pronunciation assessment:** set `AZURE_SPEECH_KEY` + `AZURE_SPEECH_REGION`.
+- **Payments:** a later phase, enabled only after owner approval.
 
 ## Layout
 

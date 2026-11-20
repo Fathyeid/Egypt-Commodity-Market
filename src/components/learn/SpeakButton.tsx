@@ -25,6 +25,28 @@ function subscribeVoices(cb: () => void) {
   return () => window.speechSynthesis.removeEventListener("voiceschanged", onChange);
 }
 
+/** Speak a list of lines in order with the best available voice. Returns false if no voice exists. */
+export function speakLines(lines: string[], language: string, onEnd?: () => void): boolean {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) return false;
+  const voices = window.speechSynthesis.getVoices();
+  const tag = BCP47[language] ?? language;
+  const voice = voices.find((v) => v.lang === tag) ?? voices.find((v) => v.lang.toLowerCase().startsWith(language));
+  if (!voice) return false;
+  window.speechSynthesis.cancel();
+  lines.forEach((line, i) => {
+    const u = new SpeechSynthesisUtterance(line);
+    u.voice = voice;
+    u.lang = voice.lang;
+    u.rate = 0.9;
+    if (i === lines.length - 1 && onEnd) {
+      u.onend = onEnd;
+      u.onerror = onEnd;
+    }
+    window.speechSynthesis.speak(u);
+  });
+  return true;
+}
+
 /** Uses the browser's built-in speech synthesis (free, on-device). Shows an honest note if no voice exists. */
 function useVoice(language: string) {
   const voices = useSyncExternalStore(subscribeVoices, readVoices, () => null);

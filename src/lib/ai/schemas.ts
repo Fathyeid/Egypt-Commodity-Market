@@ -34,3 +34,15 @@ export const RoleplayReport = z.object({
   next_steps: z.array(z.string()),
 });
 export type RoleplayReport = z.infer<typeof RoleplayReport>;
+
+export const WritingFeedback = z.object({
+  corrected_text: z.string().describe("The learner's text with only the mistakes fixed (keep their wording otherwise)"),
+  errors: z.array(Correction).describe("Each real mistake, max 12"),
+  improved_version: z.string().describe("A more natural version at the learner's level + one step"),
+  professional_version: z.string().describe("A polished, professional version suitable for the task type"),
+  task_fit: z.string().describe("Does the text answer the task and meet the length? 1–2 sentences"),
+  estimated_level: z.enum(["A1", "A2", "B1", "B2", "C1", "C2"]),
+  strengths: z.array(z.string()).describe("2–3 specific strengths"),
+  next_steps: z.array(z.string()).describe("2–3 concrete things to practise"),
+});
+export type WritingFeedback = z.infer<typeof WritingFeedback>;

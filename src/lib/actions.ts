@@ -231,3 +231,59 @@ export async function finishRoleplayAction(lang: string, conversationId: string)
   revalidatePath("/[lang]", "layout");
   return { ok: true };
 }
+
+/* ------------------------- Phase 4: listening, reading, writing ------------------------- */
+
+import * as skills from "@/lib/learner/skills";
+
+export async function submitTextAnswersAction(textId: string, answers: unknown) {
+  const userId = await uid();
+  if (!userId) return { ok: false as const, error: "unauthorized" };
+  const parsed = z.record(z.string().max(10), z.number().int().min(0).max(10)).safeParse(answers);
+  if (!parsed.success || typeof textId !== "string") return { ok: false as const, error: "invalid" };
+  try {
+    const result = await skills.submitTextAnswers(db, userId, textId, parsed.data);
+    revalidatePath("/[lang]", "layout");
+    return { ok: true as const, result };
+  } catch (e) {
+    return fail(e) as { ok: false; error: string };
+  }
+}
+
+export async function saveWordAction(input: unknown): Promise<ActionResult> {
+  const userId = await uid();
+  if (!userId) return { ok: false, error: "unauthorized" };
+  const parsed = z.object({ language: z.string().regex(/^[a-z]{2,3}$/), term: z.string().trim().min(1).max(80), meaning: z.string().max(200).nullable(), source: z.string().max(60) }).safeParse(input);
+  if (!parsed.success) return { ok: false, error: "invalid" };
+  try {
+    await skills.saveWord(db, userId, parsed.data);
+  } catch (e) {
+    return fail(e);
+  }
+  return { ok: true };
+}
+
+export async function deleteSavedWordAction(id: string): Promise<ActionResult> {
+  const userId = await uid();
+  if (!userId) return { ok: false, error: "unauthorized" };
+  const parsed = z.uuid().safeParse(id);
+  if (!parsed.success) return { ok: false, error: "invalid" };
+  await skills.deleteSavedWord(db, userId, parsed.data);
+  revalidatePath("/[lang]", "layout");
+  return { ok: true };
+}
+
+export async function submitWritingAction(lang: string, taskId: string, text: string): Promise<ActionResult> {
+  const userId = await uid();
+  if (!userId) return { ok: false, error: "unauthorized" };
+  const body = z.string().trim().min(1).max(4000).safeParse(text);
+  if (!body.success || typeof taskId !== "string") return { ok: false, error: "invalid" };
+  const locale: Locale = isLocale(lang) ? lang : "ar";
+  let id: string;
+  try {
+    id = (await skills.submitWriting(db, userId, taskId, body.data, locale)).id;
+  } catch (e) {
+    return convoFail(e);
+  }
+  redirect(`/${locale}/learn/writing/${id}`);
+}
