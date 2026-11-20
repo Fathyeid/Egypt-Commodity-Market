@@ -66,47 +66,57 @@ export function LessonPlayer({ lang, language, lesson, t, common, listenLabel, b
               <p className="mt-0.5"><Bidi text={l(lesson.goal)} /></p>
             </div>
             <p className="text-lg leading-relaxed"><Bidi text={l(lesson.explanation)} /></p>
+            <table className="w-full border-collapse overflow-hidden rounded-xl text-sm" data-testid="lesson-plan">
+              <caption className="mb-2 text-start font-semibold">{t.planTitle}</caption>
+              <tbody>
+                {SECTIONS.slice(1).map((key, n) => {
+                  const count = key === "vocabulary" ? lesson.vocabulary.length : key === "pronunciation" ? lesson.pronunciation.length : key === "examples" ? lesson.examples.length : key === "exercises" ? lesson.exercises.length : key === "quiz" ? lesson.quiz.length : key === "review" ? lesson.review.length : null;
+                  return (
+                    <tr key={key} className="border-b border-line last:border-0 even:bg-surface-2">
+                      <td className="w-10 px-3 py-2 font-bold text-brand">{n + 1}</td>
+                      <td className="px-3 py-2">
+                        <button type="button" className="font-semibold hover:underline" onClick={() => setI(n + 1)}>{t.sections[key]}</button>
+                      </td>
+                      <td className="px-3 py-2 text-end text-muted">{count !== null ? count : ""}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
         )}
 
         {section === "vocabulary" && (
-          <ul className="divide-y divide-line">
-            {lesson.vocabulary.map((v) => (
-              <li key={v.term} className="flex flex-wrap items-center gap-x-4 gap-y-1 py-3">
-                <span dir="auto" lang={language} className="min-w-32 text-lg font-semibold">{v.term}</span>
-                <span className="text-muted"><Bidi text={l(v.meaning)} /></span>
-                <span className="ms-auto"><SpeakButton text={v.term} language={language} label={listenLabel} noVoiceLabel={t.noVoice} size="sm" /></span>
-                {v.example && <p dir="auto" lang={language} className="w-full text-sm text-faint">{v.example}</p>}
-              </li>
-            ))}
-          </ul>
+          <NumberedTable
+            head={[t.colWord, t.colMeaning]}
+            rows={lesson.vocabulary.map((v) => ({ key: v.term, text: v.term, sub: l(v.meaning), extra: v.example }))}
+            language={language}
+            listenLabel={listenLabel}
+            noVoice={t.noVoice}
+          />
         )}
 
         {section === "pronunciation" && (
           <div className="space-y-4">
             <p className="rounded-xl bg-surface-2 px-4 py-2.5 text-sm text-muted">{t.pronNote}</p>
-            {lesson.pronunciation.map((p) => (
-              <div key={p.text} className="rounded-xl border border-line p-4">
-                <p dir="auto" lang={language} className="mb-2 text-lg font-semibold">{p.text}</p>
-                <p className="mb-3 text-sm text-muted"><Bidi text={l(p.tip)} /></p>
-                <SpeakButton text={p.text} language={language} label={listenLabel} noVoiceLabel={t.noVoice} />
-              </div>
-            ))}
+            <NumberedTable
+              head={[t.colSentence, t.colTip]}
+              rows={lesson.pronunciation.map((p) => ({ key: p.text, text: p.text, sub: l(p.tip) }))}
+              language={language}
+              listenLabel={listenLabel}
+              noVoice={t.noVoice}
+            />
           </div>
         )}
 
         {section === "examples" && (
-          <ul className="space-y-3">
-            {lesson.examples.map((e) => (
-              <li key={e.text} className="rounded-xl border border-line p-4">
-                <div className="flex flex-wrap items-start gap-3">
-                  <p dir="auto" lang={language} className="flex-1 text-lg font-semibold">{e.text}</p>
-                  <SpeakButton text={e.text} language={language} label={listenLabel} noVoiceLabel={t.noVoice} size="sm" />
-                </div>
-                <p className="mt-1 text-sm text-muted"><Bidi text={l(e.meaning)} /></p>
-              </li>
-            ))}
-          </ul>
+          <NumberedTable
+            head={[t.colSentence, t.colMeaning]}
+            rows={lesson.examples.map((e) => ({ key: e.text, text: e.text, sub: l(e.meaning) }))}
+            language={language}
+            listenLabel={listenLabel}
+            noVoice={t.noVoice}
+          />
         )}
 
         {section === "grammar" && (
@@ -145,14 +155,14 @@ export function LessonPlayer({ lang, language, lesson, t, common, listenLabel, b
 
         {section === "review" && (
           <div className="space-y-4">
-            <ul className="space-y-2">
+            <ol className="space-y-2">
               {lesson.review.map((r, n) => (
-                <li key={n} className="flex gap-2">
-                  <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-brand" aria-hidden />
-                  <span><Bidi text={l(r)} /></span>
+                <li key={n} className="flex gap-3 rounded-xl border border-line p-3">
+                  <span className="grid size-7 shrink-0 place-items-center rounded-full bg-brand-soft text-sm font-bold text-brand">{n + 1}</span>
+                  <span className="self-center"><Bidi text={l(r)} /></span>
                 </li>
               ))}
-            </ul>
+            </ol>
             <div className="flex flex-wrap gap-3 pt-2">
               <Link href={backHref} className="btn-ghost">{t.backToCourse}</Link>
               {nextHref && <Link href={nextHref} className="btn-primary">{nextLabel}</Link>}
@@ -260,6 +270,37 @@ function Quiz({ lesson, lang, language, labels, t, getStarted }: { lesson: Publi
           {t.submitQuiz}
         </button>
       )}
+    </div>
+  );
+}
+
+/** Numbered, zebra-striped table: # | target-language text | meaning/tip | listen. */
+function NumberedTable({ head, rows, language, listenLabel, noVoice }: { head: [string, string]; rows: { key: string; text: string; sub: string; extra?: string }[]; language: string; listenLabel: string; noVoice: string }) {
+  return (
+    <div className="overflow-x-auto rounded-xl border border-line">
+      <table className="w-full border-collapse text-sm" data-testid="numbered-table">
+        <thead className="bg-brand text-brand-ink">
+          <tr>
+            <th className="w-10 px-3 py-2 text-start">#</th>
+            <th className="px-3 py-2 text-start">{head[0]}</th>
+            <th className="px-3 py-2 text-start">{head[1]}</th>
+            <th className="w-12 px-2 py-2" aria-label={listenLabel} />
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r, n) => (
+            <tr key={r.key + n} className="border-t border-line align-top even:bg-surface-2">
+              <td className="px-3 py-2.5 font-bold text-brand">{n + 1}</td>
+              <td className="px-3 py-2.5">
+                <span dir="auto" lang={language} className="block text-base font-semibold">{r.text}</span>
+                {r.extra && <span dir="auto" lang={language} className="mt-0.5 block text-xs text-faint">{r.extra}</span>}
+              </td>
+              <td className="px-3 py-2.5 text-muted"><Bidi text={r.sub} /></td>
+              <td className="px-2 py-2"><SpeakButton text={r.text} language={language} label={listenLabel} noVoiceLabel={noVoice} size="sm" /></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

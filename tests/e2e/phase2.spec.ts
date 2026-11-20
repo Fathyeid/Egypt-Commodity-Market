@@ -32,10 +32,10 @@ test("lesson: 8 sections, practice feedback, server-graded quiz, progress saved"
   await page.waitForURL("**/ar/learn/en-a1-u1-l1");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("التحية والتعارف");
   const sections = ["شرح الدرس", "كلمات جديدة", "النطق", "أمثلة", "القواعد", "تمارين", "اختبار قصير", "مراجعة"];
-  for (const s of sections) await expect(page.getByRole("button", { name: new RegExp(s) })).toBeVisible();
+  for (const s of sections) await expect(page.getByRole("button", { name: new RegExp(s) }).first()).toBeVisible();
 
   // Practice: wrong answer → explained feedback.
-  await page.getByRole("button", { name: /تمارين/ }).click();
+  await page.getByRole("button", { name: /تمارين/ }).first().click();
   const e1 = page.getByTestId("exercise-e1");
   await e1.getByRole("radio", { name: "is" }).click();
   await e1.getByRole("button", { name: "تحقق" }).click();
@@ -46,7 +46,7 @@ test("lesson: 8 sections, practice feedback, server-graded quiz, progress saved"
   await expect(e1.getByRole("status")).toContainText("إجابة صحيحة");
 
   // Quiz: all correct.
-  await page.getByRole("button", { name: /اختبار قصير/ }).click();
+  await page.getByRole("button", { name: /اختبار قصير/ }).first().click();
   await page.getByTestId("quiz-q1").getByRole("radio", { name: "are" }).click();
   await page.getByTestId("quiz-q2").getByRole("textbox").fill("is");
   await page.getByTestId("quiz-q3").getByRole("textbox").fill("I'm Sara");

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { generateCourses, type CorpusRow } from "@/lib/factory/generate";
+import { generateCourses, LESSONS_PER_LEVEL, type CorpusRow } from "@/lib/factory/generate";
 import { gradeExercise, toPublicExercise } from "@/content";
 import type { Exercise, Lesson } from "@/content/types";
 
@@ -50,14 +50,14 @@ describe("content factory", () => {
   const rows = corpus(24000);
   const courses = generateCourses("de", rows);
 
-  it("builds six levels, capped at 300 lessons each, with stable unique ids", () => {
+  it("builds six levels, capped at LESSONS_PER_LEVEL each, with stable unique ids", () => {
     expect(courses.map((c) => c.level)).toEqual(["A1", "A2", "B1", "B2", "C1", "C2"]);
     const ids = courses.flatMap((c) => c.units.flatMap((u) => u.lessons.map((l) => l.id)));
     expect(new Set(ids).size).toBe(ids.length);
     for (const c of courses) {
       const n = c.units.reduce((s, u) => s + u.lessons.length, 0);
       expect(n).toBeGreaterThan(0);
-      expect(n).toBeLessThanOrEqual(300);
+      expect(n).toBeLessThanOrEqual(LESSONS_PER_LEVEL);
     }
     expect(generateCourses("de", rows)[0].units[0].lessons[0]).toEqual(courses[0].units[0].lessons[0]);
   });

@@ -19,7 +19,24 @@ export function TopicPanel({ topic, lang, label }: { topic: TopicInfo; lang: "ar
           />
         </div>
       )}
-      {topic.explanation && <p dir="auto" className="leading-relaxed"><Bidi text={topic.explanation[lang]} /></p>}
+      {topic.explanation && (
+        <ol className="space-y-2" data-testid="topic-points">
+          {splitPoints(topic.explanation[lang]).map((point, n) => (
+            <li key={n} className="flex gap-3 rounded-xl bg-surface-2 p-3">
+              <span className="grid size-7 shrink-0 place-items-center rounded-full bg-brand text-sm font-bold text-brand-ink">{n + 1}</span>
+              <span dir="auto" className="self-center leading-relaxed"><Bidi text={point} /></span>
+            </li>
+          ))}
+        </ol>
+      )}
     </section>
   );
+}
+
+/** Splits an explanation into numbered points (one sentence each), keeping examples attached. */
+export function splitPoints(text: string): string[] {
+  return text
+    .split(/(?<=[.!?؟])\s+(?=[^\s])/u)
+    .map((p) => p.trim())
+    .filter(Boolean);
 }

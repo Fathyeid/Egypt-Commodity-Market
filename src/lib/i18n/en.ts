@@ -257,6 +257,11 @@ const en: Dictionary = {
     lessonNotFound: "This lesson isn't in your active language.",
   },
   lesson: {
+    planTitle: "Lesson plan",
+    colWord: "Word / phrase",
+    colMeaning: "Meaning",
+    colSentence: "Sentence",
+    colTip: "Pronunciation tip",
     lessonVideo: "Lesson video",
     attribution: "Sentences and translations from",
     sections: {

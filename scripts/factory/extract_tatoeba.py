@@ -33,7 +33,7 @@ LANGS = {  # Tatoeba ISO 639-3 -> app code
     "tur": "tr", "rus": "ru", "cmn": "zh", "jpn": "ja", "kor": "ko", "ara": "ar",
 }
 NO_SPACE = {"cmn", "jpn"}
-MAX_PAIRS = int(os.environ.get("MAX_PAIRS", "36000"))
+MAX_PAIRS = int(os.environ.get("MAX_PAIRS", "62000"))
 BASE = "https://downloads.tatoeba.org/exports"
 OUT = sys.argv[1] if len(sys.argv) > 1 else "data/tatoeba"
 CACHE = os.environ.get("TATOEBA_CACHE", "/tmp/tatoeba")

@@ -255,6 +255,11 @@ const ar = {
     lessonNotFound: "الدرس غير موجود في لغتك النشطة.",
   },
   lesson: {
+    planTitle: "خطة الدرس",
+    colWord: "الكلمة / العبارة",
+    colMeaning: "المعنى",
+    colSentence: "الجملة",
+    colTip: "نصيحة النطق",
     lessonVideo: "فيديو الدرس",
     attribution: "الجمل والترجمات من مشروع",
     sections: {

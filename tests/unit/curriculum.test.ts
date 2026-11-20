@@ -26,7 +26,7 @@ describe("curriculum (database)", () => {
     const base = (await getLesson(db, "en-a1-u1-l1"))!;
     const { id: _id, title, goal, ...content } = base.lesson;
     void _id;
-    await db.insert(schema.curriculumLessons).values({ id: "test-draft", courseId: "en-a1", unitId: "en-a1-u1", position: 999, title, goal, content, topicId: "test-topic", source: "factory", status: "draft" });
+    await db.insert(schema.curriculumLessons).values({ id: "test-draft", courseId: "en-a1", unitId: "en-a1-u1", position: 999, title, goal, content, topicId: "test-topic", source: "ai", status: "draft" });
 
     expect(await getLesson(db, "test-draft")).toBeNull();
     expect(outlineLessonIds((await coursesForLanguage(db, "en"))[0])).not.toContain("test-draft");
