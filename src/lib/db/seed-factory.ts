@@ -6,11 +6,12 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { gunzipSync } from "node:zlib";
 import { and, eq, like, ne, notInArray, sql } from "drizzle-orm";
 import type { PgDatabase } from "drizzle-orm/pg-core";
 import { contentImports, curriculumCourses, curriculumLessons, curriculumUnits } from "./schema";
-import { generateCourses, type CorpusRow } from "../factory/generate";
+import { generateCourses } from "../factory/generate";
+import { readCorpus } from "../factory/corpus";
+export { readCorpus };
 import { FACTORY_LEVELS } from "../factory/syllabus";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -19,13 +20,6 @@ type Db = PgDatabase<any, any, any>;
 const FACTORY_POSITION = 1000; // after any hand-written lessons in the same course
 const BATCH = 200;
 
-export function readCorpus(file: string): CorpusRow[] {
-  return gunzipSync(readFileSync(file))
-    .toString("utf8")
-    .split("\n")
-    .filter(Boolean)
-    .map((line) => JSON.parse(line) as CorpusRow);
-}
 
 /**
  * FACTORY_STATUS=draft keeps new lessons hidden until an admin approves them (used by CI and tests);
@@ -40,7 +34,7 @@ export async function seedFactoryCurriculum(db: Db, dir = join(process.cwd(), "d
   for (const file of readdirSync(dir).filter((f) => f.endsWith(".jsonl.gz")).sort()) {
     const language = file.replace(".jsonl.gz", "");
     const raw = readFileSync(join(dir, file));
-    const hash = createHash("sha256").update(raw).update(`factory-v3:${status}`).digest("hex");
+    const hash = createHash("sha256").update(raw).update(`factory-v4:${status}`).digest("hex");
     const source = `tatoeba:${language}`;
     const [prev] = await db.select().from(contentImports).where(eq(contentImports.source, source));
     if (prev?.hash === hash) {
@@ -68,8 +62,9 @@ export async function seedFactoryCurriculum(db: Db, dir = join(process.cwd(), "d
         position: FACTORY_POSITION + i,
         title: l.title,
         goal: l.goal,
-        content: l.content,
-        attribution: l.attribution,
+        // Content is built on demand from the corpus (src/lib/factory/runtime.ts).
+        content: {},
+        attribution: null,
         source: "factory",
         status,
       }));

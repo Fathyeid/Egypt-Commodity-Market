@@ -6,6 +6,7 @@ import { and, asc, eq, inArray } from "drizzle-orm";
 import type { PgDatabase } from "drizzle-orm/pg-core";
 import { curriculumCourses, curriculumLessons, curriculumTopics, curriculumUnits } from "@/lib/db/schema";
 import type { L10n, Lesson } from "@/content/types";
+import { factoryLesson } from "@/lib/factory/runtime";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Db = PgDatabase<any, any, any>;
@@ -66,9 +67,11 @@ export async function getLesson(db: Db, lessonId: string, opts: { includeDrafts?
     const [t] = await db.select().from(curriculumTopics).where(eq(curriculumTopics.id, row.topicId));
     if (t) topic = { id: t.id, title: t.title as L10n, explanation: t.status === "published" ? (t.explanation as L10n | null) : null, videoId: t.videoStatus === "approved" ? t.videoId : null, videoTitle: t.videoTitle };
   }
-  const content = row.content as Omit<Lesson, "id" | "title" | "goal">;
+  const built = row.source === "factory" ? factoryLesson(row.id) : null;
+  if (row.source === "factory" && !built) return null;
+  const content = (built?.content ?? row.content) as Omit<Lesson, "id" | "title" | "goal">;
   const lesson: Lesson = { id: row.id, title: row.title as L10n, goal: row.goal as L10n, ...content };
-  return { lesson, language: course.language, level: course.level, courseId: course.id, unitTitle: unit.title as L10n, position: row.position, topic, status: row.status, source: row.source, video: row.videoId ? { id: row.videoId, title: row.videoTitle } : null, attribution: (row.attribution ?? null) as LessonAttribution | null };
+  return { lesson, language: course.language, level: course.level, courseId: course.id, unitTitle: unit.title as L10n, position: row.position, topic, status: row.status, source: row.source, video: row.videoId ? { id: row.videoId, title: row.videoTitle } : null, attribution: (built?.attribution ?? row.attribution ?? null) as LessonAttribution | null };
 }
 
 /** Next published lesson in the same course, by position. */
@@ -85,11 +88,16 @@ export async function nextLessonId(db: Db, courseId: string, position: number) {
 export async function lessonVocabulary(db: Db, ids: string[]) {
   if (!ids.length) return new Map<string, { language: string; terms: string[] }>();
   const rows = await db
-    .select({ id: curriculumLessons.id, content: curriculumLessons.content, language: curriculumCourses.language })
+    .select({ id: curriculumLessons.id, content: curriculumLessons.content, source: curriculumLessons.source, language: curriculumCourses.language })
     .from(curriculumLessons)
     .innerJoin(curriculumCourses, eq(curriculumCourses.id, curriculumLessons.courseId))
     .where(inArray(curriculumLessons.id, ids));
-  return new Map(rows.map((r) => [r.id, { language: r.language, terms: ((r.content as { vocabulary?: { term: string }[] }).vocabulary ?? []).map((v) => v.term) }]));
+  return new Map(
+    rows.map((r) => {
+      const content = (r.source === "factory" ? factoryLesson(r.id)?.content : r.content) as { vocabulary?: { term: string }[] } | undefined;
+      return [r.id, { language: r.language, terms: (content?.vocabulary ?? []).map((v) => v.term) }];
+    }),
+  );
 }
 
 /** Published lessons of one unit, in order (for the unit checkpoint). */
@@ -103,6 +111,11 @@ export async function unitLessons(db: Db, unitId: string) {
     .where(and(eq(curriculumLessons.unitId, unitId), eq(curriculumLessons.status, "published")))
     .orderBy(asc(curriculumLessons.position));
   if (!rows.length) return null;
-  const lessons: Lesson[] = rows.map((r) => ({ id: r.id, title: r.title as L10n, goal: r.goal as L10n, ...(r.content as Omit<Lesson, "id" | "title" | "goal">) }));
+  const lessons: Lesson[] = rows.map((r) => ({
+    id: r.id,
+    title: r.title as L10n,
+    goal: r.goal as L10n,
+    ...((r.source === "factory" ? factoryLesson(r.id)?.content : r.content) as Omit<Lesson, "id" | "title" | "goal">),
+  })).filter((l) => Array.isArray(l.quiz));
   return { unitId, title: unit.title as L10n, courseId: course.id, level: course.level, language: course.language, lessons };
 }

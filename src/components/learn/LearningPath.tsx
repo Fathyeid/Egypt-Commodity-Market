@@ -18,7 +18,7 @@ const THEME_ICONS: Record<string, LucideIcon> = {
 const TONES = ["bg-brand-soft text-brand", "bg-accent-soft text-accent", "bg-surface-2 text-text", "bg-danger-soft text-danger"];
 
 function unitIcon(unitId: string): LucideIcon {
-  const theme = unitId.split("-fu-")[1];
+  const theme = unitId.split("-fu-")[1]?.replace(/-\d+$/, "");
   return (theme && THEME_ICONS[theme]) || BookOpen;
 }
 

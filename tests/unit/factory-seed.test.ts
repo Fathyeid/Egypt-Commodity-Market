@@ -46,25 +46,25 @@ describe("factory import (database)", () => {
     await seedFactoryCurriculum(db, dir, (m) => logs.push(m), "draft");
     expect(logs.at(-1)).toContain("unchanged");
 
-    const [first, second] = await sql`select id, content from curriculum_lessons where course_id = 'fr-a1' order by position limit 2`;
+    const [first, second] = await sql`select id from curriculum_lessons where course_id = 'fr-a1' order by position limit 2`;
     await sql`update curriculum_lessons set status = 'published' where id = ${first.id}`;
-    await sql`update curriculum_lessons set status = 'rejected' where id = ${second.id}`;
+    await sql`update curriculum_lessons set status = 'rejected', title = '{"ar":"x","en":"kept"}' where id = ${second.id}`;
     writeCorpus(dir, 600, " !");
     await seedFactoryCurriculum(db, dir, (m) => logs.push(m), "draft");
-    const [pub] = await sql`select content, status from curriculum_lessons where id = ${first.id}`;
-    expect(pub.status).toBe("published"); // review status is kept…
-    expect(JSON.stringify(pub.content)).toContain(" !"); // …while generated content is refreshed
-    const [rej] = await sql`select content, status from curriculum_lessons where id = ${second.id}`;
+    const [pub] = await sql`select status, content from curriculum_lessons where id = ${first.id}`;
+    expect(pub.status).toBe("published"); // review status is kept
+    expect(pub.content).toEqual({}); // content is built on demand, not stored
+    const [rej] = await sql`select status, title from curriculum_lessons where id = ${second.id}`;
     expect(rej.status).toBe("rejected");
-    expect(rej.content).toEqual(second.content); // rejected lessons are never touched
+    expect(rej.title.en).toBe("kept"); // rejected lessons are never touched
 
     // A much smaller corpus drops lessons it no longer produces, except rejected ones.
+    const [{ before }] = await sql`select count(*)::int as before from curriculum_lessons where course_id like 'fr-%'`;
     writeCorpus(dir, 120, " zzz");
     await seedFactoryCurriculum(db, dir, (m) => logs.push(m), "draft");
     expect(logs.some((m) => m.includes("outdated"))).toBe(true);
-    const rows = await sql`select id, status, content::text like '%zzz%' as fresh from curriculum_lessons where course_id like 'fr-%'`;
-    expect(rows.filter((r) => !r.fresh).map((r) => r.id)).toEqual([second.id]);
-    const visible = (await coursesForLanguage(db, "fr")).flatMap((c) => c.units.flatMap((u) => u.lessons.map((l) => l.id)));
-    expect(visible).toEqual(rows.filter((r) => r.status === "published").map((r) => r.id));
+    const rows = await sql`select id, status from curriculum_lessons where course_id like 'fr-%'`;
+    expect(rows.length).toBeLessThan(before);
+    expect(rows.some((r) => r.id === second.id && r.status === "rejected")).toBe(true);
   });
 });

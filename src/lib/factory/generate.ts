@@ -38,7 +38,9 @@ export type FactoryCourse = { id: string; language: string; level: FactoryLevel;
 
 export const LESSON_SIZE = 14;
 export const MIN_LESSON_SIZE = 10;
-export const LESSONS_PER_LEVEL = 300;
+export const LESSONS_PER_LEVEL = 700;
+/** Big themes are split into units of at most this many lessons. */
+export const UNIT_SIZE = 20;
 const NO_SPACE = new Set(["zh", "ja"]);
 
 export const LANGUAGE_NAMES: Record<string, L10n> = {
@@ -116,7 +118,7 @@ function exampleTip(language: string): L10n {
     : { ar: "استمع ثم كرّر الجملة بنفس السرعة والإيقاع، واربط الكلمات ببعضها.", en: "Listen, then repeat at the same speed and rhythm, linking the words together." };
 }
 
-export function buildLesson(language: string, level: FactoryLevel, theme: Theme, n: number, rows: CorpusRow[], pool: CorpusRow[]): FactoryLesson {
+export function buildLesson(language: string, level: FactoryLevel, theme: Theme, n: number, rows: CorpusRow[], pool: CorpusRow[], unitId?: string): FactoryLesson {
   const lvl = level.toLowerCase();
   const id = `${language}-${lvl}-f-${theme.id}-${n}`;
   const rand = rng(id);
@@ -200,7 +202,7 @@ export function buildLesson(language: string, level: FactoryLevel, theme: Theme,
 
   return {
     id,
-    unitId: `${language}-${lvl}-fu-${theme.id}`,
+    unitId: unitId ?? `${language}-${lvl}-fu-${theme.id}`,
     title: { ar: `${theme.title.ar} (${n})`, en: `${theme.title.en} (${n})` },
     goal: {
       ar: `أن تفهم وتبني ${rows.length} جمل حقيقية عن «${theme.title.ar}» في المستوى ${level}.`,
@@ -233,21 +235,27 @@ export function buildLesson(language: string, level: FactoryLevel, theme: Theme,
   };
 }
 
-/** Builds up to LESSONS_PER_LEVEL lessons for each CEFR level of one language. */
-export function generateCourses(language: string, rows: CorpusRow[]): FactoryCourse[] {
+export type PlannedLesson = { id: string; n: number; theme: Theme; unitId: string; rows: CorpusRow[] };
+export type PlannedUnit = { id: string; title: L10n; lessons: PlannedLesson[] };
+export type PlannedLevel = { id: string; level: FactoryLevel; title: L10n; band: CorpusRow[]; units: PlannedUnit[] };
+
+/**
+ * Plans each CEFR level (which sentences go into which lesson and unit) without building
+ * lesson content. Cheap enough to run at request time; lessons are built on demand.
+ */
+export function planCourses(language: string, rows: CorpusRow[]): PlannedLevel[] {
   const lang = LANGUAGE_NAMES[language] ?? { ar: language, en: language };
-  const courses: FactoryCourse[] = [];
+  const levels: PlannedLevel[] = [];
   for (const [level, band] of bandRows(rows)) {
     const lvl = level.toLowerCase();
     const groups = [...assignThemes(band, level, language)].filter(([, rs]) => rs.length >= MIN_LESSON_SIZE);
-    // Round-robin across themes so a capped level still covers every theme.
     const chunks = new Map<Theme, CorpusRow[][]>();
     for (const [theme, rs] of groups) {
       const cs: CorpusRow[][] = [];
       for (let i = 0; i + MIN_LESSON_SIZE <= rs.length; i += LESSON_SIZE) cs.push(rs.slice(i, i + LESSON_SIZE));
       chunks.set(theme, cs);
     }
-    // Units follow the syllabus order; mixed practice comes last.
+    // Round-robin across themes so a capped level still covers every theme; syllabus order, mixed last.
     const order = [...THEMES, MIXED];
     const picked = new Map<Theme, CorpusRow[][]>([...chunks.keys()].sort((a, b) => order.indexOf(a) - order.indexOf(b)).map((th) => [th, []]));
     let total = 0;
@@ -262,18 +270,34 @@ export function generateCourses(language: string, rows: CorpusRow[]): FactoryCou
       }
       if (!any) break;
     }
-    const units: FactoryUnit[] = [];
+    const units: PlannedUnit[] = [];
     for (const [theme, cs] of picked) {
-      if (!cs.length) continue;
-      units.push({
-        id: `${language}-${lvl}-fu-${theme.id}`,
-        title: theme.title,
-        lessons: cs.map((c, i) => buildLesson(language, level, theme, i + 1, c, band)),
-      });
+      for (let start = 0, part = 1; start < cs.length; start += UNIT_SIZE, part++) {
+        const unitId = `${language}-${lvl}-fu-${theme.id}${part > 1 ? `-${part}` : ""}`;
+        const title = part > 1 ? { ar: `${theme.title.ar} ${part}`, en: `${theme.title.en} ${part}` } : theme.title;
+        units.push({
+          id: unitId,
+          title,
+          lessons: cs.slice(start, start + UNIT_SIZE).map((c, i) => ({ id: `${language}-${lvl}-f-${theme.id}-${start + i + 1}`, n: start + i + 1, theme, unitId, rows: c })),
+        });
+      }
     }
-    if (units.length) {
-      courses.push({ id: `${language}-${lvl}`, language, level, title: { ar: `${lang.ar}: المستوى ${level}`, en: `${lang.en}: Level ${level}` }, units });
-    }
+    if (units.length) levels.push({ id: `${language}-${lvl}`, level, title: { ar: `${lang.ar}: المستوى ${level}`, en: `${lang.en}: Level ${level}` }, band, units });
   }
-  return courses;
+  return levels;
+}
+
+export function buildPlannedLesson(language: string, level: PlannedLevel, l: PlannedLesson): FactoryLesson {
+  return buildLesson(language, level.level, l.theme, l.n, l.rows, level.band, l.unitId);
+}
+
+/** Builds every lesson (seed metadata, tests and reports). */
+export function generateCourses(language: string, rows: CorpusRow[]): FactoryCourse[] {
+  return planCourses(language, rows).map((lv) => ({
+    id: lv.id,
+    language,
+    level: lv.level,
+    title: lv.title,
+    units: lv.units.map((u) => ({ id: u.id, title: u.title, lessons: u.lessons.map((l) => buildPlannedLesson(language, lv, l)) })),
+  }));
 }
