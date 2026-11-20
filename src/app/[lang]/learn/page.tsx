@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { notFound, redirect } from "next/navigation";
-import { CheckCircle2, Circle, PlayCircle, Headphones, BookOpen, PenLine, AudioLines } from "lucide-react";
+import { Headphones, BookOpen, PenLine, AudioLines } from "lucide-react";
 import { listSavedWords } from "@/lib/learner/skills";
 import { SavedWords } from "@/components/practice/SavedWords";
 import { Header } from "@/components/site/Header";
@@ -14,6 +14,8 @@ import { getActiveTrack } from "@/lib/learner/repo";
 import { getProgress } from "@/lib/learner/study";
 import { coursesForLanguage, outlineLessonIds } from "@/lib/curriculum";
 import { wordCounts } from "@/lib/learner/srs";
+import { checkpointScores } from "@/lib/learner/checkpoint";
+import { LearningPath } from "@/components/learn/LearningPath";
 
 export default async function LearnPage({ params, searchParams }: PageProps<"/[lang]/learn">) {
   const { lang } = await params;
@@ -102,9 +104,9 @@ async function Course({ lang, dict, searchParams }: { lang: Locale; dict: Dictio
   const wanted = typeof sp.level === "string" ? sp.level : (track.placementLevel ?? track.selfLevel);
   const course = courses.find((c) => c.level === wanted) ?? courses.find((c) => c.level === "A1") ?? courses[0];
   const ids = outlineLessonIds(course);
-  const progress = await getProgress(db, user.id, ids);
+  const [progress, checkpoints] = await Promise.all([getProgress(db, user.id, ids), checkpointScores(db, user.id, course.units.map((u) => u.id))]);
   const nextId = ids.find((id) => !progress.has(id));
-  const openUnit = course.units.find((u) => u.lessons.some((l) => l.id === nextId))?.id ?? course.units[0]?.id;
+  const pct = Math.round((progress.size / ids.length) * 100);
   return (
     <div className="space-y-6">
       {courses.length > 1 && (
@@ -124,47 +126,14 @@ async function Course({ lang, dict, searchParams }: { lang: Locale; dict: Dictio
       <div>
         <h1 className="text-2xl font-bold sm:text-3xl">{course.title[lang]}</h1>
         <p className="mt-1 text-muted">{fmt(t.progress, { a: progress.size, b: ids.length })}</p>
-        <div className="mt-3 h-2 overflow-hidden rounded-full bg-surface-2">
-          <div className="h-full rounded-full bg-brand" style={{ width: `${(progress.size / ids.length) * 100}%` }} />
+        <div className="relative mt-3 h-3 rounded-full bg-surface-2" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
+          <div className="h-full rounded-full bg-ok" style={{ width: `${Math.max(pct, 2)}%` }} />
+          <span className="absolute top-1/2 -translate-y-1/2 rounded-full bg-ok px-2.5 py-0.5 text-xs font-bold text-white" style={{ insetInlineStart: `calc(${Math.min(Math.max(pct, 0), 88)}%)` }}>{pct}%</span>
         </div>
       </div>
       <ReviewLink lang={lang} dict={dict} userId={user.id} language={track.targetLanguage} />
       <h2 className="font-semibold" data-testid="units-heading">{fmt(t.unitsHeading, { u: course.units.length, n: ids.length })}</h2>
-      {course.units.map((unit) => (
-        <details key={unit.id} open={unit.id === openUnit} className="card group p-5 sm:p-6">
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 font-semibold">
-            <h2>{unit.title[lang]}</h2>
-            <span className="text-sm font-normal text-muted">
-              {fmt(t.unitProgress, { a: unit.lessons.filter((l) => progress.has(l.id)).length, b: unit.lessons.length })}
-            </span>
-          </summary>
-          <ol className="mt-3 space-y-2">
-            {unit.lessons.map((lesson) => {
-              const best = progress.get(lesson.id);
-              const isNext = lesson.id === nextId;
-              const Icon = best !== undefined ? CheckCircle2 : isNext ? PlayCircle : Circle;
-              return (
-                <li key={lesson.id}>
-                  <Link
-                    href={`/${lang}/learn/${lesson.id}`}
-                    className={`flex items-center gap-3 rounded-xl border p-3 transition-colors hover:bg-surface-2 ${isNext ? "border-brand bg-brand-soft/40" : "border-line"}`}
-                    data-testid={`lesson-${lesson.id}`}
-                  >
-                    <Icon className={`size-6 shrink-0 ${best !== undefined || isNext ? "text-brand" : "text-faint"}`} aria-hidden />
-                    <span className="flex-1">
-                      <span className="block font-semibold">{lesson.title[lang]}</span>
-                      <span className="block text-sm text-muted">{lesson.goal[lang]}</span>
-                    </span>
-                    <span className="shrink-0 text-sm font-semibold text-brand">
-                      {best !== undefined ? fmt(t.best, { n: best }) : isNext ? t.start : ""}
-                    </span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ol>
-        </details>
-      ))}
+      <LearningPath lang={lang} course={course} progress={progress} checkpoints={checkpoints} nextId={nextId} t={t} />
       <Centers lang={lang} dict={dict} />
       <Words lang={lang} dict={dict} userId={user.id} language={track.targetLanguage} />
     </div>

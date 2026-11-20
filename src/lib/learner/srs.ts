@@ -121,7 +121,7 @@ export function earnedBadges(m: { lessons: number; streak: number; words: number
 }
 
 export async function completedLessonCount(db: Db, userId: string) {
-  const [row] = await db.select({ n: count() }).from(lessonProgress).where(eq(lessonProgress.userId, userId));
+  const [row] = await db.select({ n: count() }).from(lessonProgress).where(and(eq(lessonProgress.userId, userId), sql`${lessonProgress.lessonId} not like 'checkpoint:%'`));
   return row?.n ?? 0;
 }
 
