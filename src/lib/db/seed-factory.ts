@@ -7,7 +7,7 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { gunzipSync } from "node:zlib";
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, like, notInArray, sql } from "drizzle-orm";
 import type { PgDatabase } from "drizzle-orm/pg-core";
 import { contentImports, curriculumCourses, curriculumLessons, curriculumUnits } from "./schema";
 import { generateCourses, type CorpusRow } from "../factory/generate";
@@ -86,6 +86,22 @@ export async function seedFactoryCurriculum(db: Db, dir = join(process.cwd(), "d
       }
       count += rows.length;
     }
+    // Drop drafts the new corpus no longer produces (reviewed lessons stay), then empty factory units.
+    const keep = courses.flatMap((c) => c.units.flatMap((u) => u.lessons.map((l) => l.id)));
+    const stale = await db
+      .delete(curriculumLessons)
+      .where(
+        and(
+          eq(curriculumLessons.source, "factory"),
+          eq(curriculumLessons.status, "draft"),
+          like(curriculumLessons.id, `${language}-%`),
+          keep.length ? notInArray(curriculumLessons.id, keep) : sql`true`,
+        ),
+      )
+      .returning({ id: curriculumLessons.id });
+    const used = db.selectDistinct({ id: curriculumLessons.unitId }).from(curriculumLessons);
+    await db.delete(curriculumUnits).where(and(like(curriculumUnits.id, `${language}-%-fu-%`), notInArray(curriculumUnits.id, used)));
+    if (stale.length) log(`${source}: removed ${stale.length} outdated drafts`);
     await db
       .insert(contentImports)
       .values({ source, hash, lessons: count })

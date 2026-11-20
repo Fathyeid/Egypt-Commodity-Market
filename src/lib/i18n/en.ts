@@ -394,6 +394,7 @@ const en: Dictionary = {
     },
   },
   admin: {
+    searchYoutube: "Find a video on YouTube ↗",
     title: "Admin",
     courses: "Curriculum",
     topics: "Topics & videos",

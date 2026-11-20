@@ -48,6 +48,13 @@ describe("factory import (database)", () => {
     const [after] = await sql`select content, status from curriculum_lessons where id = ${first.id}`;
     expect(after.status).toBe("published");
     expect(after.content).toEqual(first.content); // an approved lesson is never overwritten
+    // A smaller corpus drops outdated drafts but keeps the reviewed lesson.
+    writeCorpus(dir, 300, " zzz");
+    await seedFactoryCurriculum(db, dir, (m) => logs.push(m));
+    expect(logs.some((m) => m.includes("outdated drafts"))).toBe(true);
+    const [{ total }] = await sql`select count(*)::int as total from curriculum_lessons where course_id like 'fr-%'`;
+    const [{ fresh }] = await sql`select count(*)::int as fresh from curriculum_lessons where course_id like 'fr-%' and content::text like '%zzz%'`;
+    expect(total - fresh).toBe(1);
     const courses = await coursesForLanguage(db, "fr");
     expect(courses[0].units.flatMap((u) => u.lessons).map((l) => l.id)).toEqual([first.id]);
   });

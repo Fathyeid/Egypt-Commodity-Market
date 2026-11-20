@@ -13,6 +13,7 @@ import { linkTopicAction } from "@/lib/admin/actions";
 import { listLanguages } from "@/lib/learner/repo";
 import { TopicForm } from "@/components/admin/TopicForm";
 import { TopicPanel } from "@/components/learn/TopicPanel";
+import { LANGUAGE_NAMES } from "@/lib/factory/generate";
 
 type Props = PageProps<"/[lang]/admin/topics/[topicId]">;
 
@@ -48,6 +49,15 @@ async function EditTopic({ lang, dict, params }: { lang: Locale; dict: Dictionar
       {(topic.videoId || topic.explanation) && (
         <TopicPanel topic={{ id: topic.id, title: topic.title, explanation: topic.explanation, videoId: topic.videoId, videoTitle: topic.videoTitle }} lang={lang} label={dict.lesson.topicVideo} />
       )}
+      <a
+        href={`https://www.youtube.com/results?search_query=${encodeURIComponent(`${LANGUAGE_NAMES[topic.language]?.en ?? topic.language} grammar ${topic.title.en} ${topic.level}`)}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="btn-ghost"
+        data-testid="youtube-search"
+      >
+        {t.searchYoutube}
+      </a>
       <TopicForm lang={lang} t={t} languages={languages} topic={topic} />
       <form action={linkTopicAction} className="card flex flex-wrap items-end gap-3 p-5">
         <input type="hidden" name="topicId" value={topic.id} />
