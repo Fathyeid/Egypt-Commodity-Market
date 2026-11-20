@@ -490,6 +490,9 @@ export const curriculumLessons = pgTable(
     source: text("source").notNull(), // handwritten | factory | ai
     status: text("status").notNull().default("draft"), // draft | published | rejected
     attribution: jsonb("attribution"),
+    /** A lesson's own video (from a top teaching channel), shown above the topic video. */
+    videoId: text("video_id"),
+    videoTitle: text("video_title"),
     updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   },
   (t) => [index("lessons_course_pos_idx").on(t.courseId, t.position), index("lessons_status_idx").on(t.status)],

@@ -1,0 +1,45 @@
+name: Channel videos (YouTube)
+
+# Collects lesson videos from the biggest teaching channels of each language
+# (data/channel-videos.json). Cheap on quota: handle lookups and upload lists only.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/factory/channel_videos.py"
+      - ".github/workflows/channel-videos.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: channel-videos-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Export topics and themes
+        run: npm ci --ignore-scripts && npx tsx scripts/factory/export-video-input.ts /tmp/video-input.json
+      - name: Collect channel videos
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: python3 -I scripts/factory/channel_videos.py /tmp/video-input.json data/channel-videos.json data/videos.json
+      - name: Commit
+        run: |
+          git config user.name "lisan-video-finder"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/channel-videos.json
+          if git diff --cached --quiet; then echo "No change"; exit 0; fi
+          git commit -m "Channel videos: lesson videos from top teaching channels"
+          for i in 1 2 3; do git pull --rebase origin "${{ github.ref_name }}" && git push origin "HEAD:${{ github.ref_name }}" && exit 0; sleep 5; done
+          exit 1

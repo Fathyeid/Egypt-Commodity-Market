@@ -22,7 +22,7 @@ export async function coursesForLanguage(db: Db, language: string): Promise<Cour
   const [units, lessons] = await Promise.all([
     db.select().from(curriculumUnits).where(inArray(curriculumUnits.courseId, ids)).orderBy(asc(curriculumUnits.position)),
     db
-      .select({ id: curriculumLessons.id, courseId: curriculumLessons.courseId, unitId: curriculumLessons.unitId, title: curriculumLessons.title, goal: curriculumLessons.goal, position: curriculumLessons.position, topicId: curriculumLessons.topicId })
+      .select({ id: curriculumLessons.id, courseId: curriculumLessons.courseId, unitId: curriculumLessons.unitId, title: curriculumLessons.title, goal: curriculumLessons.goal, position: curriculumLessons.position, topicId: curriculumLessons.topicId, videoId: curriculumLessons.videoId })
       .from(curriculumLessons)
       .where(and(inArray(curriculumLessons.courseId, ids), eq(curriculumLessons.status, "published")))
       .orderBy(asc(curriculumLessons.position)),
@@ -46,7 +46,7 @@ export async function coursesForLanguage(db: Db, language: string): Promise<Cour
           title: u.title as L10n,
           lessons: lessons
             .filter((l) => l.unitId === u.id)
-            .map((l) => ({ id: l.id, title: l.title as L10n, goal: l.goal as L10n, position: l.position, topicId: l.topicId, hasVideo: !!l.topicId && withVideo.has(l.topicId) })),
+            .map((l) => ({ id: l.id, title: l.title as L10n, goal: l.goal as L10n, position: l.position, topicId: l.topicId, hasVideo: !!l.videoId || (!!l.topicId && withVideo.has(l.topicId)) })),
         }))
         .filter((u) => u.lessons.length > 0),
     }))
@@ -68,7 +68,7 @@ export async function getLesson(db: Db, lessonId: string, opts: { includeDrafts?
   }
   const content = row.content as Omit<Lesson, "id" | "title" | "goal">;
   const lesson: Lesson = { id: row.id, title: row.title as L10n, goal: row.goal as L10n, ...content };
-  return { lesson, language: course.language, level: course.level, courseId: course.id, unitTitle: unit.title as L10n, position: row.position, topic, status: row.status, source: row.source, attribution: (row.attribution ?? null) as LessonAttribution | null };
+  return { lesson, language: course.language, level: course.level, courseId: course.id, unitTitle: unit.title as L10n, position: row.position, topic, status: row.status, source: row.source, video: row.videoId ? { id: row.videoId, title: row.videoTitle } : null, attribution: (row.attribution ?? null) as LessonAttribution | null };
 }
 
 /** Next published lesson in the same course, by position. */

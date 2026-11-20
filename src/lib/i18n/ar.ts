@@ -255,6 +255,7 @@ const ar = {
     lessonNotFound: "الدرس غير موجود في لغتك النشطة.",
   },
   lesson: {
+    lessonVideo: "فيديو الدرس",
     attribution: "الجمل والترجمات من مشروع",
     sections: {
       explanation: "شرح الدرس",

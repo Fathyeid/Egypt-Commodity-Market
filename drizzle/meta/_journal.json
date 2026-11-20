@@ -50,6 +50,13 @@
       "when": 1795192212784,
       "tag": "0006_srs",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1795212484454,
+      "tag": "0007_lesson_video",
+      "breakpoints": true
     }
   ]
 }
