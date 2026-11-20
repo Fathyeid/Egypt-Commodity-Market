@@ -20,8 +20,8 @@ UA = {"User-Agent": "LisanLandmarkFetcher/1.0 (educational language-learning sit
 QUERIES = {
     "en": ("Big Ben Westminster", "big ben"), "de": ("Brandenburger Tor", "brandenburg"), "fr": ("Tour Eiffel", "eiffel"),
     "es": ("Sagrada Familia", "sagrada"), "it": ("Colosseum Rome", "colos"), "pt": ("Torre de Belem Lisboa", "bel"),
-    "tr": ("Hagia Sophia", "hagia"), "ru": ("Saint Basil's Cathedral Moscow", "basil"), "zh": ("Temple of Heaven", "heaven"),
-    "ja": ("Mount Fuji Chureito Pagoda", "fuji"), "ko": ("Gyeongbokgung", "gyeongbok"), "ar": ("Giza pyramids", "giza"),
+    "tr": ("Hagia Sophia", "hagia"), "ru": ("Saint Basil's Cathedral Moscow", "basil"), "zh": [("Temple of Heaven Beijing", "heaven"), ("Great Wall of China", "great wall"), ("Forbidden City", "forbidden")],
+    "ja": [("Mount Fuji", "fuji"), ("Kinkaku-ji", "kinkaku"), ("Fushimi Inari", "fushimi")], "ko": ("Gyeongbokgung", "gyeongbok"), "ar": ("Giza pyramids", "giza"),
 }
 CATS = ["Featured pictures on Wikimedia Commons", "Quality images", "Valued images sorted by promotion date"]
 EXCLUDE = re.compile(r"grumman|hawkeye|aircraft|navy|military|jet|plane|mural", re.I)
@@ -53,30 +53,36 @@ def strip(html: str) -> str:
 
 def main() -> None:
     os.makedirs(OUT, exist_ok=True)
-    credits = {}
-    for lang, (q, must) in QUERIES.items():
+    cred_file = f"{OUT}/credits.json"
+    credits = json.load(open(cred_file, encoding="utf-8")) if os.path.exists(cred_file) else {}
+    for lang, spec in QUERIES.items():
+        if lang in credits and os.path.exists(f"{OUT}/{lang}.jpg") and not os.environ.get("FORCE"):
+            continue  # keep photos already chosen
         chosen = None
-        for cat in CATS:
-            res = api({
-                "action": "query", "generator": "search", "gsrnamespace": 6, "gsrlimit": 20,
-                "gsrsearch": f'{q} incategory:"{cat}" filetype:bitmap',
-                "prop": "imageinfo", "iiprop": "url|size|mime|extmetadata", "iiurlwidth": 1280,
-            })
-            pages = sorted(res.get("query", {}).get("pages", {}).values(), key=lambda p: p.get("index", 99))
-            for p in pages:
-                ii = (p.get("imageinfo") or [{}])[0]
-                meta = ii.get("extmetadata", {})
-                lic = meta.get("LicenseShortName", {}).get("value", "")
-                if must not in p.get("title", "").lower().replace("é", "e").replace("_", " ") or EXCLUDE.search(p.get("title", "")):
-                    continue
-                if ii.get("mime") != "image/jpeg" or not OK_LICENSE.match(lic):
-                    continue
-                if ii.get("width", 0) < ii.get("height", 1) * 1.2:  # want a landscape banner
-                    continue
-                chosen = (p, ii, meta, lic)
-                break
-            if chosen:
-                break
+        for q, must in (spec if isinstance(spec, list) else [spec]):
+          if chosen:
+            break
+          for cat in CATS:
+              res = api({
+                  "action": "query", "generator": "search", "gsrnamespace": 6, "gsrlimit": 20,
+                  "gsrsearch": f'{q} incategory:"{cat}" filetype:bitmap',
+                  "prop": "imageinfo", "iiprop": "url|size|mime|extmetadata", "iiurlwidth": 1280,
+              })
+              pages = sorted(res.get("query", {}).get("pages", {}).values(), key=lambda p: p.get("index", 99))
+              for p in pages:
+                  ii = (p.get("imageinfo") or [{}])[0]
+                  meta = ii.get("extmetadata", {})
+                  lic = meta.get("LicenseShortName", {}).get("value", "")
+                  if must not in p.get("title", "").lower().replace("é", "e").replace("_", " ") or EXCLUDE.search(p.get("title", "")):
+                      continue
+                  if ii.get("mime") != "image/jpeg" or not OK_LICENSE.match(lic):
+                      continue
+                  if ii.get("width", 0) < ii.get("height", 1) * 1.2:  # want a landscape banner
+                      continue
+                  chosen = (p, ii, meta, lic)
+                  break
+              if chosen:
+                  break
         if not chosen:
             print(f"{lang}: no suitable photo", flush=True)
             continue
