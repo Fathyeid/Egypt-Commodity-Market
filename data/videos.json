@@ -1,1 +1,812 @@
-{}
+{
+ "ar-a1-g-alphabet": {
+  "videoId": "c-7SVieC_04",
+  "title": "How to READ ARABIC? - The alphabet - Lesson 1 - Arabic 101",
+  "channel": "Arabic 101",
+  "views": 1542867,
+  "seconds": 837,
+  "query": "Arabic grammar The alphabet and letter shapes A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "ar-a1-g-definite-article": {
+  "videoId": "KRHASaEghBk",
+  "title": "DEFINITE AND INDEFINITE NOUNS IN ARABIC. ARABIC GRAMMAR (LESSON 7)",
+  "channel": "ARABIC LANGUAGE ACADEMY",
+  "views": 29709,
+  "seconds": 322,
+  "query": "Arabic grammar The definite article al- A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "ar-a1-g-gender": {
+  "videoId": "2D__7wXTeWI",
+  "title": "Beginners: Feminine versus Masculine, \"He does\" versus \"She does\" Grammar Lesson (4)",
+  "channel": "Learn Modern Standard Arabic",
+  "views": 6059,
+  "seconds": 1581,
+  "query": "Arabic grammar Masculine and feminine A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "ar-a1-g-nominal-sentence": {
+  "videoId": "ir1Fm-2phMo",
+  "title": "Learn Arabic Grammar in 30 Minutes (Full Course For Beginners)",
+  "channel": "Ismail Arman",
+  "views": 34904,
+  "seconds": 1659,
+  "query": "Arabic grammar Nominal sentences A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "ar-a1-g-pronouns": {
+  "videoId": "hELcpY5pnz0",
+  "title": "Arabic Pronouns Made Easy | Learn Arabic Grammar for Beginners",
+  "channel": "Daily Life Arabic",
+  "views": 232751,
+  "seconds": 669,
+  "query": "Arabic grammar Personal pronouns A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "de-a1-g-articles-gender": {
+  "videoId": "IFsEX4ZY6bc",
+  "title": "Der Die Das? | German Genders Explained | Tips, Tricks and Hacks",
+  "channel": "YourGermanTeacher",
+  "views": 1917797,
+  "seconds": 953,
+  "query": "German grammar Gender and articles: der / die / das A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "de-a1-g-negation": {
+  "videoId": "NcswV-xuyMc",
+  "title": "Kein vs Nicht | The difference and rules explained! | YourGermanTeacher",
+  "channel": "YourGermanTeacher",
+  "views": 324934,
+  "seconds": 754,
+  "query": "German grammar Negation: nicht and kein A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "de-a1-g-present-conjugation": {
+  "videoId": "n6db5VSUm2o",
+  "title": "A1 - Lesson 9 | Satzstruktur | Sentence Structure Part 1 | Revised | Learn German",
+  "channel": "Learn German",
+  "views": 2016225,
+  "seconds": 608,
+  "query": "German grammar Present tense conjugation A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "de-a1-g-sein-haben": {
+  "videoId": "xy4a1c7W7k0",
+  "title": "A1 - Lesson 12 | haben und sein | Verb conjugation | Revised | Learn German",
+  "channel": "Learn German",
+  "views": 1695249,
+  "seconds": 604,
+  "query": "German grammar The verbs sein and haben A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "de-a1-g-separable-verbs": {
+  "videoId": "Kj_L8uAffG8",
+  "title": "A1 - Lesson 37 | Trennbare Verben | Separable verbs | Learn German for beginners",
+  "channel": "Learn German",
+  "views": 863473,
+  "seconds": 663,
+  "query": "German grammar Separable verbs A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "de-a1-g-word-order-v2": {
+  "videoId": "jR4XeQxwGHQ",
+  "title": "Basic Word Order in German",
+  "channel": "mugridge language",
+  "views": 374901,
+  "seconds": 510,
+  "query": "German grammar Word order: the verb comes second A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "de-a2-g-accusative-dative": {
+  "videoId": "-XjraxIEzrk",
+  "title": "Akkusativ oder Dativ? | German Cases Explained!",
+  "channel": "YourGermanTeacher",
+  "views": 1111167,
+  "seconds": 1267,
+  "query": "German grammar Accusative and dative cases A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "de-a2-g-comparison": {
+  "videoId": "xxQf741CH-k",
+  "title": "A2 - Lesson 5 | Adjektivendungen | Nominativ | German for beginners",
+  "channel": "Learn German",
+  "views": 768230,
+  "seconds": 902,
+  "query": "German grammar Comparison of adjectives A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "de-a2-g-modal-verbs": {
+  "videoId": "bD4vSw6AWps",
+  "title": "Learn German | German Grammar | Modalverben | Modal verbs | A1",
+  "channel": "Learn German",
+  "views": 761977,
+  "seconds": 612,
+  "query": "German grammar Modal verbs A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "de-a2-g-perfekt": {
+  "videoId": "gKLK6gBM_qI",
+  "title": "A1 - Lesson 44 | Perfekt | Past tense | Part 1 | Learn German for beginners",
+  "channel": "Learn German",
+  "views": 947322,
+  "seconds": 672,
+  "query": "German grammar The Perfekt (spoken past) A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "de-a2-g-possessives": {
+  "videoId": "sBUR0Q9ZTN4",
+  "title": "A1 - Lesson 24 | possessive articles in German | Possessivartikel | Revised | Learn German",
+  "channel": "Learn German",
+  "views": 716326,
+  "seconds": 834,
+  "query": "German grammar Possessive articles A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "de-a2-g-two-way-prepositions": {
+  "videoId": "r-6OA9VZcdQ",
+  "title": "A2 - Lesson 34 | Wechselpräpositionen | Two way prepositions | German for beginners",
+  "channel": "Learn German",
+  "views": 387991,
+  "seconds": 788,
+  "query": "German grammar Two-way prepositions A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "en-a1-g-articles": {
+  "videoId": "3zJQoQLCeNo",
+  "title": "A, AN, THE - Articles in English",
+  "channel": "English with Ronnie · EnglishLessons4U with engVid",
+  "views": 6851117,
+  "seconds": 862,
+  "query": "English grammar Articles: a / an / the A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "en-a1-g-can": {
+  "videoId": "SeLYwHeOodM",
+  "title": "Can Can't Cannot | Learn English Grammar | Basic English Lesson by Woodward English",
+  "channel": "Woodward English",
+  "views": 1157283,
+  "seconds": 849,
+  "query": "English grammar Ability: can / can't A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "en-a1-g-have-got": {
+  "videoId": "oBYfoG5wBP8",
+  "title": "English Grammar: Possessive Adjectives",
+  "channel": "Shaw English Online",
+  "views": 972636,
+  "seconds": 482,
+  "query": "English grammar Possession: have, ’s and my / your A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "en-a1-g-plurals-demonstratives": {
+  "videoId": "rimSOFeVrYA",
+  "title": "THIS, THAT, THESE and THOSE | English Demonstrative pronouns",
+  "channel": "Vocab - English Vocabulary",
+  "views": 685946,
+  "seconds": 136,
+  "query": "English grammar Plurals and this / that / these / those A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "en-a1-g-present-simple": {
+  "videoId": "nvVdIJ0las0",
+  "title": "Simple Present – Grammar & Verb Tenses",
+  "channel": "Ellii (formerly ESL Library)",
+  "views": 4713433,
+  "seconds": 290,
+  "query": "English grammar Present simple A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "en-a1-g-to-be": {
+  "videoId": "nvVdIJ0las0",
+  "title": "Simple Present – Grammar & Verb Tenses",
+  "channel": "Ellii (formerly ESL Library)",
+  "views": 4713433,
+  "seconds": 290,
+  "query": "English grammar The verb to be: am / is / are A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "en-a2-g-comparatives": {
+  "videoId": "jz8Fy5qQXu8",
+  "title": "Comparatives and Superlatives | Learn English | EasyTeaching",
+  "channel": "EasyTeaching",
+  "views": 965614,
+  "seconds": 326,
+  "query": "English grammar Comparatives and superlatives A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "en-a2-g-countable": {
+  "videoId": "bhgzqbv9Rxk",
+  "title": "English for Beginners: Countable & Uncountable Nouns",
+  "channel": "English with Emma · engVid",
+  "views": 1519193,
+  "seconds": 1337,
+  "query": "English grammar Countable and uncountable nouns A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "en-a2-g-future": {
+  "videoId": "n14zCZAvSjI",
+  "title": "Simple Future with Will – Grammar & Verb Tenses",
+  "channel": "Ellii (formerly ESL Library)",
+  "views": 1051949,
+  "seconds": 284,
+  "query": "English grammar Future: will and going to A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "en-a2-g-past-simple": {
+  "videoId": "MI3S3kdkofo",
+  "title": "Simple Past  – Grammar & Verb Tenses",
+  "channel": "Ellii (formerly ESL Library)",
+  "views": 3494818,
+  "seconds": 348,
+  "query": "English grammar Past simple A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "en-a2-g-prepositions-time-place": {
+  "videoId": "92XBCRYZ1S8",
+  "title": "IN / ON / AT - Prepositions of PLACE AND TIME | English Grammar Lesson (+ Free PDF & Quiz)",
+  "channel": "English with Lucy",
+  "views": 2484646,
+  "seconds": 837,
+  "query": "English grammar Prepositions of time and place: in / on / at A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "en-a2-g-present-continuous": {
+  "videoId": "AKzG_ZS-Ydg",
+  "title": "Present Progressive – Grammar & Verb Tenses",
+  "channel": "Ellii (formerly ESL Library)",
+  "views": 1929598,
+  "seconds": 301,
+  "query": "English grammar Present continuous A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "es-a1-g-gender-articles": {
+  "videoId": "YeTIwDcKwZ4",
+  "title": "Definite and Indefinite Articles in Spanish | The Language Tutor *Lesson 11*",
+  "channel": "The Language Tutor - Spanish",
+  "views": 384149,
+  "seconds": 337,
+  "query": "Spanish grammar Gender and articles A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "es-a1-g-hay-tener": {
+  "videoId": "RaT1vHv_aD0",
+  "title": "5 ways to use \"TENGO\" - \"to have\" in Spanish",
+  "channel": "Butterfly Spanish",
+  "views": 959051,
+  "seconds": 489,
+  "query": "Spanish grammar Hay and tener A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "es-a1-g-present-regular": {
+  "videoId": "D95mAYdT9m4",
+  "title": "Mastering 'ER' and 'IR' Verbs | Spanish For Beginners (Ep.6)",
+  "channel": "AIB",
+  "views": 956021,
+  "seconds": 798,
+  "query": "Spanish grammar Present tense: -ar, -er, -ir verbs A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "es-a1-g-questions-negation": {
+  "videoId": "rajf7Tlhnrc",
+  "title": "The 6 Most Important Spanish Sentence Structures You Need To Know",
+  "channel": "BaseLang",
+  "views": 242523,
+  "seconds": 1009,
+  "query": "Spanish grammar Questions and negation A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "es-a1-g-ser-estar": {
+  "videoId": "z7c0IlnBr7k",
+  "title": "When to Use Ser or Estar | Spanish For Beginners (Ep.2.5)",
+  "channel": "AIB",
+  "views": 2570189,
+  "seconds": 919,
+  "query": "Spanish grammar Ser and estar A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "es-a2-g-gustar": {
+  "videoId": "SAfXpyZlz-I",
+  "title": "How to Use Gustar in Spanish | The Language Tutor *Lesson 121*",
+  "channel": "The Language Tutor - Spanish",
+  "views": 190926,
+  "seconds": 846,
+  "query": "Spanish grammar Gustar (to like) A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "es-a2-g-ir-a": {
+  "videoId": "U42loE1zhdw",
+  "title": "Spanish Verbs in Future Tense  | The Language Tutor *Lesson 51*",
+  "channel": "The Language Tutor - Spanish",
+  "views": 417874,
+  "seconds": 839,
+  "query": "Spanish grammar Near future: ir a + infinitive A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "es-a2-g-preterito": {
+  "videoId": "3nVHhqblh88",
+  "title": "Spanish Past Tense: Preterite Vs. Imperfect, Rule of Thumb",
+  "channel": "The Spanish Dude",
+  "views": 1575465,
+  "seconds": 470,
+  "query": "Spanish grammar Preterite A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "es-a2-g-reflexive": {
+  "videoId": "aYFCwIfZ-s4",
+  "title": "Reflexive Verbs Made Easy With a Song! (Spanish Lesson)",
+  "channel": "Señor Jordan",
+  "views": 553691,
+  "seconds": 193,
+  "query": "Spanish grammar Reflexive verbs A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "es-a2-g-stem-changing": {
+  "videoId": "PL7f8FOjwpg",
+  "title": "01066 Spanish Lesson - Present Tense - O-UE Stem-changing verbs",
+  "channel": "Señor Jordan",
+  "views": 321580,
+  "seconds": 570,
+  "query": "Spanish grammar Stem-changing verbs A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "fr-a1-g-er-verbs": {
+  "videoId": "I0yL_zTDOmI",
+  "title": "Learn 50 Basic French Verbs (Present Tense) for Beginners A1–A2 | Part 5",
+  "channel": "French Flicks Fun",
+  "views": 262,
+  "seconds": 227,
+  "query": "French grammar Present tense of -er verbs A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "fr-a1-g-etre-avoir": {
+  "videoId": "84olv0BM4oY",
+  "title": "Être & Avoir (French Essentials Lesson 10)",
+  "channel": "Learn French With Alexa",
+  "views": 3416185,
+  "seconds": 927,
+  "query": "French grammar The verbs être and avoir A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "fr-a1-g-gender-articles": {
+  "videoId": "054MD3i3RDE",
+  "title": "French Definite Article / How to say THE in French (French Essentials Lesson 7)",
+  "channel": "Learn French With Alexa",
+  "views": 2262126,
+  "seconds": 716,
+  "query": "French grammar Gender and articles A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "fr-a1-g-negation": {
+  "videoId": "Rymbg3PnyL0",
+  "title": "Simple Negations - part 1 (French Essentials Lesson 13)",
+  "channel": "Learn French With Alexa",
+  "views": 1252081,
+  "seconds": 475,
+  "query": "French grammar Negation: ne … pas A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "fr-a1-g-questions": {
+  "videoId": "o0tgXagvolU",
+  "title": "Asking questions in French with EST-CE QUE (French Essentials Lesson 30)",
+  "channel": "Learn French With Alexa",
+  "views": 1761980,
+  "seconds": 668,
+  "query": "French grammar Asking questions A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "fr-a2-g-adjective-agreement": {
+  "videoId": "I1RUF472SFY",
+  "title": "French adjectives: BEFORE or AFTER the noun?",
+  "channel": "Learn French With Alexa",
+  "views": 369319,
+  "seconds": 426,
+  "query": "French grammar Adjective agreement and position A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "fr-a2-g-futur-proche": {
+  "videoId": "S80DXgd-i2s",
+  "title": "Learn French: know the futur proche with Aller under 5 minutes.",
+  "channel": "Learn French With Alexa",
+  "views": 219645,
+  "seconds": 274,
+  "query": "French grammar Near future: aller + infinitive A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "fr-a2-g-object-pronouns": {
+  "videoId": "xQqiwEEklkk",
+  "title": "Lui, leur OR le, la, les in French? Pick correctly EVERY TIME with this trick - French pronouns",
+  "channel": "French in Plain Sight",
+  "views": 231133,
+  "seconds": 486,
+  "query": "French grammar Object pronouns A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "fr-a2-g-partitive": {
+  "videoId": "X9TxWLoyU40",
+  "title": "Practise your French Partitive Articles: DU, DE LA, DE L' & DES",
+  "channel": "Learn French With Alexa",
+  "views": 380083,
+  "seconds": 939,
+  "query": "French grammar Partitive articles A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "fr-a2-g-passe-compose": {
+  "videoId": "JK5OMjjAc8A",
+  "title": "French Imperfect Tense VS Passé Composé Tense",
+  "channel": "Learn French With Alexa",
+  "views": 869593,
+  "seconds": 523,
+  "query": "French grammar Passé composé A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "it-a1-g-articles": {
+  "videoId": "NPKruSoFftY",
+  "title": "4. Learn Italian Beginners (A1): Indefinite articles (un, uno, una, un’)",
+  "channel": "Passione Italiana",
+  "views": 289734,
+  "seconds": 704,
+  "query": "Italian grammar Articles A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "it-a1-g-essere-avere": {
+  "videoId": "toeGFmEm_dk",
+  "title": "11. Learn Italian Beginners (A1): How to use the verb “avere” (“to have”)",
+  "channel": "Passione Italiana",
+  "views": 410850,
+  "seconds": 577,
+  "query": "Italian grammar Essere and avere A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "it-a1-g-negation-questions": {
+  "videoId": "aeMy4bLdk90",
+  "title": "How to ask questions in Italian - Beginner Italian Course: Lesson 20",
+  "channel": "Italy Made Easy",
+  "views": 119702,
+  "seconds": 1005,
+  "query": "Italian grammar Negation and questions A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "it-a1-g-plurals": {
+  "videoId": "hwqs5-V7cFU",
+  "title": "2. Learn Italian Beginners (A1): Singular and plural",
+  "channel": "Passione Italiana",
+  "views": 307390,
+  "seconds": 608,
+  "query": "Italian grammar Plurals A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "it-a1-g-present-regular": {
+  "videoId": "FRVVrK7BYRQ",
+  "title": "Day 5 – Present Simple in Italian | A1 Daily Routine Practice",
+  "channel": "Italiano Dinamico",
+  "views": 4937,
+  "seconds": 412,
+  "query": "Italian grammar Present tense: -are, -ere, -ire A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "it-a2-g-articulated-prepositions": {
+  "videoId": "1Wf9e4-v3aE",
+  "title": "13. Learn Italian Elementary (A2): Le preposizioni A e IN- How to use the prepositions A and IN",
+  "channel": "Passione Italiana",
+  "views": 638570,
+  "seconds": 1145,
+  "query": "Italian grammar Articulated prepositions A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "it-a2-g-futuro": {
+  "videoId": "ZM26xm32Q3U",
+  "title": "7. Learn Italian Intermediate (B1): Il futuro semplice (come si forma)",
+  "channel": "Passione Italiana",
+  "views": 322020,
+  "seconds": 864,
+  "query": "Italian grammar Future tense A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "it-a2-g-passato-prossimo": {
+  "videoId": "_OAB07NWQeM",
+  "title": "40. Learn Italian Beginners (A1):  Il passato prossimo- Introduction to the past tense",
+  "channel": "Passione Italiana",
+  "views": 231891,
+  "seconds": 1021,
+  "query": "Italian grammar Passato prossimo A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "it-a2-g-piacere": {
+  "videoId": "t768qNZlgUc",
+  "title": "1. Learn Italian Elementary (A2): The verb “to like” (pt 2)",
+  "channel": "Passione Italiana",
+  "views": 371451,
+  "seconds": 933,
+  "query": "Italian grammar Piacere (to like) A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "it-a2-g-reflexive": {
+  "videoId": "KYH9wNrMK5M",
+  "title": "38. Learn Italian Beginners (A1): I verbi riflessivi- Daily routine and reflexive verbs",
+  "channel": "Passione Italiana",
+  "views": 198027,
+  "seconds": 897,
+  "query": "Italian grammar Reflexive verbs A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "ja-a1-g-desu": {
+  "videoId": "qAxpv3cCHO8",
+  "title": "HOW TO INTRODUCE YOURSELF in JAPANESE | EASY for BEGINNERS | FREE TUTORIAL",
+  "channel": "ShekMatz Japan",
+  "views": 641524,
+  "seconds": 508,
+  "query": "Japanese grammar Desu and identity sentences A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "ja-a1-g-masu": {
+  "videoId": "cGA6Tj9_lSg",
+  "title": "The ULTIMATE Japanese Verb Conjugation CHEAT SHEET",
+  "channel": "Jouzu Juls (上手 ジューズ)",
+  "views": 789084,
+  "seconds": 806,
+  "query": "Japanese grammar Polite masu forms A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "ja-a1-g-particles": {
+  "videoId": "BckC9gXghIc",
+  "title": "Learn Japanese Grammar in 25 Minutes - ALL the Basics You Need",
+  "channel": "Learn Japanese with JapanesePod101.com",
+  "views": 5807611,
+  "seconds": 1424,
+  "query": "Japanese grammar Particles: は, が, を, に, で A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "ja-a1-g-scripts": {
+  "videoId": "r7a8OjvViwE",
+  "title": "Understanding the Japanese Writing System",
+  "channel": "Academia Cervena",
+  "views": 1635508,
+  "seconds": 681,
+  "query": "Japanese grammar The three writing systems A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "ja-a1-g-word-order": {
+  "videoId": "U2q5GsB0swQ",
+  "title": "Basic Sentence Structure in Japanese",
+  "channel": "Kaname Naito",
+  "views": 408567,
+  "seconds": 223,
+  "query": "Japanese grammar Word order: verb last A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "ko-a1-g-ayo-present": {
+  "videoId": "eARFgjhtEAI",
+  "title": "How to make Korean sentences in the present tense (for beginners)",
+  "channel": "Talk To Me In Korean",
+  "views": 537480,
+  "seconds": 639,
+  "query": "Korean grammar Polite present: -아요/어요 A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "ko-a1-g-hangul": {
+  "videoId": "rBDrM1VPJX0",
+  "title": "How to Learn and Read the Korean Alphabet (Hangul) in 10 Minutes🇰🇷 | Learn Korean for Beginners",
+  "channel": "Real Korean with Morning",
+  "views": 4731365,
+  "seconds": 769,
+  "query": "Korean grammar The Hangul alphabet A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "ko-a1-g-ieyo": {
+  "videoId": "F8lFSt7SQMU",
+  "title": "What is the point of 은,는,이,가? - Simple Explanation of Subject Particles (Korean Grammar)",
+  "channel": "Hailey _Your Korean Friend",
+  "views": 205179,
+  "seconds": 227,
+  "query": "Korean grammar Identity: 이에요 / 예요 A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "ko-a1-g-particles": {
+  "videoId": "fCxLNRLntc0",
+  "title": "One-Stop Guide to Korean Particles - 은/는/이/가 (Subject & Topic Markers)",
+  "channel": "Talk To Me In Korean",
+  "views": 1216276,
+  "seconds": 1015,
+  "query": "Korean grammar Particles: 은/는, 이/가, 을/를 A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "ko-a1-g-word-order": {
+  "videoId": "JqDIrGABedY",
+  "title": "How to Study Korean Grammar for Beginner",
+  "channel": "Hailey _Your Korean Friend",
+  "views": 357005,
+  "seconds": 496,
+  "query": "Korean grammar Word order: verb last A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "pt-a1-g-articles": {
+  "videoId": "Sh_cC75D0wo",
+  "title": "Understanding Portuguese Articles  Definite and Indefinite 🇵🇹",
+  "channel": "Learn Portuguese Today",
+  "views": 10476,
+  "seconds": 256,
+  "query": "Portuguese grammar Articles and gender A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "pt-a1-g-negation-questions": {
+  "videoId": "UlUIYd00lyc",
+  "title": "An Introduction to Portuguese Grammar For Beginners - Learn Brazilian Portuguese",
+  "channel": "Plain Portuguese",
+  "views": 7052,
+  "seconds": 933,
+  "query": "Portuguese grammar Negation and questions A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "pt-a1-g-present-regular": {
+  "videoId": "pz34af4BU9w",
+  "title": "Portuguese Verb Conjugation | How to conjugate verbs ending in AR [PRESENT TENSE]",
+  "channel": "Mia Esmeriz Academy",
+  "views": 39823,
+  "seconds": 289,
+  "query": "Portuguese grammar Present tense A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "pt-a1-g-ser-estar": {
+  "videoId": "x8qE0hVrfCA",
+  "title": "Ser vs Estar: When to use which? [verb to be] // Quick Portuguese Lesson",
+  "channel": "Portuguese With Leo",
+  "views": 75874,
+  "seconds": 451,
+  "query": "Portuguese grammar Ser and estar A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "pt-a1-g-ter-haver": {
+  "videoId": "b0gHn6q0OgI",
+  "title": "Learn Brazilian Portuguese // Lesson 1: Building sentences",
+  "channel": "Decoding Words with Andrew",
+  "views": 666139,
+  "seconds": 1041,
+  "query": "Portuguese grammar Ter (to have) A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "pt-a2-g-comparison": {
+  "videoId": "b0gHn6q0OgI",
+  "title": "Learn Brazilian Portuguese // Lesson 1: Building sentences",
+  "channel": "Decoding Words with Andrew",
+  "views": 666139,
+  "seconds": 1041,
+  "query": "Portuguese grammar Comparisons A2 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "ru-a1-g-gender": {
+  "videoId": "BKjITUoLrmc",
+  "title": "Lesson 3 | Russian Nouns Explained: Gender, Number & Animacy #russianforbeginners",
+  "channel": "Natasha RusNow",
+  "views": 72450,
+  "seconds": 815,
+  "query": "Russian grammar Noun gender A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "ru-a1-g-have": {
+  "videoId": "GweWgqkUeX0",
+  "title": "#9 Construction I have.../У меня есть...",
+  "channel": "Russian with Nastya",
+  "views": 2666,
+  "seconds": 696,
+  "query": "Russian grammar Possession: у меня есть A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "ru-a1-g-no-to-be": {
+  "videoId": "nQSfCYeZPqU",
+  "title": "The most important Russian verbs in Present tense",
+  "channel": "Lina's Lessons",
+  "views": 12756,
+  "seconds": 663,
+  "query": "Russian grammar No “to be” in the present A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "ru-a1-g-present-conjugation": {
+  "videoId": "BK1bIswL-eg",
+  "title": "214. Russian Vebs A1 Level | Most common Russian verbs conjugation",
+  "channel": "Russian with Nastya",
+  "views": 86910,
+  "seconds": 1343,
+  "query": "Russian grammar Present tense conjugation A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "ru-a1-g-questions-negation": {
+  "videoId": "qB2BW1EziOY",
+  "title": "Russian language practice – Russian lesson 11 – Russian language course",
+  "channel": "Real Russian Club",
+  "views": 156362,
+  "seconds": 1607,
+  "query": "Russian grammar Questions and negation A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "tr-a1-g-present-continuous": {
+  "videoId": "8i6pLMMn4U4",
+  "title": "Learn Turkish Lesson 35 - Simple Present Tense (Geniş Zaman)",
+  "channel": "Learn Turkish Via",
+  "views": 21918,
+  "seconds": 909,
+  "query": "Turkish grammar Present continuous: -iyor A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "tr-a1-g-questions-mi": {
+  "videoId": "lsesi5tRMbY",
+  "title": "Turkish Grammar : YES /NO QUESTIONS",
+  "channel": "Turkish Journey",
+  "views": 6513,
+  "seconds": 1556,
+  "query": "Turkish grammar Questions with mi A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "tr-a1-g-to-be-suffixes": {
+  "videoId": "E5mMEtvmigo",
+  "title": "Turkish Grammar: Positive Sentences in the Present Tense Using the Verb ‘to be’",
+  "channel": "Turkish Journey",
+  "views": 1495,
+  "seconds": 351,
+  "query": "Turkish grammar Personal suffixes for “to be” A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "tr-a1-g-vowel-harmony": {
+  "videoId": "BiC7o7YigXI",
+  "title": "Turkish Grammar : 2 Way Vowel Harmony (Turkishwithcan)",
+  "channel": "Turkishle",
+  "views": 28907,
+  "seconds": 441,
+  "query": "Turkish grammar Vowel harmony A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "tr-a1-g-word-order": {
+  "videoId": "hEnv6PPTIbo",
+  "title": "Basic Turkish Sentence Structure",
+  "channel": "Turkishle",
+  "views": 18904,
+  "seconds": 598,
+  "query": "Turkish grammar Word order: verb last A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "zh-a1-g-ma-questions": {
+  "videoId": "uSlZVM2VaFE",
+  "title": "12 Basic Chinese Grammar Points You Need to Know (HSK 1) - Beginner Chinese Grammar",
+  "channel": "Everyday Chinese",
+  "views": 236736,
+  "seconds": 1046,
+  "query": "Chinese grammar Questions with 吗 A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "zh-a1-g-measure-words": {
+  "videoId": "5BNxDj_h9iQ",
+  "title": "Top 25 Common Measure Words in Chinese (with Examples!)",
+  "channel": "Grace Mandarin Chinese",
+  "views": 33458,
+  "seconds": 1465,
+  "query": "Chinese grammar Measure words A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "zh-a1-g-no-conjugation": {
+  "videoId": "CajY1Hb8pwY",
+  "title": "pov: you learned all chinese grammar in 5 minutes.",
+  "channel": "Learn Chinese with Semplicinese ",
+  "views": 559220,
+  "seconds": 337,
+  "query": "Chinese grammar No verb conjugation A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "zh-a1-g-shi": {
+  "videoId": "0MBVY8w2VTQ",
+  "title": "Emphasizing specifics with 是……的  - Beginner Chinese Grammar HSK 1.15.1",
+  "channel": "Chinese Zero to Hero",
+  "views": 214068,
+  "seconds": 415,
+  "query": "Chinese grammar 是 shì (to be) A1 lesson",
+  "foundAt": "2026-11-20"
+ },
+ "zh-a1-g-tones-pinyin": {
+  "videoId": "n_Cj3aOSI1w",
+  "title": "Master Chinese Tones | Pronunciation Training",
+  "channel": "Grace Mandarin Chinese",
+  "views": 1530732,
+  "seconds": 743,
+  "query": "Chinese grammar Tones and pinyin A1 lesson",
+  "foundAt": "2026-11-20"
+ }
+}
