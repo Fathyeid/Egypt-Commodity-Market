@@ -36,6 +36,13 @@
       "when": 1795173712276,
       "tag": "0004_curriculum",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1795174374757,
+      "tag": "0005_content_imports",
+      "breakpoints": true
     }
   ]
 }

@@ -5,6 +5,7 @@ import { sql as dsql } from "drizzle-orm";
 import { languages } from "../src/lib/db/schema";
 import { LAUNCH_LANGUAGES } from "../src/lib/db/languages";
 import { seedHandwrittenCurriculum, HANDWRITTEN_COURSES } from "../src/lib/db/seed-curriculum";
+import { seedFactoryCurriculum } from "../src/lib/db/seed-factory";
 
 async function main() {
   const client = postgres(process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL!, { max: 1 });
@@ -28,6 +29,7 @@ async function main() {
   console.log(`Seeded ${LAUNCH_LANGUAGES.length} languages`);
   await seedHandwrittenCurriculum(db);
   console.log(`Seeded ${HANDWRITTEN_COURSES.length} hand-written courses`);
+  await seedFactoryCurriculum(db);
   await client.end();
 }
 main().catch((e) => { console.error(e); process.exit(1); });

@@ -11,7 +11,7 @@ import { db } from "@/lib/db";
 import { resolveLesson } from "@/lib/learner/study";
 import { DomainError } from "@/lib/learner/repo";
 import { toPublicLesson } from "@/content";
-import { getLesson, nextLessonId } from "@/lib/curriculum";
+import { getLesson, nextLessonId, type LessonAttribution } from "@/lib/curriculum";
 import { TopicPanel } from "@/components/learn/TopicPanel";
 
 export default async function LessonPage({ params }: PageProps<"/[lang]/learn/[lessonId]">) {
@@ -68,6 +68,26 @@ async function Player({ lang, dict, params }: { lang: Locale; dict: Dictionary; 
         nextHref={nextId ? `/${lang}/learn/${nextId}` : null}
         nextLabel={dict.learn.next}
       />
+      {found.attribution && <Attribution a={found.attribution} label={dict.lesson.attribution} />}
     </>
+  );
+}
+
+function Attribution({ a, label }: { a: LessonAttribution; label: string }) {
+  const people = [...new Set(a.sentences.map((s) => s.by).filter(Boolean))].slice(0, 8);
+  return (
+    <footer className="mx-auto mt-6 max-w-3xl text-xs text-faint" data-testid="attribution">
+      {label}{" "}
+      <a href="https://tatoeba.org" className="underline" target="_blank" rel="noopener noreferrer">Tatoeba</a>{" "}
+      (<a href="https://creativecommons.org/licenses/by/2.0/fr/" className="underline" target="_blank" rel="noopener noreferrer">{a.license}</a>)
+      {people.length > 0 && <> — <span dir="auto">{people.join("، ")}</span></>}
+      {" · "}
+      {a.sentences.slice(0, 10).map((s, i) => (
+        <span key={s.id}>
+          {i > 0 && " "}
+          <a href={`https://tatoeba.org/sentences/show/${s.id}`} className="underline" target="_blank" rel="noopener noreferrer">#{s.id}</a>
+        </span>
+      ))}
+    </footer>
   );
 }

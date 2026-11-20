@@ -14,7 +14,7 @@ import { getActiveTrack } from "@/lib/learner/repo";
 import { getProgress } from "@/lib/learner/study";
 import { coursesForLanguage, outlineLessonIds } from "@/lib/curriculum";
 
-export default async function LearnPage({ params }: PageProps<"/[lang]/learn">) {
+export default async function LearnPage({ params, searchParams }: PageProps<"/[lang]/learn">) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const dict = await getDictionary(lang);
@@ -23,7 +23,7 @@ export default async function LearnPage({ params }: PageProps<"/[lang]/learn">) 
       <Header lang={lang} dict={dict} />
       <main className="container-page max-w-3xl py-6 pb-28 sm:py-10">
         <Suspense fallback={<div className="h-64 animate-pulse rounded-2xl bg-surface-2" aria-hidden />}>
-          <Course lang={lang} dict={dict} />
+          <Course lang={lang} dict={dict} searchParams={searchParams} />
         </Suspense>
       </main>
     </>
@@ -69,7 +69,8 @@ async function Words({ lang, dict, userId, language }: { lang: Locale; dict: Dic
   );
 }
 
-async function Course({ lang, dict }: { lang: Locale; dict: Dictionary }) {
+async function Course({ lang, dict, searchParams }: { lang: Locale; dict: Dictionary; searchParams: PageProps<"/[lang]/learn">["searchParams"] }) {
+  const sp = await searchParams;
   const user = await requireUser(lang, `/${lang}/learn`);
   const track = await getActiveTrack(db, user.id);
   if (!track) redirect(`/${lang}/onboarding`);
@@ -84,12 +85,28 @@ async function Course({ lang, dict }: { lang: Locale; dict: Dictionary }) {
       </div>
     );
   }
-  const course = courses[0];
+  const wanted = typeof sp.level === "string" ? sp.level : (track.placementLevel ?? track.selfLevel);
+  const course = courses.find((c) => c.level === wanted) ?? courses.find((c) => c.level === "A1") ?? courses[0];
   const ids = outlineLessonIds(course);
   const progress = await getProgress(db, user.id, ids);
   const nextId = ids.find((id) => !progress.has(id));
+  const openUnit = course.units.find((u) => u.lessons.some((l) => l.id === nextId))?.id ?? course.units[0]?.id;
   return (
     <div className="space-y-6">
+      {courses.length > 1 && (
+        <nav aria-label={t.levelsLabel} className="flex flex-wrap gap-2" data-testid="level-tabs">
+          {courses.map((c) => (
+            <Link
+              key={c.id}
+              href={`/${lang}/learn?level=${c.level}`}
+              aria-current={c.id === course.id ? "page" : undefined}
+              className={`rounded-full border px-4 py-1.5 text-sm font-semibold ${c.id === course.id ? "border-brand bg-brand text-brand-ink" : "border-line bg-surface hover:bg-surface-2"}`}
+            >
+              {c.level}
+            </Link>
+          ))}
+        </nav>
+      )}
       <div>
         <h1 className="text-2xl font-bold sm:text-3xl">{course.title[lang]}</h1>
         <p className="mt-1 text-muted">{fmt(t.progress, { a: progress.size, b: ids.length })}</p>
@@ -99,9 +116,14 @@ async function Course({ lang, dict }: { lang: Locale; dict: Dictionary }) {
       </div>
       <Centers lang={lang} dict={dict} />
       {course.units.map((unit) => (
-        <section key={unit.id} className="card p-5 sm:p-6">
-          <h2 className="mb-3 font-semibold">{unit.title[lang]}</h2>
-          <ol className="space-y-2">
+        <details key={unit.id} open={unit.id === openUnit} className="card group p-5 sm:p-6">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 font-semibold">
+            <h2>{unit.title[lang]}</h2>
+            <span className="text-sm font-normal text-muted">
+              {fmt(t.unitProgress, { a: unit.lessons.filter((l) => progress.has(l.id)).length, b: unit.lessons.length })}
+            </span>
+          </summary>
+          <ol className="mt-3 space-y-2">
             {unit.lessons.map((lesson) => {
               const best = progress.get(lesson.id);
               const isNext = lesson.id === nextId;
@@ -126,7 +148,7 @@ async function Course({ lang, dict }: { lang: Locale; dict: Dictionary }) {
               );
             })}
           </ol>
-        </section>
+        </details>
       ))}
       <p className="text-sm text-faint">{t.moreSoon}</p>
       <Words lang={lang} dict={dict} userId={user.id} language={track.targetLanguage} />

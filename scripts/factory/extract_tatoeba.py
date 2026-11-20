@@ -60,6 +60,9 @@ def tokens(text: str, l3: str) -> list[str]:
     return re.findall(r"[^\W\d_]+(?:['’-][^\W\d_]+)*", text.lower())
 
 
+with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "blocklist.json"), encoding="utf-8") as _f:
+    BLOCK = re.compile(r"\b(?:" + "|".join(re.escape(w) for w in json.load(_f)["words"]) + r")\b", re.I)
+
 GOOD = re.compile(r"^[^<>{}\[\]#@=|\\/~^*_]+$")
 
 
@@ -175,24 +178,40 @@ def main() -> None:
             if sid in user:
                 row["u"] = user[sid]
             if l3 == "eng":
+                if BLOCK.search(text):
+                    continue
                 a = to_ar[sid][0]
                 row.update(en=text, enId=sid, ar=sent[a][1], arId=a)
             else:
-                e = to_en[sid][0]
+                # Prefer an English translation that itself has an Arabic translation.
+                e = next((x for x in to_en[sid] if to_ar.get(x)), to_en[sid][0])
                 row.update(en=sent[e][1], enId=e)
-                if to_ar.get(sid):
+                if BLOCK.search(row["en"]):
+                    continue
+                if l3 == "ara":
+                    pass
+                elif to_ar.get(sid):
                     a = to_ar[sid][0]
                     row.update(ar=sent[a][1], arId=a)
+                elif to_ar.get(e):
+                    # Human Arabic translation of the English pivot ("via English").
+                    a = to_ar[e][0]
+                    row.update(ar=sent[a][1], arId=a, arVia="en")
                 alt = sorted({sent[o][1] for o in same_meaning[e] if o != sid and acceptable(sent[o][1], l3)})
                 if alt:
                     row["alt"] = alt[:4]
             rows.append(row)
 
         # Keep an even spread across difficulty so every level has material.
+        # within each of 100 difficulty strata, prefer sentences with an Arabic meaning.
         rows.sort(key=lambda r: r["d"])
         if len(rows) > MAX_PAIRS:
-            step = len(rows) / MAX_PAIRS
-            rows = [rows[int(i * step)] for i in range(MAX_PAIRS)]
+            strata, quota, kept = 100, MAX_PAIRS // 100, []
+            for k in range(strata):
+                chunk = rows[k * len(rows) // strata:(k + 1) * len(rows) // strata]
+                chunk.sort(key=lambda r: ("ar" not in r, r["id"]))
+                kept.extend(sorted(chunk[:quota], key=lambda r: r["id"]))
+            rows = sorted(kept, key=lambda r: r["d"])
         with gzip.open(f"{OUT}/{l2}.jsonl.gz", "wt", encoding="utf-8", compresslevel=9) as f:
             for r in rows:
                 f.write(json.dumps(r, ensure_ascii=False, separators=(",", ":")) + "\n")

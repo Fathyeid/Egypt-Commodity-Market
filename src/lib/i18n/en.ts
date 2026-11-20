@@ -220,17 +220,20 @@ const en: Dictionary = {
     method: "How it's calculated: we start at your self-rated level; questions get harder after correct answers and easier after mistakes. Each skill's level is the one most consistent with all your answers, and your overall level is the conservative median of the four skills.",
   },
   learn: {
+    levelsLabel: "Levels",
+    unitProgress: "{a}/{b}",
     title: "Lessons",
     progress: "{a} of {b} lessons completed",
     start: "Start",
     review: "Review",
     next: "Next lesson",
     best: "Best score {n}%",
-    noCourse: "There's no course for this language yet. Available now: English and German (A1).",
+    noCourse: "No published lessons for this language yet. New lessons appear here once they are reviewed.",
     moreSoon: "More lessons for this level are in preparation.",
     lessonNotFound: "This lesson isn't in your active language.",
   },
   lesson: {
+    attribution: "Sentences and translations from",
     sections: {
       explanation: "Explanation",
       vocabulary: "New words",

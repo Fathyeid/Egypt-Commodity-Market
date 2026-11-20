@@ -487,4 +487,12 @@ export const curriculumLessons = pgTable(
   (t) => [index("lessons_course_pos_idx").on(t.courseId, t.position), index("lessons_status_idx").on(t.status)],
 );
 
+/** One row per imported content source, so a build re-imports only when the data changed. */
+export const contentImports = pgTable("content_imports", {
+  source: text("source").primaryKey(), // e.g. tatoeba:de
+  hash: text("hash").notNull(),
+  lessons: integer("lessons").notNull(),
+  importedAt: timestamp("imported_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
 export const authSchema = { user, session, account, verification };

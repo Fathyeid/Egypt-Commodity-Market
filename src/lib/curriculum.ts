@@ -12,6 +12,7 @@ type Db = PgDatabase<any, any, any>;
 
 export type LessonOutline = { id: string; title: L10n; goal: L10n; position: number };
 export type CourseOutline = { id: string; language: string; level: string; title: L10n; units: { id: string; title: L10n; lessons: LessonOutline[] }[] };
+export type LessonAttribution = { source: "tatoeba"; license: string; sentences: { id: number; by?: string }[] };
 export type TopicInfo = { id: string; title: L10n; explanation: L10n | null; videoId: string | null; videoTitle: string | null };
 
 export async function coursesForLanguage(db: Db, language: string): Promise<CourseOutline[]> {
@@ -59,7 +60,7 @@ export async function getLesson(db: Db, lessonId: string, opts: { includeDrafts?
   }
   const content = row.content as Omit<Lesson, "id" | "title" | "goal">;
   const lesson: Lesson = { id: row.id, title: row.title as L10n, goal: row.goal as L10n, ...content };
-  return { lesson, language: course.language, level: course.level, courseId: course.id, unitTitle: unit.title as L10n, position: row.position, topic, status: row.status };
+  return { lesson, language: course.language, level: course.level, courseId: course.id, unitTitle: unit.title as L10n, position: row.position, topic, status: row.status, source: row.source, attribution: (row.attribution ?? null) as LessonAttribution | null };
 }
 
 /** Next published lesson in the same course, by position. */
