@@ -129,7 +129,7 @@ async function Course({ lang, dict, searchParams }: { lang: Locale; dict: Dictio
         </div>
       </div>
       <ReviewLink lang={lang} dict={dict} userId={user.id} language={track.targetLanguage} />
-      <Centers lang={lang} dict={dict} />
+      <h2 className="font-semibold" data-testid="units-heading">{fmt(t.unitsHeading, { u: course.units.length, n: ids.length })}</h2>
       {course.units.map((unit) => (
         <details key={unit.id} open={unit.id === openUnit} className="card group p-5 sm:p-6">
           <summary className="flex cursor-pointer list-none items-center justify-between gap-3 font-semibold">
@@ -165,7 +165,7 @@ async function Course({ lang, dict, searchParams }: { lang: Locale; dict: Dictio
           </ol>
         </details>
       ))}
-      <p className="text-sm text-faint">{t.moreSoon}</p>
+      <Centers lang={lang} dict={dict} />
       <Words lang={lang} dict={dict} userId={user.id} language={track.targetLanguage} />
     </div>
   );
