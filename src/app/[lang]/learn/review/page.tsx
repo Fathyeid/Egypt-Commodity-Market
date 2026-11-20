@@ -40,14 +40,7 @@ async function Review({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         <h1 className="mt-1 text-2xl font-bold sm:text-3xl">{t.title}</h1>
         <p className="mt-1 text-sm text-muted">{fmt(t.stats, { due: counts.due, learned: counts.learned, total: counts.total })}</p>
       </div>
-      {cards.length === 0 ? (
-        <div className="card space-y-3 p-6 text-center" data-testid="review-empty">
-          <p className="text-muted">{counts.total === 0 ? t.emptyDeck : t.nothingDue}</p>
-          <Link href={`/${lang}/learn`} className="btn-primary">{t.back}</Link>
-        </div>
-      ) : (
-        <ReviewDeck cards={cards} language={track.targetLanguage} lang={lang} t={t} listen={dict.placement.listen} noVoice={dict.lesson.noVoice} />
-      )}
+      <ReviewDeck cards={cards} emptyText={counts.total === 0 ? t.emptyDeck : t.nothingDue} language={track.targetLanguage} lang={lang} t={t} listen={dict.placement.listen} noVoice={dict.lesson.noVoice} />
       <p className="text-xs text-faint">{t.howItWorks}</p>
     </div>
   );

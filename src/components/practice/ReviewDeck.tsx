@@ -10,13 +10,25 @@ type Card = { id: string; term: string; meaning: string | null };
 const GRADES = ["again", "hard", "good", "easy"] as const;
 
 /** Flashcards: see the word, try to recall, reveal, then grade honestly. */
-export function ReviewDeck({ cards, language, lang, t, listen, noVoice }: { cards: Card[]; language: string; lang: string; t: Dictionary["review"]; listen: string; noVoice: string }) {
+export function ReviewDeck({ cards: initial, emptyText, language, lang, t, listen, noVoice }: { cards: Card[]; emptyText: string; language: string; lang: string; t: Dictionary["review"]; listen: string; noVoice: string }) {
+  // Snapshot the session's cards: the server may re-render this page after a review
+  // (e.g. a refreshed session cookie), and the session must not change underneath the learner.
+  const [cards] = useState(initial);
   const [i, setI] = useState(0);
   const [shown, setShown] = useState(false);
   const [error, setError] = useState(false);
   const [counts, setCounts] = useState({ again: 0, hard: 0, good: 0, easy: 0 });
   const [pending, start] = useTransition();
   const card = cards[i];
+
+  if (cards.length === 0) {
+    return (
+      <div className="card space-y-3 p-6 text-center" data-testid="review-empty">
+        <p className="text-muted">{emptyText}</p>
+        <Link href={`/${lang}/learn`} className="btn-primary">{t.back}</Link>
+      </div>
+    );
+  }
 
   if (!card) {
     const done = counts.hard + counts.good + counts.easy;
