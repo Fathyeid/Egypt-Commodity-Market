@@ -1,6 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const PORT = Number(process.env.E2E_PORT ?? 3100);
+// A fresh admin account per run (tests read it from the environment).
+process.env.E2E_ADMIN_EMAIL ??= `admin-${Date.now()}@e2e.test`;
 
 export default defineConfig({
   testDir: "tests/e2e",
@@ -11,7 +13,7 @@ export default defineConfig({
   use: { baseURL: `http://localhost:${PORT}`, trace: "off" },
   webServer: {
     command: `npm run start -- -p ${PORT}`,
-    env: { AUTH_RATE_LIMIT: "off", BETTER_AUTH_URL: `http://localhost:${PORT}`, AI_PROVIDER: "fake", SPEECH_PROVIDER: "fake" },
+    env: { AUTH_RATE_LIMIT: "off", BETTER_AUTH_URL: `http://localhost:${PORT}`, AI_PROVIDER: "fake", SPEECH_PROVIDER: "fake", ADMIN_EMAILS: process.env.E2E_ADMIN_EMAIL },
     url: `http://localhost:${PORT}/ar`,
     reuseExistingServer: false,
     timeout: 120_000,
