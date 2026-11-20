@@ -21,9 +21,10 @@ QUERIES = {
     "en": ("Big Ben Westminster", "big ben"), "de": ("Brandenburger Tor", "brandenburg"), "fr": ("Tour Eiffel", "eiffel"),
     "es": ("Sagrada Familia", "sagrada"), "it": ("Colosseum Rome", "colos"), "pt": ("Torre de Belem Lisboa", "bel"),
     "tr": ("Hagia Sophia", "hagia"), "ru": ("Saint Basil's Cathedral Moscow", "basil"), "zh": ("Temple of Heaven", "heaven"),
-    "ja": ("Mount Fuji", "fuji"), "ko": ("Gyeongbokgung", "gyeongbok"), "ar": ("Giza pyramids", "giza"),
+    "ja": ("Mount Fuji Chureito Pagoda", "fuji"), "ko": ("Gyeongbokgung", "gyeongbok"), "ar": ("Giza pyramids", "giza"),
 }
 CATS = ["Featured pictures on Wikimedia Commons", "Quality images", "Valued images sorted by promotion date"]
+EXCLUDE = re.compile(r"grumman|hawkeye|aircraft|navy|military|jet|plane|mural", re.I)
 OK_LICENSE = re.compile(r"^(cc0|public domain|pd|cc by(-sa)? [\d.]+)", re.I)
 
 
@@ -66,7 +67,7 @@ def main() -> None:
                 ii = (p.get("imageinfo") or [{}])[0]
                 meta = ii.get("extmetadata", {})
                 lic = meta.get("LicenseShortName", {}).get("value", "")
-                if must not in p.get("title", "").lower().replace("é", "e").replace("_", " "):
+                if must not in p.get("title", "").lower().replace("é", "e").replace("_", " ") or EXCLUDE.search(p.get("title", "")):
                     continue
                 if ii.get("mime") != "image/jpeg" or not OK_LICENSE.match(lic):
                     continue
