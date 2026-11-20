@@ -55,16 +55,16 @@ export function LanguageBanner({ language, title, done, total, t }: { language: 
   const photo = !!landmarkCredit(language);
   return (
     <section className="relative isolate overflow-hidden" data-testid="learn-hero">
-      <div className="absolute inset-y-0 end-0 -z-10 w-[58%]">
+      <div className="absolute inset-0 -z-10">
         {photo ? (
           // eslint-disable-next-line @next/next/no-img-element -- static, credited Commons photo
           <img src={`/images/landmarks/${language}.jpg`} alt="" className="size-full object-cover" />
         ) : (
-          <div className="flex size-full items-end justify-center bg-gradient-to-b from-[#3d63b8] to-[#14234d] pb-2">
+          <div className="flex size-full items-end justify-end bg-gradient-to-b from-[#3d63b8] to-[#14234d] px-6 pb-2">
             <Landmark language={language} className="h-[80%] w-auto fill-[#f2c14e]/80" />
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-l from-[#0d1838] via-[#0d1838]/40 to-transparent rtl:bg-gradient-to-r" />
+        <div className="hero-fade absolute inset-0" />
       </div>
       <div className="flex min-h-36 items-center gap-4 px-4 py-5 sm:min-h-44">
         <Ring pct={pct} />
