@@ -4,6 +4,7 @@ import { IBM_Plex_Sans_Arabic } from "next/font/google";
 import "../globals.css";
 import { dirOf, isLocale, locales } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n";
+import { siteUrl } from "@/lib/site-url";
 
 const plexArabic = IBM_Plex_Sans_Arabic({
   subsets: ["arabic", "latin"],
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
   return {
     title: { default: dict.meta.title, template: `%s · ${dict.brand}` },
     description: dict.meta.description,
-    metadataBase: new URL(process.env.BETTER_AUTH_URL ?? "http://localhost:3000"),
+    metadataBase: new URL(siteUrl() ?? "http://localhost:3000"),
     alternates: { canonical: `/${lang}`, languages: { ar: "/ar", en: "/en", "x-default": "/ar" } },
   };
 }

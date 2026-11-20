@@ -6,7 +6,7 @@ import { languages } from "../src/lib/db/schema";
 import { LAUNCH_LANGUAGES } from "../src/lib/db/languages";
 
 async function main() {
-  const client = postgres(process.env.DATABASE_URL!, { max: 1 });
+  const client = postgres(process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL!, { max: 1 });
   const db = drizzle(client);
   await db
     .insert(languages)

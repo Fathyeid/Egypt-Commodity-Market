@@ -6,10 +6,26 @@ import { db } from "@/lib/db";
 import { authSchema } from "@/lib/db/schema";
 import { serviceStatus } from "@/lib/services";
 import { sendMail } from "@/lib/email";
+import { createHash } from "node:crypto";
+import { extraTrustedOrigins, siteUrl } from "@/lib/site-url";
 
 const services = serviceStatus();
 
+/**
+ * Session-signing secret. Set BETTER_AUTH_SECRET in production; if it's missing,
+ * derive one from DATABASE_URL (itself a secret) so a fresh deploy still works.
+ */
+function authSecret(): string | undefined {
+  if (process.env.BETTER_AUTH_SECRET) return process.env.BETTER_AUTH_SECRET;
+  if (!process.env.DATABASE_URL) return undefined;
+  console.warn("BETTER_AUTH_SECRET is not set; deriving it from DATABASE_URL. Set it explicitly for production.");
+  return createHash("sha256").update(`lisan-auth:${process.env.DATABASE_URL}`).digest("base64");
+}
+
 export const auth = betterAuth({
+  baseURL: siteUrl(),
+  secret: authSecret(),
+  trustedOrigins: extraTrustedOrigins(),
   database: drizzleAdapter(db, { provider: "pg", schema: authSchema }),
   emailAndPassword: {
     enabled: true,
