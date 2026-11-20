@@ -11,52 +11,52 @@
     "de": {
       "sentences": 786987,
       "pairs": 25000,
-      "withArabic": 107
+      "withArabic": 18979
     },
     "fr": {
       "sentences": 730700,
       "pairs": 25000,
-      "withArabic": 138
+      "withArabic": 19721
     },
     "es": {
       "sentences": 443266,
       "pairs": 25000,
-      "withArabic": 283
+      "withArabic": 16073
     },
     "it": {
       "sentences": 993442,
       "pairs": 25000,
-      "withArabic": 21
+      "withArabic": 24210
     },
     "pt": {
       "sentences": 445912,
       "pairs": 25000,
-      "withArabic": 13
+      "withArabic": 14152
     },
     "tr": {
       "sentences": 750286,
       "pairs": 25000,
-      "withArabic": 57
+      "withArabic": 22103
     },
     "ru": {
       "sentences": 1237680,
       "pairs": 25000,
-      "withArabic": 132
+      "withArabic": 23971
     },
     "zh": {
       "sentences": 89315,
       "pairs": 25000,
-      "withArabic": 47
+      "withArabic": 6830
     },
     "ja": {
       "sentences": 248989,
       "pairs": 25000,
-      "withArabic": 136
+      "withArabic": 14144
     },
     "ko": {
       "sentences": 15970,
-      "pairs": 10168,
-      "withArabic": 67
+      "pairs": 9958,
+      "withArabic": 1808
     },
     "ar": {
       "sentences": 68788,
