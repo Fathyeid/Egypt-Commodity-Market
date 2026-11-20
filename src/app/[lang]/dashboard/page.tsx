@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { notFound, redirect } from "next/navigation";
-import { BookOpen, BookOpenCheck, Clock, Flame, Gauge, Layers } from "lucide-react";
+import { Award, BookOpen, BookOpenCheck, Clock, Flame, Gauge, Layers } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { TrackSwitcher } from "@/components/dashboard/TrackSwitcher";
 import { getDictionary, type Dictionary } from "@/lib/i18n";
@@ -10,10 +10,11 @@ import { fmt } from "@/lib/i18n/format";
 import { requireUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { getDashboardStats, getProfile, listLanguages, listTracks } from "@/lib/learner/repo";
+import { completedLessonCount, earnedBadges, levelFromXp, minutesToday, wordCounts } from "@/lib/learner/srs";
 import { serviceStatus, type ServiceKey } from "@/lib/services";
 import { getProgress, getSkillLevels, latestPlacement } from "@/lib/learner/study";
 import { placementAvailable } from "@/content";
-import { coursesForLanguage, outlineLessonIds, lessonVocabulary } from "@/lib/curriculum";
+import { coursesForLanguage, outlineLessonIds } from "@/lib/curriculum";
 import { StartPlacementButton } from "@/components/placement/StartPlacementButton";
 import { recurringErrors } from "@/lib/learner/conversations";
 
@@ -46,12 +47,19 @@ async function Dashboard({ lang, dict }: { lang: Locale; dict: Dictionary }) {
     recurringErrors(db, user.id, active.id),
   ]);
   const courses = await coursesForLanguage(db, active.targetLanguage);
-  const course = courses[0] ?? null;
+  const wantedLevel = active.placementLevel ?? active.selfLevel;
+  const course = courses.find((c) => c.level === wantedLevel) ?? courses.find((c) => c.level === "A1") ?? courses[0] ?? null;
   const ids = course ? outlineLessonIds(course) : [];
-  const progress = await getProgress(db, user.id, ids);
-  // Words introduced in lessons the learner has completed (spaced repetition arrives in Phase 5).
-  const vocab = await lessonVocabulary(db, [...progress.keys()]);
-  const wordsLearned = [...vocab.values()].reduce((n, v) => n + v.terms.length, 0);
+  const [progress, words, lessonsDone, todayMinutes] = await Promise.all([
+    getProgress(db, user.id, ids),
+    wordCounts(db, user.id, active.targetLanguage),
+    completedLessonCount(db, user.id),
+    minutesToday(db, user.id),
+  ]);
+  const wordsLearned = words.learned;
+  const lvl = levelFromXp(stats.totalXp);
+  const badges = earnedBadges({ lessons: lessonsDone, streak: stats.streak, words: words.learned, xp: stats.totalXp });
+  const goalPct = Math.min(100, Math.round((todayMinutes / active.dailyMinutes) * 100));
   const nextLessonId = ids.find((id) => !progress.has(id)) ?? null;
   const nextLesson = nextLessonId ? course!.units.flatMap((u) => u.lessons).find((l) => l.id === nextLessonId) ?? null : null;
   const SKILLS = ["vocabulary", "grammar", "reading", "listening", "writing", "speaking", "pronunciation"] as const;
@@ -92,6 +100,34 @@ async function Dashboard({ lang, dict }: { lang: Locale; dict: Dictionary }) {
       </section>
 
       {!hasActivity && <p className="rounded-xl bg-surface-2 px-4 py-3 text-sm text-muted">{t.emptyActivity}</p>}
+
+      <section className="grid gap-3 sm:grid-cols-3" aria-label={t.progressTitle}>
+        <div className="card p-4" data-testid="xp-level">
+          <div className="flex items-baseline justify-between">
+            <span className="font-semibold">{fmt(t.xpLevel, { n: lvl.level })}</span>
+            <span className="text-sm text-muted" dir="ltr">{stats.totalXp} XP</span>
+          </div>
+          <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-2">
+            <div className="h-full rounded-full bg-brand" style={{ width: `${(lvl.xpIntoLevel / lvl.xpForNext) * 100}%` }} />
+          </div>
+          <p className="mt-1 text-xs text-faint">{fmt(t.xpToNext, { n: lvl.xpForNext - lvl.xpIntoLevel })}</p>
+        </div>
+        <div className="card p-4" data-testid="daily-goal">
+          <div className="flex items-baseline justify-between">
+            <span className="font-semibold">{t.todayGoal}</span>
+            <span className="text-sm text-muted">{fmt(t.todayMinutes, { a: todayMinutes, b: active.dailyMinutes })}</span>
+          </div>
+          <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-2">
+            <div className={`h-full rounded-full ${goalPct >= 100 ? "bg-ok" : "bg-accent"}`} style={{ width: `${goalPct}%` }} />
+          </div>
+          <p className="mt-1 text-xs text-faint">{goalPct >= 100 ? t.goalDone : t.goalKeepGoing}</p>
+        </div>
+        <Link href={`/${lang}/learn/review`} className="card p-4 transition-shadow hover:shadow-card" data-testid="review-cta">
+          <span className="font-semibold">{t.reviewTitle}</span>
+          <p className="mt-1 text-2xl font-bold" dir="ltr" style={{ textAlign: "start" }}>{words.due}</p>
+          <p className="text-xs text-faint">{words.due > 0 ? t.reviewDue : fmt(t.reviewNone, { n: words.total })}</p>
+        </Link>
+      </section>
 
       <div className="grid gap-5 lg:grid-cols-3">
         <section className="card space-y-5 p-5 sm:p-6 lg:col-span-2">
@@ -139,6 +175,19 @@ async function Dashboard({ lang, dict }: { lang: Locale; dict: Dictionary }) {
           />
         </section>
       </div>
+
+      <section className="card p-5 sm:p-6" data-testid="badges">
+        <h2 className="mb-3 font-semibold">{t.badgesTitle}</h2>
+        <ul className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-6">
+          {badges.map((b) => (
+            <li key={b.id} className={`rounded-xl border p-3 text-center text-sm ${b.earned ? "border-brand bg-brand-soft/50" : "border-line opacity-70"}`} data-earned={b.earned}>
+              <Award className={`mx-auto size-6 ${b.earned ? "text-brand" : "text-faint"}`} aria-hidden />
+              <span className="mt-1 block font-semibold">{t.badges[b.id]}</span>
+              {!b.earned && <span className="mt-1 block h-1 overflow-hidden rounded-full bg-surface-2"><span className="block h-full bg-faint" style={{ width: `${b.progress * 100}%` }} /></span>}
+            </li>
+          ))}
+        </ul>
+      </section>
 
       <section className="card p-5 sm:p-6">
         <h2 className="mb-3 font-semibold">{t.skillsTitle}</h2>

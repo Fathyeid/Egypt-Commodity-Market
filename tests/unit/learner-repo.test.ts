@@ -89,12 +89,12 @@ describe("isolation between users", () => {
       { userId: b, kind: "lesson", durationSeconds: 3000, xp: 99 },
     ]);
     const s = await repo.getDashboardStats(db, a, null);
-    expect(s).toMatchObject({ minutesThisWeek: 10, totalXp: 20, streak: 1, wordsLearned: 0 });
+    expect(s).toMatchObject({ minutesThisWeek: 10, totalXp: 20, streak: 1 });
   });
 
   it("a new user's dashboard is all zeros (no fake data)", async () => {
     const a = await makeUser("alice");
-    expect(await repo.getDashboardStats(db, a, null)).toEqual({ minutesThisWeek: 0, xpThisWeek: 0, totalXp: 0, streak: 0, wordsLearned: 0 });
+    expect(await repo.getDashboardStats(db, a, null)).toEqual({ minutesThisWeek: 0, xpThisWeek: 0, totalXp: 0, streak: 0 });
   });
 });
 

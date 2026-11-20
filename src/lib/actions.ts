@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import { getSession } from "@/lib/auth/session";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import * as repo from "@/lib/learner/repo";
+import * as srs from "@/lib/learner/srs";
 import { z } from "zod";
 import { onboardingInput, profileInput, trackInput } from "@/lib/validation";
 
@@ -160,13 +161,13 @@ export async function checkExerciseAction(lessonId: string, exerciseId: string, 
   }
 }
 
-export async function submitQuizAction(lessonId: string, answers: unknown, durationSeconds: number) {
+export async function submitQuizAction(lessonId: string, answers: unknown, durationSeconds: number, lang?: string) {
   const userId = await uid();
   if (!userId) return { ok: false as const, error: "unauthorized" };
   const parsed = z.record(z.string().max(20), answerSchema).safeParse(answers);
   if (!parsed.success || typeof lessonId !== "string") return { ok: false as const, error: "invalid" };
   try {
-    const result = await study.submitQuiz(db, userId, lessonId, parsed.data, Number(durationSeconds));
+    const result = await study.submitQuiz(db, userId, lessonId, parsed.data, Number(durationSeconds), lang === "en" ? "en" : "ar");
     revalidatePath("/[lang]", "layout");
     return { ok: true as const, result };
   } catch (e) {
@@ -286,4 +287,19 @@ export async function submitWritingAction(lang: string, taskId: string, text: st
     return convoFail(e);
   }
   redirect(`/${locale}/learn/writing/${id}`);
+}
+
+/* ------------------------- Phase 5: spaced repetition ------------------------- */
+
+export async function reviewWordAction(id: unknown, grade: unknown): Promise<ActionResult> {
+  const userId = await uid();
+  if (!userId) return { ok: false, error: "unauthorized" };
+  const parsed = z.object({ id: z.uuid(), grade: z.enum(srs.GRADES) }).safeParse({ id, grade });
+  if (!parsed.success) return { ok: false, error: "invalid" };
+  try {
+    await srs.reviewWord(db, userId, parsed.data.id, parsed.data.grade);
+  } catch (e) {
+    return fail(e);
+  }
+  return { ok: true };
 }

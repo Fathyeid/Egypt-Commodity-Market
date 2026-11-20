@@ -175,7 +175,6 @@ export async function getDashboardStats(db: Db, userId: string, trackId: string 
     xpThisWeek: week.xp,
     totalXp: total.xp,
     streak: computeStreak(days.map((d) => d.day), now),
-    wordsLearned: 0, // vocabulary system arrives in Phase 5 — no table yet, so truly 0
   };
 }
 

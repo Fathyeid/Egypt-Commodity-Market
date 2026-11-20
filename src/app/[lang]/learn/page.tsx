@@ -13,6 +13,7 @@ import { db } from "@/lib/db";
 import { getActiveTrack } from "@/lib/learner/repo";
 import { getProgress } from "@/lib/learner/study";
 import { coursesForLanguage, outlineLessonIds } from "@/lib/curriculum";
+import { wordCounts } from "@/lib/learner/srs";
 
 export default async function LearnPage({ params, searchParams }: PageProps<"/[lang]/learn">) {
   const { lang } = await params;
@@ -51,6 +52,19 @@ function Centers({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         ))}
       </div>
     </section>
+  );
+}
+
+async function ReviewLink({ lang, dict, userId, language }: { lang: Locale; dict: Dictionary; userId: string; language: string }) {
+  const c = await wordCounts(db, userId, language);
+  return (
+    <Link href={`/${lang}/learn/review`} className="card flex items-center justify-between gap-3 p-4 transition-shadow hover:shadow-card" data-testid="learn-review">
+      <span>
+        <span className="block font-semibold">{dict.review.title}</span>
+        <span className="block text-sm text-muted">{fmt(dict.review.stats, { due: c.due, learned: c.learned, total: c.total })}</span>
+      </span>
+      <span className={`rounded-full px-3 py-1 text-sm font-bold ${c.due > 0 ? "bg-brand text-brand-ink" : "bg-surface-2 text-muted"}`}>{c.due}</span>
+    </Link>
   );
 }
 
@@ -114,6 +128,7 @@ async function Course({ lang, dict, searchParams }: { lang: Locale; dict: Dictio
           <div className="h-full rounded-full bg-brand" style={{ width: `${(progress.size / ids.length) * 100}%` }} />
         </div>
       </div>
+      <ReviewLink lang={lang} dict={dict} userId={user.id} language={track.targetLanguage} />
       <Centers lang={lang} dict={dict} />
       {course.units.map((unit) => (
         <details key={unit.id} open={unit.id === openUnit} className="card group p-5 sm:p-6">
