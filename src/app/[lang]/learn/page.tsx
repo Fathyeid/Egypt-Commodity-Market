@@ -12,7 +12,7 @@ import { requireUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { getActiveTrack } from "@/lib/learner/repo";
 import { getProgress } from "@/lib/learner/study";
-import { coursesFor, lessonIds } from "@/content";
+import { coursesForLanguage, outlineLessonIds } from "@/lib/curriculum";
 
 export default async function LearnPage({ params }: PageProps<"/[lang]/learn">) {
   const { lang } = await params;
@@ -74,7 +74,7 @@ async function Course({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const track = await getActiveTrack(db, user.id);
   if (!track) redirect(`/${lang}/onboarding`);
   const t = dict.learn;
-  const courses = coursesFor(track.targetLanguage);
+  const courses = await coursesForLanguage(db, track.targetLanguage);
   if (!courses.length) {
     return (
       <div className="space-y-6">
@@ -85,7 +85,7 @@ async function Course({ lang, dict }: { lang: Locale; dict: Dictionary }) {
     );
   }
   const course = courses[0];
-  const ids = lessonIds(course);
+  const ids = outlineLessonIds(course);
   const progress = await getProgress(db, user.id, ids);
   const nextId = ids.find((id) => !progress.has(id));
   return (

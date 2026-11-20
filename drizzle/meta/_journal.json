@@ -29,6 +29,13 @@
       "when": 1795171849856,
       "tag": "0003_phase4",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1795173712276,
+      "tag": "0004_curriculum",
+      "breakpoints": true
     }
   ]
 }

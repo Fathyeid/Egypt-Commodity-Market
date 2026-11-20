@@ -12,7 +12,8 @@ import { db } from "@/lib/db";
 import { getDashboardStats, getProfile, listLanguages, listTracks } from "@/lib/learner/repo";
 import { serviceStatus, type ServiceKey } from "@/lib/services";
 import { getProgress, getSkillLevels, latestPlacement } from "@/lib/learner/study";
-import { coursesFor, lessonIds, placementAvailable, findLesson } from "@/content";
+import { placementAvailable } from "@/content";
+import { coursesForLanguage, outlineLessonIds, lessonVocabulary } from "@/lib/curriculum";
 import { StartPlacementButton } from "@/components/placement/StartPlacementButton";
 import { recurringErrors } from "@/lib/learner/conversations";
 
@@ -44,13 +45,15 @@ async function Dashboard({ lang, dict }: { lang: Locale; dict: Dictionary }) {
     latestPlacement(db, user.id, active.id),
     recurringErrors(db, user.id, active.id),
   ]);
-  const course = coursesFor(active.targetLanguage)[0] ?? null;
-  const ids = course ? lessonIds(course) : [];
+  const courses = await coursesForLanguage(db, active.targetLanguage);
+  const course = courses[0] ?? null;
+  const ids = course ? outlineLessonIds(course) : [];
   const progress = await getProgress(db, user.id, ids);
   // Words introduced in lessons the learner has completed (spaced repetition arrives in Phase 5).
-  const wordsLearned = [...progress.keys()].reduce((n, id) => n + (findLesson(id)?.lesson.vocabulary.length ?? 0), 0);
+  const vocab = await lessonVocabulary(db, [...progress.keys()]);
+  const wordsLearned = [...vocab.values()].reduce((n, v) => n + v.terms.length, 0);
   const nextLessonId = ids.find((id) => !progress.has(id)) ?? null;
-  const nextLesson = nextLessonId ? findLesson(nextLessonId)?.lesson ?? null : null;
+  const nextLesson = nextLessonId ? course!.units.flatMap((u) => u.lessons).find((l) => l.id === nextLessonId) ?? null : null;
   const SKILLS = ["vocabulary", "grammar", "reading", "listening", "writing", "speaking", "pronunciation"] as const;
   const SCALE = ["A0", "A1", "A2", "B1", "B2", "C1", "C2"];
   const t = dict.dashboard;

@@ -242,6 +242,7 @@ const en: Dictionary = {
       review: "Review",
     },
     goal: "Lesson goal",
+    topicVideo: "Topic video",
     check: "Check",
     correct: "Correct!",
     wrong: "Not quite. Correct answer:",
