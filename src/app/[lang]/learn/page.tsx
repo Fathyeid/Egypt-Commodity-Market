@@ -16,6 +16,8 @@ import { coursesForLanguage, outlineLessonIds } from "@/lib/curriculum";
 import { wordCounts } from "@/lib/learner/srs";
 import { checkpointScores } from "@/lib/learner/checkpoint";
 import { LearningPath } from "@/components/learn/LearningPath";
+import { ContinueCard, LearnHero, LevelJourney } from "@/components/learn/LearnHero";
+import { LANGUAGE_NAMES } from "@/lib/factory/generate";
 
 export default async function LearnPage({ params, searchParams }: PageProps<"/[lang]/learn">) {
   const { lang } = await params;
@@ -106,33 +108,22 @@ async function Course({ lang, dict, searchParams }: { lang: Locale; dict: Dictio
   const ids = outlineLessonIds(course);
   const [progress, checkpoints] = await Promise.all([getProgress(db, user.id, ids), checkpointScores(db, user.id, course.units.map((u) => u.id))]);
   const nextId = ids.find((id) => !progress.has(id));
-  const pct = Math.round((progress.size / ids.length) * 100);
+  const nextLesson = course.units.flatMap((u) => u.lessons).find((l) => l.id === nextId) ?? null;
   return (
     <div className="space-y-6">
-      {courses.length > 1 && (
-        <nav aria-label={t.levelsLabel} className="flex flex-wrap gap-2" data-testid="level-tabs">
-          {courses.map((c) => (
-            <Link
-              key={c.id}
-              href={`/${lang}/learn?level=${c.level}`}
-              aria-current={c.id === course.id ? "page" : undefined}
-              className={`rounded-full border px-4 py-1.5 text-sm font-semibold ${c.id === course.id ? "border-brand bg-brand text-brand-ink" : "border-line bg-surface hover:bg-surface-2"}`}
-            >
-              {c.level}
-            </Link>
-          ))}
-        </nav>
-      )}
-      <div>
-        <h1 className="text-2xl font-bold sm:text-3xl">{course.title[lang]}</h1>
-        <p className="mt-1 text-muted">{fmt(t.progress, { a: progress.size, b: ids.length })}</p>
-        <div className="relative mt-3 h-3 rounded-full bg-surface-2" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
-          <div className="h-full rounded-full bg-ok" style={{ width: `${Math.max(pct, 2)}%` }} />
-          <span className="absolute top-1/2 -translate-y-1/2 rounded-full bg-ok px-2.5 py-0.5 text-xs font-bold text-white" style={{ insetInlineStart: `calc(${Math.min(Math.max(pct, 0), 88)}%)` }}>{pct}%</span>
-        </div>
-      </div>
+      <LearnHero lang={lang} language={track.targetLanguage} languageName={LANGUAGE_NAMES[track.targetLanguage]?.[lang] ?? track.targetLanguage} level={course.level} done={progress.size} total={ids.length} t={t} />
+      <ContinueCard
+        href={nextId ? `/${lang}/learn/${nextId}` : null}
+        title={t.continueTitle}
+        subtitle={nextLesson ? fmt(t.continueSub, { title: nextLesson.title[lang] }) : fmt(t.progress, { a: progress.size, b: ids.length })}
+        language={track.targetLanguage}
+      />
+      <LevelJourney lang={lang} levels={courses.map((c) => c.level)} current={course.level} home={track.placementLevel ?? track.selfLevel} t={t} />
       <ReviewLink lang={lang} dict={dict} userId={user.id} language={track.targetLanguage} />
-      <h2 className="font-semibold" data-testid="units-heading">{fmt(t.unitsHeading, { u: course.units.length, n: ids.length })}</h2>
+      <div className="flex items-end justify-between gap-3">
+        <h2 className="text-xl font-bold" data-testid="units-heading">{t.unitsTitle}</h2>
+        <span className="text-sm text-muted">{fmt(t.unitsHeading, { u: course.units.length, n: ids.length })}</span>
+      </div>
       <LearningPath lang={lang} course={course} progress={progress} checkpoints={checkpoints} nextId={nextId} t={t} />
       <Centers lang={lang} dict={dict} />
       <Words lang={lang} dict={dict} userId={user.id} language={track.targetLanguage} />

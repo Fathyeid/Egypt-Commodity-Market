@@ -2,7 +2,7 @@ import Link from "next/link";
 import {
   Briefcase, BookOpen, Brain, CalendarClock, Check, CloudSun, Coins, Cpu, Flag, FlaskConical, Gamepad2, GitBranch, GraduationCap,
   Hand, Hash, Heart, HeartPulse, History, Home, Landmark, Lightbulb, MapPin, MessagesSquare, Newspaper, Palette, Plane, PlayCircle,
-  Quote, Scale, Shuffle, ShoppingBag, Smile, Sparkles, Sun, Trees, User, Users, Utensils, Video, Clock, type LucideIcon,
+  Quote, Scale, Shuffle, ChevronDown, ShoppingBag, Smile, Sparkles, Sun, Trees, User, Users, Utensils, Video, Clock, type LucideIcon,
 } from "lucide-react";
 import type { CourseOutline } from "@/lib/curriculum";
 import type { Dictionary } from "@/lib/i18n";
@@ -42,17 +42,25 @@ export function LearningPath({ lang, course, progress, checkpoints, nextId, t }:
         const done = unit.lessons.filter((l) => progress.has(l.id)).length;
         const cp = checkpoints.get(unit.id);
         return (
-          <details key={unit.id} open={unit.id === openUnit} className="card group overflow-hidden" data-testid={`unit-${unit.id}`}>
-            <summary className="flex cursor-pointer list-none items-center gap-3 p-4 sm:p-5">
-              <span className={`grid size-11 shrink-0 place-items-center rounded-xl ${tone}`}>
-                <Icon className="size-6" aria-hidden />
+          <details key={unit.id} open={unit.id === openUnit} className="card group overflow-hidden [&>ol]:pt-4" data-testid={`unit-${unit.id}`}>
+            <summary className="flex cursor-pointer list-none items-stretch gap-0 overflow-hidden">
+              <span className={`grid w-24 shrink-0 place-items-center sm:w-28 ${tone}`}>
+                <Icon className="size-12 drop-shadow" aria-hidden />
               </span>
-              <span className="min-w-0 flex-1">
-                <span className="block text-xs font-semibold text-faint">{fmt(t.unitNumber, { n: ui + 1 })}</span>
-                <span className="block font-semibold">{unit.title[lang]}</span>
-                {unit.topicTitle && <span className="mt-0.5 block text-xs font-semibold text-brand">{t.grammarTag}: {unit.topicTitle[lang]}</span>}
+              <span className="flex min-w-0 flex-1 items-center gap-3 p-4">
+                <span className="min-w-0 flex-1 space-y-1">
+                  <span className="inline-block rounded-full bg-gold/20 px-2.5 py-0.5 text-xs font-bold text-gold">{fmt(t.unitNumber, { n: ui + 1 })}</span>
+                  <span className="block text-lg font-bold leading-snug">{unit.title[lang]}</span>
+                  {unit.topicTitle && <span className="block text-xs font-semibold text-brand">{t.grammarTag}: {unit.topicTitle[lang]}</span>}
+                  <span className="flex items-center gap-2">
+                    <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-2">
+                      <span className="block h-full rounded-full bg-ok" style={{ width: `${(done / unit.lessons.length) * 100}%` }} />
+                    </span>
+                    <span className="text-xs font-semibold text-muted" dir="ltr">{done}/{unit.lessons.length}</span>
+                  </span>
+                </span>
+                <ChevronDown className="size-6 shrink-0 rounded-full border border-line p-1 text-muted transition-transform group-open:rotate-180" aria-hidden />
               </span>
-              <span className="text-sm text-muted">{fmt(t.unitProgress, { a: done, b: unit.lessons.length })}</span>
             </summary>
 
             <ol className="px-4 pb-5 sm:px-6">

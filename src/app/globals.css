@@ -21,24 +21,38 @@
   --danger: #b03a32;
   --danger-soft: #fbe9e7;
   --ok: #1f6f43;
+  --gold: #b7861b;
+  --hero-from: #1d4fc4;
+  --hero-to: #3270dc;
+  --hero-ink: #ffffff;
+  --hero-gold: #ffe7a3;
+  --hero-landmark: #0f2f73;
+  --hero-sky: #a9d0ff;
   --shadow: 0 1px 2px rgb(15 27 45 / 0.04), 0 8px 24px rgb(29 95 214 / 0.07);
   color-scheme: light;
 }
 
 :root[data-theme="dark"] {
-  --bg: #0b1220;
-  --surface: #111a2c;
-  --surface-2: #172237;
-  --line: #22304a;
+  --bg: #0a1230;
+  --surface: #121d40;
+  --surface-2: #19264f;
+  --line: #2a3a6b;
   --text: #eceef1;
   --muted: #a3aab5;
   --faint: #8b93a0;
-  --brand: #6ea2ff;
-  --brand-hover: #8ab4ff;
-  --brand-ink: #071a3a;
-  --brand-soft: #142a52;
+  --brand: #f2c14e;
+  --brand-hover: #f7d27a;
+  --brand-ink: #1a1300;
+  --brand-soft: #2b2a3a;
   --accent: #4cc0f5;
   --accent-soft: #10324a;
+  --gold: #f2c14e;
+  --hero-from: #0d1838;
+  --hero-to: #26407e;
+  --hero-ink: #f5f1e6;
+  --hero-gold: #f2c14e;
+  --hero-landmark: #c79a3a;
+  --hero-sky: #1b2c5c;
   --danger: #f07a70;
   --danger-soft: #3a1c1a;
   --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px rgb(0 0 0 / 0.35);
@@ -141,3 +155,24 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Lessons hero (per-language banner), continue card and level journey */
+.hero {
+  background: linear-gradient(135deg, var(--hero-from), var(--hero-to));
+  color: var(--hero-ink);
+  box-shadow: var(--shadow);
+}
+.hero .text-gold, .continue-card .text-gold { color: var(--hero-gold); }
+.hero .bg-gold, .continue-card .bg-gold { background: var(--hero-gold); }
+.hero .border-gold\/50 { border-color: color-mix(in srgb, var(--hero-gold) 50%, transparent); }
+.hero-landmark { color: var(--hero-landmark); }
+.hero-motto { color: var(--hero-gold); font-family: Georgia, "Times New Roman", serif; }
+.continue-card {
+  background: linear-gradient(110deg, var(--hero-from), var(--hero-to));
+  color: var(--hero-ink);
+  border: 1.5px solid color-mix(in srgb, var(--hero-gold) 55%, transparent);
+  box-shadow: var(--shadow);
+}
+.journey { background: var(--surface); border: 1px solid var(--line); }
+.journey-road { stroke: var(--surface-2); }
+.journey-dash { stroke: var(--gold); opacity: .7; }
