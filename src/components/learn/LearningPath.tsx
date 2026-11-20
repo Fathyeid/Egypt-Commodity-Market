@@ -17,6 +17,18 @@ const THEME_ICONS: Record<string, LucideIcon> = {
 };
 const TONES = ["bg-brand-soft text-brand", "bg-accent-soft text-accent", "bg-surface-2 text-text", "bg-danger-soft text-danger"];
 
+const ART = [
+  "bg-gradient-to-br from-[#bfe0ff] to-[#f9e6b8]",
+  "bg-gradient-to-br from-[#ffd9a8] to-[#ffe9c9]",
+  "bg-gradient-to-br from-[#c7f0d8] to-[#e2f3ff]",
+  "bg-gradient-to-br from-[#e3d4ff] to-[#ffe1ec]",
+];
+const THEME_FILES = new Set(Object.keys(THEME_ICONS));
+function themeOf(unitId: string): string {
+  const theme = unitId.split("-fu-")[1]?.replace(/-\d+$/, "");
+  return theme && THEME_FILES.has(theme) ? theme : "mixed";
+}
+
 function unitIcon(unitId: string): LucideIcon {
   const theme = unitId.split("-fu-")[1]?.replace(/-\d+$/, "");
   return (theme && THEME_ICONS[theme]) || BookOpen;
@@ -38,28 +50,27 @@ export function LearningPath({ lang, course, progress, checkpoints, nextId, t }:
     <div className="space-y-4" data-testid="learning-path">
       {course.units.map((unit, ui) => {
         const Icon = unitIcon(unit.id);
-        const tone = TONES[ui % TONES.length];
         const done = unit.lessons.filter((l) => progress.has(l.id)).length;
         const cp = checkpoints.get(unit.id);
         return (
-          <details key={unit.id} open={unit.id === openUnit} className="card group overflow-hidden [&>ol]:pt-4" data-testid={`unit-${unit.id}`}>
-            <summary className="flex cursor-pointer list-none items-stretch gap-0 overflow-hidden">
-              <span className={`grid w-24 shrink-0 place-items-center sm:w-28 ${tone}`}>
-                <Icon className="size-12 drop-shadow" aria-hidden />
-              </span>
-              <span className="flex min-w-0 flex-1 items-center gap-3 p-4">
-                <span className="min-w-0 flex-1 space-y-1">
-                  <span className="inline-block rounded-full bg-gold/20 px-2.5 py-0.5 text-xs font-bold text-gold">{fmt(t.unitNumber, { n: ui + 1 })}</span>
-                  <span className="block text-lg font-bold leading-snug">{unit.title[lang]}</span>
-                  {unit.topicTitle && <span className="block text-xs font-semibold text-brand">{t.grammarTag}: {unit.topicTitle[lang]}</span>}
-                  <span className="flex items-center gap-2">
-                    <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-2">
-                      <span className="block h-full rounded-full bg-ok" style={{ width: `${(done / unit.lessons.length) * 100}%` }} />
-                    </span>
-                    <span className="text-xs font-semibold text-muted" dir="ltr">{done}/{unit.lessons.length}</span>
+          <details key={unit.id} open={unit.id === openUnit} className="group overflow-hidden rounded-2xl border border-line bg-surface shadow-card [&>ol]:pt-4" data-testid={`unit-${unit.id}`}>
+            <summary className="flex cursor-pointer list-none items-stretch overflow-hidden rounded-2xl bg-surface">
+              <span className="flex min-w-0 flex-1 flex-col justify-center gap-1.5 p-4">
+                <span className="w-fit rounded-full bg-[#f6e3b0] px-3 py-0.5 text-sm font-bold text-[#5b4300]">{fmt(t.unitNumber, { n: ui + 1 })}</span>
+                <span className="text-xl font-bold leading-snug">{unit.title[lang]}</span>
+                {unit.topicTitle && <span className="text-xs font-semibold text-brand">{t.grammarTag}: {unit.topicTitle[lang]}</span>}
+                <span className="flex items-center gap-2">
+                  <span className="text-sm font-semibold text-muted">{fmt(t.unitLessons, { a: done, b: unit.lessons.length })}</span>
+                  <span className="h-2 flex-1 overflow-hidden rounded-full bg-surface-2">
+                    <span className="block h-full rounded-full bg-[#f2c14e]" style={{ width: `${(done / unit.lessons.length) * 100}%` }} />
                   </span>
                 </span>
-                <ChevronDown className="size-6 shrink-0 rounded-full border border-line p-1 text-muted transition-transform group-open:rotate-180" aria-hidden />
+              </span>
+              <span className={`relative w-[42%] shrink-0 overflow-hidden ${ART[ui % ART.length]}`}>
+                {/* eslint-disable-next-line @next/next/no-img-element -- Fluent 3D emoji (MIT) */}
+                <img src={`/images/themes/${themeOf(unit.id)}.png`} alt="" loading="lazy" className="absolute inset-0 m-auto size-24 drop-shadow-xl transition-transform group-open:scale-90 sm:size-28" />
+                <span className="absolute inset-y-0 start-0 w-10 bg-gradient-to-l from-transparent to-[var(--surface)] rtl:bg-gradient-to-r" />
+                <ChevronDown className="absolute bottom-3 end-3 size-8 rounded-full bg-white/90 p-1.5 text-[#121a33] shadow transition-transform group-open:rotate-180" aria-hidden />
               </span>
             </summary>
 

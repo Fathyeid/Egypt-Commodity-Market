@@ -237,6 +237,10 @@ const en: Dictionary = {
     method: "How it's calculated: we start at your self-rated level; questions get harder after correct answers and easier after mistakes. Each skill's level is the one most consistent with all your answers, and your overall level is the conservative median of the four skills.",
   },
   learn: {
+    noUnits: "No units match your search.",
+    photoCredit: "Banner photo:",
+    unitLessons: "{a}/{b} lessons",
+    search: "Search",
     currentLevel: "Current level",
     ofLessons: "{a} of {b} lessons done",
     keepGoing: "Keep going!",
