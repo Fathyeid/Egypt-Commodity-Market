@@ -4,7 +4,7 @@ import { TOPIC_SEEDS } from "@/content/topics";
 describe("grammar topics", () => {
   it("have unique ids and both languages filled, for every level of each written language", () => {
     expect(new Set(TOPIC_SEEDS.map((t) => t.id)).size).toBe(TOPIC_SEEDS.length);
-    for (const lang of ["en", "de", "fr", "es"]) {
+    for (const lang of ["en", "de", "fr", "es", "it", "pt"]) {
       for (const level of ["A1", "A2", "B1", "B2", "C1", "C2"]) {
         expect(TOPIC_SEEDS.filter((t) => t.language === lang && t.level === level).length, `${lang} ${level}`).toBeGreaterThanOrEqual(5);
       }
