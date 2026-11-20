@@ -257,6 +257,7 @@ const en: Dictionary = {
     lessonNotFound: "This lesson isn't in your active language.",
   },
   lesson: {
+    lessonVideo: "Lesson video",
     attribution: "Sentences and translations from",
     sections: {
       explanation: "Explanation",

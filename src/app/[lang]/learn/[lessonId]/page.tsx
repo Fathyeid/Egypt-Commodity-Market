@@ -56,6 +56,7 @@ async function Player({ lang, dict, params }: { lang: Locale; dict: Dictionary; 
         <Link href={`/${lang}/learn`} className="text-sm text-brand hover:underline">← {found.unitTitle[lang]}</Link>
         <h1 className="mt-1 text-2xl font-bold sm:text-3xl">{found.lesson.title[lang]}</h1>
       </div>
+      {found.video && <LessonVideo id={found.video.id} title={found.video.title} label={dict.lesson.lessonVideo} />}
       {found.topic && (found.topic.videoId || found.topic.explanation) && <TopicPanel topic={found.topic} lang={lang} label={dict.lesson.topicVideo} />}
       <LessonPlayer
         lang={lang}
@@ -89,5 +90,25 @@ function Attribution({ a, label }: { a: LessonAttribution; label: string }) {
         </span>
       ))}
     </footer>
+  );
+}
+
+function LessonVideo({ id, title, label }: { id: string; title: string | null; label: string }) {
+  return (
+    <section className="card mx-auto mb-5 max-w-3xl space-y-3 p-4 sm:p-5" data-testid="lesson-video">
+      <h2 className="font-semibold">{label}</h2>
+      <div className="aspect-video overflow-hidden rounded-xl bg-surface-2">
+        <iframe
+          className="size-full"
+          src={`https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}`}
+          title={title ?? label}
+          loading="lazy"
+          allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          referrerPolicy="strict-origin-when-cross-origin"
+        />
+      </div>
+      {title && <p className="text-xs text-muted" dir="auto">{title}</p>}
+    </section>
   );
 }
