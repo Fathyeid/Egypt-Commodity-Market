@@ -35,8 +35,9 @@ test("admin reviews a factory lesson, publishes it and attaches a topic video", 
 
   // Now the learner sees it, with Tatoeba attribution.
   await page.goto("/en/learn");
-  await page.getByTestId(`lesson-${lessonId}`).click();
-  await page.waitForURL(`**/en/learn/${lessonId}`);
+  // It's now on the learner's path (its unit may be collapsed if other lessons are published too).
+  await expect(page.getByTestId(`lesson-${lessonId}`)).toHaveCount(1);
+  await page.goto(`/en/learn/${lessonId}`);
   await expect(page.getByTestId("attribution")).toContainText("Tatoeba");
 
   // Topic with a YouTube video, approved and attached to the lesson's unit.
