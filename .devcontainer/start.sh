@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# Runs every time the Codespace starts: point auth at the forwarded URL and start the app.
+# Points auth at the Codespaces forwarded URL and starts the app.
+#   bash .devcontainer/start.sh               → background (survives the lifecycle hook)
+#   bash .devcontainer/start.sh --foreground  → foreground (from a terminal)
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -13,5 +15,10 @@ if [ -n "${CODESPACE_NAME:-}" ] && [ -n "${GITHUB_CODESPACES_PORT_FORWARDING_DOM
 fi
 
 pkill -f "next start" 2>/dev/null || true
-nohup npm start > /tmp/lisan.log 2>&1 &
+if [ "${1:-}" = "--foreground" ]; then
+  echo "Starting Lisan on port 3000…"
+  exec npm start
+fi
+# setsid detaches from the hook's process group so Codespaces doesn't kill it when the hook ends.
+setsid nohup npm start > /tmp/lisan.log 2>&1 < /dev/null &
 echo "Lisan is starting on port 3000 (log: /tmp/lisan.log)"
