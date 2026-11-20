@@ -3,6 +3,8 @@
  * factory units: unit i of a level gets that level's topic i (round-robin).
  * Never overwrites a topic or a lesson's topic once set (the admin panel owns them).
  */
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { and, asc, eq, isNull } from "drizzle-orm";
 import type { PgDatabase } from "drizzle-orm/pg-core";
 import { curriculumCourses, curriculumLessons, curriculumTopics, curriculumUnits } from "./schema";
@@ -39,4 +41,27 @@ export async function seedTopics(db: Db, topics: TopicSeed[] = TOPIC_SEEDS) {
     }
   }
   return { topics: topics.length, lessons };
+}
+
+export type FoundVideo = { videoId: string | null; title?: string; channel?: string };
+
+/**
+ * Applies videos found by the YouTube workflow (data/videos.json) to topics nobody
+ * has touched yet (video_status "none"). An admin can still reject or replace them.
+ */
+export async function applyTopicVideos(db: Db, file = join(process.cwd(), "data/videos.json")) {
+  if (!existsSync(file)) return 0;
+  const found = JSON.parse(readFileSync(file, "utf8")) as Record<string, FoundVideo>;
+  let n = 0;
+  for (const [id, v] of Object.entries(found)) {
+    if (!v.videoId || !/^[\w-]{11}$/.test(v.videoId)) continue;
+    const title = [v.title, v.channel].filter(Boolean).join(" — ").slice(0, 200) || null;
+    const res = await db
+      .update(curriculumTopics)
+      .set({ videoId: v.videoId, videoTitle: title, videoStatus: "approved", updatedAt: new Date() })
+      .where(and(eq(curriculumTopics.id, id), eq(curriculumTopics.videoStatus, "none")))
+      .returning({ id: curriculumTopics.id });
+    n += res.length;
+  }
+  return n;
 }
