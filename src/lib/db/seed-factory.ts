@@ -31,6 +31,7 @@ export function factoryStatus(env: Record<string, string | undefined> = process.
 
 export async function seedFactoryCurriculum(db: Db, dir = join(process.cwd(), "data/tatoeba"), log = console.log, status = factoryStatus()) {
   if (!existsSync(dir)) return log("No factory corpus found (data/tatoeba); skipping");
+  let changed = false;
   for (const file of readdirSync(dir).filter((f) => f.endsWith(".jsonl.gz")).sort()) {
     const language = file.replace(".jsonl.gz", "");
     const raw = readFileSync(join(dir, file));
@@ -111,6 +112,15 @@ export async function seedFactoryCurriculum(db: Db, dir = join(process.cwd(), "d
       .insert(contentImports)
       .values({ source, hash, lessons: count })
       .onConflictDoUpdate({ target: contentImports.source, set: { hash, lessons: count, importedAt: new Date() } });
+    changed = true;
     log(`${source}: imported ${count} ${status} lessons in ${courses.length} levels`);
+  }
+  // Lesson content used to be stored as JSON; reclaim that space (the free database tier is small).
+  if (changed) {
+    try {
+      await db.execute(sql`vacuum (full, analyze) curriculum_lessons`);
+    } catch (e) {
+      log(`vacuum skipped: ${(e as Error).message}`);
+    }
   }
 }
