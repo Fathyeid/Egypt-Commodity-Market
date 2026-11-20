@@ -170,11 +170,9 @@ def main() -> None:
                 continue
             seen.add(key)
             toks = tokens(text, l3)
-            ranks = sorted(rank.get(t, vocab_size) for t in toks)
             # Hardest-word rank (log-scaled) dominates; length adds a little.
-            hard = math.log(ranks[-1] + 1) / math.log(vocab_size + 1)
             length = min(len(toks) / (30 if l3 in NO_SPACE else 15), 1.0)
-            row = {"id": sid, "t": text, "d": round(0.75 * hard + 0.25 * length, 4)}
+            row = {"id": sid, "t": text, "d": 0.0}
             if sid in user:
                 row["u"] = user[sid]
             if l3 == "eng":
@@ -200,6 +198,11 @@ def main() -> None:
                 alt = sorted({sent[o][1] for o in same_meaning[e] if o != sid and acceptable(sent[o][1], l3)})
                 if alt:
                     row["alt"] = alt[:4]
+            # Words shared with the English translation (names like Tom, Paris) don't make a sentence harder.
+            shared = set(tokens(row["en"], "eng")) if l3 != "eng" else set()
+            hard_ranks = [rank.get(t, vocab_size) for t in toks if t not in shared] or [1]
+            hard = math.log(max(hard_ranks) + 1) / math.log(vocab_size + 1)
+            row["d"] = round(0.75 * hard + 0.25 * length, 4)
             rows.append(row)
 
         # Keep an even spread across difficulty so every level has material.

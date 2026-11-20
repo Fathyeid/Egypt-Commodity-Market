@@ -14,7 +14,7 @@ export type Theme = { id: string; title: L10n; from: FactoryLevel; words: string
 const t = (ar: string, en: string): L10n => ({ ar, en });
 
 export const THEMES: Theme[] = [
-  { id: "greetings", from: "A1", title: t("التحية والتعارف", "Greetings and introductions"), words: ["hello", "hi", "goodbye", "bye", "name", "meet", "thank", "thanks", "please", "sorry", "welcome", "morning", "evening", "night"] },
+  { id: "greetings", from: "A1", title: t("التحية والتعارف", "Greetings and introductions"), words: ["hello", "hi", "goodbye", "bye", "name", "meet", "thank", "thanks", "sorry", "welcome", "morning", "evening", "night"] },
   { id: "family", from: "A1", title: t("العائلة", "Family"), words: ["mother", "father", "mom", "dad", "brother", "sister", "son", "daughter", "family", "parents", "wife", "husband", "child", "children", "baby", "grandmother", "grandfather", "uncle", "aunt", "cousin"] },
   { id: "food", from: "A1", title: t("الطعام والشراب", "Food and drink"), words: ["eat", "ate", "food", "drink", "water", "coffee", "tea", "bread", "milk", "breakfast", "lunch", "dinner", "hungry", "thirsty", "apple", "meat", "fish", "rice", "cook", "restaurant", "delicious"] },
   { id: "home", from: "A1", title: t("البيت", "At home"), words: ["house", "home", "room", "kitchen", "door", "window", "bed", "table", "chair", "live", "lives", "apartment", "flat", "garden"] },

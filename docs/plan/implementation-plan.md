@@ -331,3 +331,11 @@
    - إنشاء المشروع قد يترتب عليه تكلفة حسب خطتك، لذلك لن أنشئه قبل موافقتك.
 4. **Google OAuth:** يحتاج إنشاء OAuth Client من Google Cloud Console على حسابك. سأعطيك الخطوات بالتفصيل.
 5. **الموافقة على التصميم الأولي** في `design/prototype.html`.
+
+## Status: curriculum at scale (content factory + admin review)
+
+- **Data:** `.github/workflows/content-factory.yml` builds `data/tatoeba/<lang>.jsonl.gz` from Tatoeba's open exports (CC BY 2.0 FR) on GitHub's runners: up to 25,000 human-translated sentence pairs per language, with contributor names and sentence ids for attribution. Arabic meanings come from a direct Tatoeba link, or from the human Arabic translation of the English pivot sentence.
+- **Lessons:** `src/lib/factory/` splits each corpus into six difficulty bands (A1–C2) and 34 language-neutral themes, producing up to 300 lessons per level (11 languages × 6 × 300 + Korean ≈ 960; ~20,800 lessons). Exercises are listening, meaning choice, cloze, word order, matching, translation and dictation, all built from real sentences. A blocklist keeps sexual, violent, drug and alcohol/pork content out.
+- **Import:** `npm run db:seed` (part of `vercel-build`) imports them as **drafts**, re-importing a language only when its corpus changes, and never overwriting a lesson an admin published or rejected.
+- **Review:** `/[lang]/admin` (admins listed in `ADMIN_EMAILS`) shows counts per language and level, bulk publish, a paginated lesson list, and a preview with the correct answers. Topics hold a written explanation and a YouTube video (privacy-enhanced embed). A video shows to learners only once approved, and a topic attaches to all lessons of a unit.
+- **Honest limits:** difficulty bands are frequency-based, not expert-graded. Factory lessons teach through real sentences, not written grammar explanations; those come from topics (still to be written per language). Korean has ~160 lessons per level, because Tatoeba has fewer Korean sentences.
