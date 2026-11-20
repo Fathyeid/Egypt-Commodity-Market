@@ -19,7 +19,7 @@ UA = {"User-Agent": "LisanLandmarkFetcher/1.0 (educational language-learning sit
 # (search, a word the file title must contain)
 QUERIES = {
     "en": ("Big Ben Westminster", "big ben"), "de": ("Brandenburger Tor", "brandenburg"), "fr": ("Tour Eiffel", "eiffel"),
-    "es": [("Plaza de Espana Sevilla", "plaza de espa"), ("Alhambra Granada", "alhambra"), ("Sagrada Familia facade", "sagrada")], "it": ("Colosseum Rome", "colos"), "pt": ("Torre de Belem Lisboa", "bel"),
+    "es": [("Alhambra Granada", "alhambra"), ("Plaza de Espana Sevilla", "sevill"), ("Sagrada Familia facade", "sagrada")], "it": ("Colosseum Rome", "colos"), "pt": ("Torre de Belem Lisboa", "bel"),
     "tr": ("Hagia Sophia", "hagia"), "ru": ("Saint Basil's Cathedral Moscow", "basil"), "zh": [("Temple of Heaven Beijing", "heaven"), ("Great Wall of China", "great wall"), ("Forbidden City", "forbidden")],
     "ja": [("Mount Fuji", "fuji"), ("Kinkaku-ji", "kinkaku"), ("Fushimi Inari", "fushimi")], "ko": ("Gyeongbokgung", "gyeongbok"), "ar": ("Giza pyramids", "giza"),
 }
