@@ -16,6 +16,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: devcontainers/ci@v0.3
+        env:
+          # Newer Docker Compose builds via buildx bake, which the devcontainer CLI can't grant fs access to.
+          COMPOSE_BAKE: "false"
+          BUILDX_BAKE_ENTITLEMENTS_FS: "0"
         with:
           push: never
           runCmd: |
