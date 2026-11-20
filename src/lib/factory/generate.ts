@@ -36,8 +36,8 @@ export type FactoryLesson = {
 export type FactoryUnit = { id: string; title: L10n; lessons: FactoryLesson[] };
 export type FactoryCourse = { id: string; language: string; level: FactoryLevel; title: L10n; units: FactoryUnit[] };
 
-export const LESSON_SIZE = 10;
-export const MIN_LESSON_SIZE = 8;
+export const LESSON_SIZE = 14;
+export const MIN_LESSON_SIZE = 10;
 export const LESSONS_PER_LEVEL = 300;
 const NO_SPACE = new Set(["zh", "ja"]);
 
@@ -175,30 +175,28 @@ export function buildLesson(language: string, level: FactoryLevel, theme: Theme,
   };
 
   // Vocabulary: the shortest sentences double as useful phrases.
-  const vocabulary: VocabItem[] = byLength.slice(0, 5).map((r) => ({ term: r.t, meaning: m(r) }));
-  const examples = rows.slice(0, 6).map((r) => ({ text: r.t, meaning: m(r) }));
-  const pronunciation = byLength.slice(0, 2).map((r) => ({ text: r.t, tip: exampleTip(language) }));
+  const vocabulary: VocabItem[] = byLength.slice(0, 8).map((r) => ({ term: r.t, meaning: m(r) }));
+  const examples = rows.map((r) => ({ text: r.t, meaning: m(r) }));
+  const pronunciation = byLength.slice(0, 4).map((r) => ({ text: r.t, tip: exampleTip(language) }));
 
-  const [s0, s1, s2, s3, s4, s5, s6, s7, s8, s9] = [...rows, ...rows];
-  const shortOrdered = byLength.find((r) => order("x", r)) ?? s3;
+  // Practice: every sentence gets an exercise, rotating through the exercise types.
+  const kinds = ["listen", "meaning", "fill", "order", "translate", "dictation"] as const;
+  const make = (kind: (typeof kinds)[number], eid: string, row: CorpusRow): Exercise =>
+    kind === "listen" ? listen(eid, row)
+    : kind === "meaning" ? meaningChoice(eid, row)
+    : kind === "fill" ? (fill(eid, row) ?? meaningChoice(eid, row))
+    : kind === "order" ? (order(eid, row) ?? listen(eid, row))
+    : kind === "translate" ? translate(eid, row)
+    : dictation(eid, row);
+  const exercises: Exercise[] = rows.map((r, i) => make(kinds[i % kinds.length], `e${i + 1}`, r));
   const matchRows: CorpusRow[] = [];
   for (const r of byLength) {
-    if (matchRows.length < 3 && !matchRows.some((x) => m(x).en === m(r).en || x.t === r.t)) matchRows.push(r);
+    if (matchRows.length < 4 && !matchRows.some((x) => m(x).en === m(r).en || x.t === r.t)) matchRows.push(r);
   }
-  const exercises: Exercise[] = [listen("e1", s0), meaningChoice("e2", s1)];
-  const e3 = fill("e3", s2) ?? meaningChoice("e3", s2);
-  exercises.push(e3);
-  exercises.push(order("e4", shortOrdered) ?? listen("e4", s3));
-  if (matchRows.length === 3) exercises.push({ id: "e5", type: "match", pairs: matchRows.map((r) => [r.t, m(r)] as [string, L10n]) });
-  exercises.push(translate("e6", byLength[0]));
+  if (matchRows.length >= 3) exercises.splice(3, 0, { id: "e0", type: "match", pairs: matchRows.map((r) => [r.t, m(r)] as [string, L10n]) });
 
-  const quiz: Exercise[] = [
-    listen("q1", s4),
-    fill("q2", s5) ?? meaningChoice("q2", s5),
-    dictation("q3", byLength[1] ?? s6),
-    translate("q4", byLength[2] ?? s7),
-    meaningChoice("q5", s8 ?? s9),
-  ];
+  // Quiz: 8 questions on the same sentences, each with a different exercise type than in practice.
+  const quiz: Exercise[] = rows.slice(0, 8).map((r, i) => make(kinds[(i + 3) % kinds.length], `q${i + 1}`, r));
 
   return {
     id,
@@ -225,7 +223,7 @@ export function buildLesson(language: string, level: FactoryLevel, theme: Theme,
       },
       exercises,
       quiz,
-      review: rows.slice(0, 3).map((r) => ({ ar: `${r.t} — ${m(r).ar}`, en: `${r.t} — ${m(r).en}` })),
+      review: rows.slice(0, 5).map((r) => ({ ar: `${r.t} — ${m(r).ar}`, en: `${r.t} — ${m(r).en}` })),
     },
     attribution: {
       source: "tatoeba",

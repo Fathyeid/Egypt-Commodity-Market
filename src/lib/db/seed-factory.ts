@@ -1,13 +1,13 @@
 /**
  * Imports factory lessons (generated from data/tatoeba/<lang>.jsonl.gz) as drafts.
- * Re-runs only when a language's corpus changed. Never touches lessons an admin
- * has already published or rejected, and never touches hand-written lessons.
+ * Re-runs only when a language's corpus or the generator changed. Keeps each lesson's
+ * review status, never touches rejected or hand-written lessons.
  */
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { gunzipSync } from "node:zlib";
-import { and, eq, like, notInArray, sql } from "drizzle-orm";
+import { and, eq, like, ne, notInArray, sql } from "drizzle-orm";
 import type { PgDatabase } from "drizzle-orm/pg-core";
 import { contentImports, curriculumCourses, curriculumLessons, curriculumUnits } from "./schema";
 import { generateCourses, type CorpusRow } from "../factory/generate";
@@ -40,7 +40,7 @@ export async function seedFactoryCurriculum(db: Db, dir = join(process.cwd(), "d
   for (const file of readdirSync(dir).filter((f) => f.endsWith(".jsonl.gz")).sort()) {
     const language = file.replace(".jsonl.gz", "");
     const raw = readFileSync(join(dir, file));
-    const hash = createHash("sha256").update(raw).update(`factory-v2:${status}`).digest("hex");
+    const hash = createHash("sha256").update(raw).update(`factory-v3:${status}`).digest("hex");
     const source = `tatoeba:${language}`;
     const [prev] = await db.select().from(contentImports).where(eq(contentImports.source, source));
     if (prev?.hash === hash) {
@@ -86,23 +86,24 @@ export async function seedFactoryCurriculum(db: Db, dir = join(process.cwd(), "d
               attribution: sql`excluded.attribution`,
               position: sql`excluded.position`,
               unitId: sql`excluded.unit_id`,
-              status: sql`excluded.status`,
+              // Keep a reviewed status; a draft follows the import mode.
+              status: sql`case when ${curriculumLessons.status} = 'draft' then excluded.status else ${curriculumLessons.status} end`,
               updatedAt: new Date(),
             },
-            // Only refresh untouched factory drafts.
-            setWhere: and(eq(curriculumLessons.source, "factory"), eq(curriculumLessons.status, "draft")),
+            // Refresh generated content; lessons an admin rejected stay as they are.
+            setWhere: and(eq(curriculumLessons.source, "factory"), ne(curriculumLessons.status, "rejected")),
           });
       }
       count += rows.length;
     }
-    // Drop drafts the new corpus no longer produces (reviewed lessons stay), then empty factory units.
+    // Drop generated lessons the new corpus no longer produces (rejected ones stay), then empty factory units.
     const keep = courses.flatMap((c) => c.units.flatMap((u) => u.lessons.map((l) => l.id)));
     const stale = await db
       .delete(curriculumLessons)
       .where(
         and(
           eq(curriculumLessons.source, "factory"),
-          eq(curriculumLessons.status, "draft"),
+          ne(curriculumLessons.status, "rejected"),
           like(curriculumLessons.id, `${language}-%`),
           keep.length ? notInArray(curriculumLessons.id, keep) : sql`true`,
         ),
@@ -110,7 +111,7 @@ export async function seedFactoryCurriculum(db: Db, dir = join(process.cwd(), "d
       .returning({ id: curriculumLessons.id });
     const used = db.selectDistinct({ id: curriculumLessons.unitId }).from(curriculumLessons);
     await db.delete(curriculumUnits).where(and(like(curriculumUnits.id, `${language}-%-fu-%`), notInArray(curriculumUnits.id, used)));
-    if (stale.length) log(`${source}: removed ${stale.length} outdated drafts`);
+    if (stale.length) log(`${source}: removed ${stale.length} outdated lessons`);
     await db
       .insert(contentImports)
       .values({ source, hash, lessons: count })
