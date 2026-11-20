@@ -1,79 +1,86 @@
 {
-  "en": {
-    "title": "File:Big Ben at sunset - 2014-10-27 17-30.jpg",
-    "author": "Colin",
-    "license": "CC BY-SA 4.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Big_Ben_at_sunset_-_2014-10-27_17-30.jpg"
-  },
-  "de": {
-    "title": "File:Brandenburger Tor morgens.jpg",
-    "author": "Thomas Wolf, www.foto-tw.de",
-    "license": "CC BY-SA 3.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Brandenburger_Tor_morgens.jpg"
-  },
-  "fr": {
-    "title": "File:Paris - The Eiffel Tower in spring - 2307.jpg",
-    "author": "Jorge Royan",
-    "license": "CC BY-SA 3.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Paris_-_The_Eiffel_Tower_in_spring_-_2307.jpg"
-  },
-  "it": {
-    "title": "File:Colosseum in Rome-April 2007-1- copie 2B.jpg",
-    "author": "Diliff",
-    "license": "CC BY-SA 2.5",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.5",
-    "source": "https://commons.wikimedia.org/wiki/File:Colosseum_in_Rome-April_2007-1-_copie_2B.jpg"
-  },
-  "pt": {
-    "title": "File:Torre de Belém, Lisboa, Portugal, 2012-05-12, DD 16.JPG",
-    "author": "Diego Delso",
-    "license": "CC BY-SA 3.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Torre_de_Bel%C3%A9m,_Lisboa,_Portugal,_2012-05-12,_DD_16.JPG"
-  },
-  "tr": {
-    "title": "File:Hagia Sophia Mars 2013.jpg",
-    "author": "Arild Vågen",
-    "license": "CC BY-SA 3.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Hagia_Sophia_Mars_2013.jpg"
-  },
-  "ru": {
-    "title": "File:Moscow. Saint Basil's Cathedral P4162276 2750.jpg",
-    "author": "Alexxx1979",
-    "license": "CC BY-SA 4.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Moscow._Saint_Basil%27s_Cathedral_P4162276_2750.jpg"
-  },
-  "ko": {
-    "title": "File:Gyeonghoeru (Royal Banquet Hall) at Gyeongbokgung Palace, Seoul.jpg",
-    "author": "Frank Schulenburg",
-    "license": "CC BY-SA 4.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Gyeonghoeru_(Royal_Banquet_Hall)_at_Gyeongbokgung_Palace,_Seoul.jpg"
-  },
-  "ar": {
-    "title": "File:All Gizah Pyramids.jpg",
-    "author": "Ricardo Liberato",
-    "license": "CC BY-SA 2.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:All_Gizah_Pyramids.jpg"
-  },
-  "zh": {
-    "title": "File:20090529 Great Wall 8185.jpg",
-    "author": "Jakub Hałun",
-    "license": "CC BY-SA 3.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:20090529_Great_Wall_8185.jpg"
-  },
-  "ja": {
-    "title": "File:Mount Fuji at sunset, March 2025.jpg",
-    "author": "Romain Guy from San Francisco, USA",
-    "license": "CC0",
-    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-    "source": "https://commons.wikimedia.org/wiki/File:Mount_Fuji_at_sunset,_March_2025.jpg"
-  }
+ "en": {
+  "title": "File:Big Ben at sunset - 2014-10-27 17-30.jpg",
+  "author": "Colin",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Big_Ben_at_sunset_-_2014-10-27_17-30.jpg"
+ },
+ "de": {
+  "title": "File:Brandenburger Tor morgens.jpg",
+  "author": "Thomas Wolf, www.foto-tw.de",
+  "license": "CC BY-SA 3.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Brandenburger_Tor_morgens.jpg"
+ },
+ "fr": {
+  "title": "File:Paris - The Eiffel Tower in spring - 2307.jpg",
+  "author": "Jorge Royan",
+  "license": "CC BY-SA 3.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Paris_-_The_Eiffel_Tower_in_spring_-_2307.jpg"
+ },
+ "it": {
+  "title": "File:Colosseum in Rome-April 2007-1- copie 2B.jpg",
+  "author": "Diliff",
+  "license": "CC BY-SA 2.5",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.5",
+  "source": "https://commons.wikimedia.org/wiki/File:Colosseum_in_Rome-April_2007-1-_copie_2B.jpg"
+ },
+ "pt": {
+  "title": "File:Torre de Belém, Lisboa, Portugal, 2012-05-12, DD 16.JPG",
+  "author": "Diego Delso",
+  "license": "CC BY-SA 3.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Torre_de_Bel%C3%A9m,_Lisboa,_Portugal,_2012-05-12,_DD_16.JPG"
+ },
+ "tr": {
+  "title": "File:Hagia Sophia Mars 2013.jpg",
+  "author": "Arild Vågen",
+  "license": "CC BY-SA 3.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Hagia_Sophia_Mars_2013.jpg"
+ },
+ "ru": {
+  "title": "File:Moscow. Saint Basil's Cathedral P4162276 2750.jpg",
+  "author": "Alexxx1979",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Moscow._Saint_Basil%27s_Cathedral_P4162276_2750.jpg"
+ },
+ "ko": {
+  "title": "File:Gyeonghoeru (Royal Banquet Hall) at Gyeongbokgung Palace, Seoul.jpg",
+  "author": "Frank Schulenburg",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Gyeonghoeru_(Royal_Banquet_Hall)_at_Gyeongbokgung_Palace,_Seoul.jpg"
+ },
+ "ar": {
+  "title": "File:All Gizah Pyramids.jpg",
+  "author": "Ricardo Liberato",
+  "license": "CC BY-SA 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:All_Gizah_Pyramids.jpg"
+ },
+ "zh": {
+  "title": "File:20090529 Great Wall 8185.jpg",
+  "author": "Jakub Hałun",
+  "license": "CC BY-SA 3.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:20090529_Great_Wall_8185.jpg"
+ },
+ "ja": {
+  "title": "File:Mount Fuji at sunset, March 2025.jpg",
+  "author": "Romain Guy from San Francisco, USA",
+  "license": "CC0",
+  "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "source": "https://commons.wikimedia.org/wiki/File:Mount_Fuji_at_sunset,_March_2025.jpg"
+ },
+ "es": {
+  "title": "File:Alhambra in the evening.jpg",
+  "author": "Jebulon",
+  "license": "Public domain",
+  "licenseUrl": "",
+  "source": "https://commons.wikimedia.org/wiki/File:Alhambra_in_the_evening.jpg"
+ }
 }
