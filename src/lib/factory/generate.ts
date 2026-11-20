@@ -249,12 +249,19 @@ export function planCourses(language: string, rows: CorpusRow[]): PlannedLevel[]
   for (const [level, band] of bandRows(rows)) {
     const lvl = level.toLowerCase();
     const groups = [...assignThemes(band, level, language)].filter(([, rs]) => rs.length >= MIN_LESSON_SIZE);
-    const chunks = new Map<Theme, CorpusRow[][]>();
-    for (const [theme, rs] of groups) {
-      const cs: CorpusRow[][] = [];
-      for (let i = 0; i + MIN_LESSON_SIZE <= rs.length; i += LESSON_SIZE) cs.push(rs.slice(i, i + LESSON_SIZE));
-      chunks.set(theme, cs);
-    }
+    // When a language has too few sentences for the target, lessons overlap by half (each
+    // sentence then appears in two lessons, practised with different exercises).
+    const chunkWith = (step: number) => {
+      const out = new Map<Theme, CorpusRow[][]>();
+      for (const [theme, rs] of groups) {
+        const cs: CorpusRow[][] = [];
+        for (let i = 0; i + MIN_LESSON_SIZE <= rs.length; i += step) cs.push(rs.slice(i, i + LESSON_SIZE));
+        out.set(theme, cs);
+      }
+      return out;
+    };
+    let chunks = chunkWith(LESSON_SIZE);
+    if ([...chunks.values()].reduce((n, cs) => n + cs.length, 0) < LESSONS_PER_LEVEL) chunks = chunkWith(Math.ceil(LESSON_SIZE / 2));
     // Round-robin across themes so a capped level still covers every theme. Themes new at this
     // level come first; themes from earlier levels follow as "review & expand"; mixed practice last.
     const order = [...THEMES, MIXED];
