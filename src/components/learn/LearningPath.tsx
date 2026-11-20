@@ -50,6 +50,7 @@ export function LearningPath({ lang, course, progress, checkpoints, nextId, t }:
               <span className="min-w-0 flex-1">
                 <span className="block text-xs font-semibold text-faint">{fmt(t.unitNumber, { n: ui + 1 })}</span>
                 <span className="block font-semibold">{unit.title[lang]}</span>
+                {unit.topicTitle && <span className="mt-0.5 block text-xs font-semibold text-brand">{t.grammarTag}: {unit.topicTitle[lang]}</span>}
               </span>
               <span className="text-sm text-muted">{fmt(t.unitProgress, { a: done, b: unit.lessons.length })}</span>
             </summary>

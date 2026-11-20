@@ -7,7 +7,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { and, asc, eq, isNull, sql } from "drizzle-orm";
 import type { PgDatabase } from "drizzle-orm/pg-core";
-import { curriculumCourses, curriculumLessons, curriculumTopics, curriculumUnits } from "./schema";
+import { contentImports, curriculumCourses, curriculumLessons, curriculumTopics, curriculumUnits } from "./schema";
 import { TOPIC_SEEDS, type TopicSeed } from "../../content/topics";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -19,6 +19,12 @@ export async function seedTopics(db: Db, topics: TopicSeed[] = TOPIC_SEEDS) {
     .insert(curriculumTopics)
     .values(topics.map((t) => ({ ...t, kind: "grammar", status: "published", videoStatus: "none" })))
     .onConflictDoNothing();
+  // Units were re-planned (new themes first, even splits): re-attach automatic topics once.
+  const [done] = await db.select().from(contentImports).where(eq(contentImports.source, "topics:v2"));
+  if (!done) {
+    await db.update(curriculumLessons).set({ topicId: null }).where(eq(curriculumLessons.source, "factory"));
+    await db.insert(contentImports).values({ source: "topics:v2", hash: "v2", lessons: 0 }).onConflictDoNothing();
+  }
   let lessons = 0;
   const groups = new Map<string, TopicSeed[]>();
   for (const t of topics) groups.set(`${t.language}:${t.level}`, [...(groups.get(`${t.language}:${t.level}`) ?? []), t]);

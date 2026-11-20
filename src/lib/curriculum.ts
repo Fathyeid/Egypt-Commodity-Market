@@ -12,7 +12,7 @@ import { factoryLesson } from "@/lib/factory/runtime";
 type Db = PgDatabase<any, any, any>;
 
 export type LessonOutline = { id: string; title: L10n; goal: L10n; position: number; topicId: string | null; hasVideo: boolean };
-export type CourseOutline = { id: string; language: string; level: string; title: L10n; units: { id: string; title: L10n; lessons: LessonOutline[] }[] };
+export type CourseOutline = { id: string; language: string; level: string; title: L10n; units: { id: string; title: L10n; topicTitle: L10n | null; lessons: LessonOutline[] }[] };
 export type LessonAttribution = { source: "tatoeba"; license: string; sentences: { id: number; by?: string }[] };
 export type TopicInfo = { id: string; title: L10n; explanation: L10n | null; videoId: string | null; videoTitle: string | null };
 
@@ -29,11 +29,11 @@ export async function coursesForLanguage(db: Db, language: string): Promise<Cour
       .orderBy(asc(curriculumLessons.position)),
   ]);
   const topicIds = [...new Set(lessons.map((l) => l.topicId).filter((x): x is string => !!x))];
-  const withVideo = new Set(
-    topicIds.length
-      ? (await db.select({ id: curriculumTopics.id }).from(curriculumTopics).where(and(inArray(curriculumTopics.id, topicIds), eq(curriculumTopics.videoStatus, "approved")))).map((t) => t.id)
-      : [],
-  );
+  const topicRows = topicIds.length
+    ? await db.select({ id: curriculumTopics.id, title: curriculumTopics.title, videoStatus: curriculumTopics.videoStatus }).from(curriculumTopics).where(inArray(curriculumTopics.id, topicIds))
+    : [];
+  const withVideo = new Set(topicRows.filter((t) => t.videoStatus === "approved").map((t) => t.id));
+  const topicTitle = new Map(topicRows.map((t) => [t.id, t.title as L10n]));
   return courses
     .map((c) => ({
       id: c.id,
@@ -45,6 +45,7 @@ export async function coursesForLanguage(db: Db, language: string): Promise<Cour
         .map((u) => ({
           id: u.id,
           title: u.title as L10n,
+          topicTitle: topicTitle.get(lessons.find((l) => l.unitId === u.id && l.topicId)?.topicId ?? "") ?? null,
           lessons: lessons
             .filter((l) => l.unitId === u.id)
             .map((l) => ({ id: l.id, title: l.title as L10n, goal: l.goal as L10n, position: l.position, topicId: l.topicId, hasVideo: !!l.videoId || (!!l.topicId && withVideo.has(l.topicId)) })),

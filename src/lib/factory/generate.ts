@@ -255,9 +255,11 @@ export function planCourses(language: string, rows: CorpusRow[]): PlannedLevel[]
       for (let i = 0; i + MIN_LESSON_SIZE <= rs.length; i += LESSON_SIZE) cs.push(rs.slice(i, i + LESSON_SIZE));
       chunks.set(theme, cs);
     }
-    // Round-robin across themes so a capped level still covers every theme; syllabus order, mixed last.
+    // Round-robin across themes so a capped level still covers every theme. Themes new at this
+    // level come first; themes from earlier levels follow as "review & expand"; mixed practice last.
     const order = [...THEMES, MIXED];
-    const picked = new Map<Theme, CorpusRow[][]>([...chunks.keys()].sort((a, b) => order.indexOf(a) - order.indexOf(b)).map((th) => [th, []]));
+    const rank = (th: Theme) => (th === MIXED ? 2 : th.from === level ? 0 : 1) * 1000 + order.indexOf(th);
+    const picked = new Map<Theme, CorpusRow[][]>([...chunks.keys()].sort((a, b) => rank(a) - rank(b)).map((th) => [th, []]));
     let total = 0;
     for (let round = 0; total < LESSONS_PER_LEVEL; round++) {
       let any = false;
@@ -272,13 +274,19 @@ export function planCourses(language: string, rows: CorpusRow[]): PlannedLevel[]
     }
     const units: PlannedUnit[] = [];
     for (const [theme, cs] of picked) {
-      for (let start = 0, part = 1; start < cs.length; start += UNIT_SIZE, part++) {
+      if (!cs.length) continue;
+      const review = theme !== MIXED && theme.from !== level;
+      const base = review ? { ar: `مراجعة وتوسّع: ${theme.title.ar}`, en: `Review & expand: ${theme.title.en}` } : theme.title;
+      // Split evenly so no unit ends up with a single lesson.
+      const parts = Math.ceil(cs.length / UNIT_SIZE);
+      const size = Math.ceil(cs.length / parts);
+      for (let start = 0, part = 1; start < cs.length; start += size, part++) {
         const unitId = `${language}-${lvl}-fu-${theme.id}${part > 1 ? `-${part}` : ""}`;
-        const title = part > 1 ? { ar: `${theme.title.ar} ${part}`, en: `${theme.title.en} ${part}` } : theme.title;
+        const title = parts > 1 ? { ar: `${base.ar} (${part})`, en: `${base.en} (${part})` } : base;
         units.push({
           id: unitId,
           title,
-          lessons: cs.slice(start, start + UNIT_SIZE).map((c, i) => ({ id: `${language}-${lvl}-f-${theme.id}-${start + i + 1}`, n: start + i + 1, theme, unitId, rows: c })),
+          lessons: cs.slice(start, start + size).map((c, i) => ({ id: `${language}-${lvl}-f-${theme.id}-${start + i + 1}`, n: start + i + 1, theme, unitId, rows: c })),
         });
       }
     }
