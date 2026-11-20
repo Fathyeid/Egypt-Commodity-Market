@@ -11,37 +11,37 @@
     "de": {
       "sentences": 786987,
       "pairs": 25000,
-      "withArabic": 18979
+      "withArabic": 18808
     },
     "fr": {
       "sentences": 730700,
       "pairs": 25000,
-      "withArabic": 19721
+      "withArabic": 19672
     },
     "es": {
       "sentences": 443266,
       "pairs": 25000,
-      "withArabic": 16073
+      "withArabic": 16051
     },
     "it": {
       "sentences": 993442,
       "pairs": 25000,
-      "withArabic": 24210
+      "withArabic": 24220
     },
     "pt": {
       "sentences": 445912,
       "pairs": 25000,
-      "withArabic": 14152
+      "withArabic": 14163
     },
     "tr": {
       "sentences": 750286,
       "pairs": 25000,
-      "withArabic": 22103
+      "withArabic": 22045
     },
     "ru": {
       "sentences": 1237680,
       "pairs": 25000,
-      "withArabic": 23971
+      "withArabic": 23977
     },
     "zh": {
       "sentences": 89315,
