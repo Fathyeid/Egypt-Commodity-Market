@@ -176,3 +176,11 @@ body {
 .journey { background: var(--surface); border: 1px solid var(--line); }
 .journey-road { stroke: var(--surface-2); }
 .journey-dash { stroke: var(--gold); opacity: .7; }
+
+/* Lessons banner: navy behind the text (start side), photo showing on the end side. */
+.hero-fade {
+  background: linear-gradient(to right, #0d1838 0%, rgb(13 24 56 / 0.82) 45%, rgb(13 24 56 / 0.15) 100%);
+}
+[dir="rtl"] .hero-fade {
+  background: linear-gradient(to left, #0d1838 0%, rgb(13 24 56 / 0.82) 45%, rgb(13 24 56 / 0.15) 100%);
+}

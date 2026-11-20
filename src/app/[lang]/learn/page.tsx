@@ -16,8 +16,7 @@ import { coursesForLanguage, outlineLessonIds } from "@/lib/curriculum";
 import { wordCounts } from "@/lib/learner/srs";
 import { checkpointScores } from "@/lib/learner/checkpoint";
 import { LearningPath } from "@/components/learn/LearningPath";
-import { ContinueCard, LearnHero, LevelJourney } from "@/components/learn/LearnHero";
-import { LANGUAGE_NAMES } from "@/lib/factory/generate";
+import { ContinueCard, LanguageBanner, LevelChips, UnitsHeader, landmarkCredit } from "@/components/learn/LearnTop";
 
 export default async function LearnPage({ params, searchParams }: PageProps<"/[lang]/learn">) {
   const { lang } = await params;
@@ -109,24 +108,45 @@ async function Course({ lang, dict, searchParams }: { lang: Locale; dict: Dictio
   const [progress, checkpoints] = await Promise.all([getProgress(db, user.id, ids), checkpointScores(db, user.id, course.units.map((u) => u.id))]);
   const nextId = ids.find((id) => !progress.has(id));
   const nextLesson = course.units.flatMap((u) => u.lessons).find((l) => l.id === nextId) ?? null;
+  const q = typeof sp.q === "string" ? sp.q.trim().slice(0, 60) : "";
+  const needle = q.toLowerCase();
+  const shown = needle
+    ? { ...course, units: course.units.filter((u) => `${u.title.ar} ${u.title.en} ${u.topicTitle?.ar ?? ""} ${u.topicTitle?.en ?? ""}`.toLowerCase().includes(needle)) }
+    : course;
   return (
     <div className="space-y-6">
-      <LearnHero lang={lang} language={track.targetLanguage} languageName={LANGUAGE_NAMES[track.targetLanguage]?.[lang] ?? track.targetLanguage} level={course.level} done={progress.size} total={ids.length} t={t} />
-      <ContinueCard
-        href={nextId ? `/${lang}/learn/${nextId}` : null}
-        title={t.continueTitle}
-        subtitle={nextLesson ? fmt(t.continueSub, { title: nextLesson.title[lang] }) : fmt(t.progress, { a: progress.size, b: ids.length })}
-        language={track.targetLanguage}
-      />
-      <LevelJourney lang={lang} levels={courses.map((c) => c.level)} current={course.level} home={track.placementLevel ?? track.selfLevel} t={t} />
-      <ReviewLink lang={lang} dict={dict} userId={user.id} language={track.targetLanguage} />
-      <div className="flex items-end justify-between gap-3">
-        <h2 className="text-xl font-bold" data-testid="units-heading">{t.unitsTitle}</h2>
-        <span className="text-sm text-muted">{fmt(t.unitsHeading, { u: course.units.length, n: ids.length })}</span>
+      <div className="-mx-4 -mt-6 overflow-hidden bg-gradient-to-b from-[#16244f] to-[#0d1838] pt-3 sm:mx-0 sm:mt-0 sm:rounded-3xl">
+        <LevelChips lang={lang} levels={courses.map((c) => c.level)} current={course.level} t={t} />
+        <LanguageBanner language={track.targetLanguage} title={course.title[lang]} done={progress.size} total={ids.length} t={t} />
       </div>
-      <LearningPath lang={lang} course={course} progress={progress} checkpoints={checkpoints} nextId={nextId} t={t} />
+      <div className="-mt-4">
+        <ContinueCard
+          href={nextId ? `/${lang}/learn/${nextId}` : null}
+          title={t.continueTitle}
+          subtitle={nextLesson ? fmt(t.continueSub, { title: nextLesson.title[lang] }) : fmt(t.progress, { a: progress.size, b: ids.length })}
+          language={track.targetLanguage}
+        />
+      </div>
+      <ReviewLink lang={lang} dict={dict} userId={user.id} language={track.targetLanguage} />
+      <UnitsHeader lang={lang} level={course.level} q={q} count={fmt(t.unitsHeading, { u: course.units.length, n: ids.length })} t={t} />
+      {q && shown.units.length === 0 && <p className="card p-5 text-center text-muted">{t.noUnits}</p>}
+      <LearningPath lang={lang} course={shown} progress={progress} checkpoints={checkpoints} nextId={nextId} t={t} />
       <Centers lang={lang} dict={dict} />
       <Words lang={lang} dict={dict} userId={user.id} language={track.targetLanguage} />
+      <PhotoCredit language={track.targetLanguage} label={t.photoCredit} />
     </div>
+  );
+}
+
+function PhotoCredit({ language, label }: { language: string; label: string }) {
+  const c = landmarkCredit(language);
+  if (!c) return null;
+  return (
+    <p className="text-xs text-faint" data-testid="photo-credit">
+      {label}{" "}
+      <a href={c.source} target="_blank" rel="noopener noreferrer" className="underline">{c.title.replace(/^File:/, "")}</a>
+      {c.author ? ` — ${c.author}` : ""} ·{" "}
+      {c.licenseUrl ? <a href={c.licenseUrl} target="_blank" rel="noopener noreferrer" className="underline">{c.license}</a> : c.license} · Wikimedia Commons
+    </p>
   );
 }
