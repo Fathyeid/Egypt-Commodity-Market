@@ -1,0 +1,59 @@
+name: Topic videos (YouTube)
+
+# Finds one YouTube video per grammar topic (data/videos.json) with the
+# YOUTUBE_API_KEY repository secret, level by level, inside the free daily quota.
+# Each run commits its progress to main; the next deploy shows the videos.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * *" # daily, after the API quota resets (midnight Pacific)
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/topic-videos.yml"
+      - "scripts/factory/find_videos.py"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: topic-videos
+  cancel-in-progress: false
+
+jobs:
+  find:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Skip when the API key is missing
+        id: key
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: |
+          if [ -z "$YOUTUBE_API_KEY" ]; then echo "YOUTUBE_API_KEY secret is not set yet"; echo "ok=false" >> "$GITHUB_OUTPUT"; else echo "ok=true" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/setup-node@v4
+        if: steps.key.outputs.ok == 'true'
+        with:
+          node-version: 22
+          cache: npm
+      - name: Export topics
+        if: steps.key.outputs.ok == 'true'
+        run: npm ci --ignore-scripts && npx tsx scripts/factory/export-topics.ts /tmp/topics.json
+      - name: Find videos
+        if: steps.key.outputs.ok == 'true'
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: python3 -I scripts/factory/find_videos.py /tmp/topics.json data/videos.json
+      - name: Commit progress
+        if: steps.key.outputs.ok == 'true'
+        run: |
+          git config user.name "lisan-video-finder"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/videos.json
+          if git diff --cached --quiet; then echo "No change"; exit 0; fi
+          git commit -m "Topic videos: daily YouTube search progress"
+          for i in 1 2 3; do git pull --rebase origin main && git push origin HEAD:main && exit 0; sleep 5; done
+          exit 1
