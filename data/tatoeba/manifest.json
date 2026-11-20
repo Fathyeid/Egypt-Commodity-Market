@@ -5,53 +5,53 @@
   "languages": {
     "en": {
       "sentences": 2041097,
-      "pairs": 25000,
-      "withArabic": 25000
+      "pairs": 36000,
+      "withArabic": 36000
     },
     "de": {
       "sentences": 786987,
-      "pairs": 25000,
-      "withArabic": 18808
+      "pairs": 36000,
+      "withArabic": 20657
     },
     "fr": {
       "sentences": 730700,
-      "pairs": 25000,
-      "withArabic": 19672
+      "pairs": 36000,
+      "withArabic": 21751
     },
     "es": {
       "sentences": 443266,
-      "pairs": 25000,
-      "withArabic": 16051
+      "pairs": 36000,
+      "withArabic": 16785
     },
     "it": {
       "sentences": 993442,
-      "pairs": 25000,
-      "withArabic": 24220
+      "pairs": 36000,
+      "withArabic": 30347
     },
     "pt": {
       "sentences": 445912,
-      "pairs": 25000,
-      "withArabic": 14163
+      "pairs": 36000,
+      "withArabic": 14370
     },
     "tr": {
       "sentences": 750286,
-      "pairs": 25000,
-      "withArabic": 22045
+      "pairs": 36000,
+      "withArabic": 23562
     },
     "ru": {
       "sentences": 1237680,
-      "pairs": 25000,
-      "withArabic": 23977
+      "pairs": 36000,
+      "withArabic": 29259
     },
     "zh": {
       "sentences": 89315,
-      "pairs": 25000,
+      "pairs": 36000,
       "withArabic": 6830
     },
     "ja": {
       "sentences": 248989,
-      "pairs": 25000,
-      "withArabic": 14144
+      "pairs": 36000,
+      "withArabic": 14839
     },
     "ko": {
       "sentences": 15970,
@@ -60,7 +60,7 @@
     },
     "ar": {
       "sentences": 68788,
-      "pairs": 25000,
+      "pairs": 36000,
       "withArabic": 0
     }
   }

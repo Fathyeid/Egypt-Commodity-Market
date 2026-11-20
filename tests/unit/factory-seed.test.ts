@@ -33,7 +33,7 @@ describe("factory import (database)", () => {
     expect(factoryStatus({ FACTORY_STATUS: "draft" })).toBe("draft");
   });
 
-  it("imports drafts, skips unchanged corpora and keeps reviewed lessons", async () => {
+  it("imports drafts, skips unchanged corpora, refreshes content and respects review status", async () => {
     await cleanup();
     const dir = mkdtempSync(join(tmpdir(), "corpus-"));
     writeCorpus(dir, 600);
@@ -46,21 +46,25 @@ describe("factory import (database)", () => {
     await seedFactoryCurriculum(db, dir, (m) => logs.push(m), "draft");
     expect(logs.at(-1)).toContain("unchanged");
 
-    const [first] = await sql`select id, content from curriculum_lessons where course_id = 'fr-a1' order by position limit 1`;
+    const [first, second] = await sql`select id, content from curriculum_lessons where course_id = 'fr-a1' order by position limit 2`;
     await sql`update curriculum_lessons set status = 'published' where id = ${first.id}`;
+    await sql`update curriculum_lessons set status = 'rejected' where id = ${second.id}`;
     writeCorpus(dir, 600, " !");
     await seedFactoryCurriculum(db, dir, (m) => logs.push(m), "draft");
-    const [after] = await sql`select content, status from curriculum_lessons where id = ${first.id}`;
-    expect(after.status).toBe("published");
-    expect(after.content).toEqual(first.content); // an approved lesson is never overwritten
-    // A smaller corpus drops outdated drafts but keeps the reviewed lesson.
-    writeCorpus(dir, 300, " zzz");
+    const [pub] = await sql`select content, status from curriculum_lessons where id = ${first.id}`;
+    expect(pub.status).toBe("published"); // review status is kept…
+    expect(JSON.stringify(pub.content)).toContain(" !"); // …while generated content is refreshed
+    const [rej] = await sql`select content, status from curriculum_lessons where id = ${second.id}`;
+    expect(rej.status).toBe("rejected");
+    expect(rej.content).toEqual(second.content); // rejected lessons are never touched
+
+    // A much smaller corpus drops lessons it no longer produces, except rejected ones.
+    writeCorpus(dir, 120, " zzz");
     await seedFactoryCurriculum(db, dir, (m) => logs.push(m), "draft");
-    expect(logs.some((m) => m.includes("outdated drafts"))).toBe(true);
-    const [{ total }] = await sql`select count(*)::int as total from curriculum_lessons where course_id like 'fr-%'`;
-    const [{ fresh }] = await sql`select count(*)::int as fresh from curriculum_lessons where course_id like 'fr-%' and content::text like '%zzz%'`;
-    expect(total - fresh).toBe(1);
-    const courses = await coursesForLanguage(db, "fr");
-    expect(courses[0].units.flatMap((u) => u.lessons).map((l) => l.id)).toEqual([first.id]);
+    expect(logs.some((m) => m.includes("outdated"))).toBe(true);
+    const rows = await sql`select id, status, content::text like '%zzz%' as fresh from curriculum_lessons where course_id like 'fr-%'`;
+    expect(rows.filter((r) => !r.fresh).map((r) => r.id)).toEqual([second.id]);
+    const visible = (await coursesForLanguage(db, "fr")).flatMap((c) => c.units.flatMap((u) => u.lessons.map((l) => l.id)));
+    expect(visible).toEqual(rows.filter((r) => r.status === "published").map((r) => r.id));
   });
 });

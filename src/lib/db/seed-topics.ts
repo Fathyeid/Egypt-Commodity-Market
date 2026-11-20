@@ -1,6 +1,6 @@
 /**
  * Seeds hand-written grammar topics (src/content/topics) and attaches them to
- * factory units: unit i of a level gets that level's topic i (round-robin).
+ * every unit: unit i of a level gets that level's topic i (round-robin).
  * Never overwrites a topic or a lesson's topic once set (the admin panel owns them).
  */
 import { existsSync, readFileSync } from "node:fs";
@@ -30,8 +30,9 @@ export async function seedTopics(db: Db, topics: TopicSeed[] = TOPIC_SEEDS) {
       .innerJoin(curriculumCourses, eq(curriculumCourses.id, curriculumUnits.courseId))
       .where(and(eq(curriculumCourses.language, language), eq(curriculumCourses.level, level)))
       .orderBy(asc(curriculumUnits.position));
-    const factoryUnits = units.filter((u) => u.id.includes("-fu-"));
-    for (const [i, unit] of factoryUnits.entries()) {
+    // Hand-written units come first in a course, so they get the level's first topics
+    // (e.g. English A1 unit 1 → the verb "to be").
+    for (const [i, unit] of units.entries()) {
       const res = await db
         .update(curriculumLessons)
         .set({ topicId: list[i % list.length].id })
