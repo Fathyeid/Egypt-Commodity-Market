@@ -1,0 +1,67 @@
+{
+  "source": "Tatoeba (https://tatoeba.org)",
+  "license": "CC BY 2.0 FR",
+  "exported": "2026-11-20",
+  "languages": {
+    "en": {
+      "sentences": 2041097,
+      "pairs": 25000,
+      "withArabic": 25000
+    },
+    "de": {
+      "sentences": 786987,
+      "pairs": 25000,
+      "withArabic": 107
+    },
+    "fr": {
+      "sentences": 730700,
+      "pairs": 25000,
+      "withArabic": 138
+    },
+    "es": {
+      "sentences": 443266,
+      "pairs": 25000,
+      "withArabic": 283
+    },
+    "it": {
+      "sentences": 993442,
+      "pairs": 25000,
+      "withArabic": 21
+    },
+    "pt": {
+      "sentences": 445912,
+      "pairs": 25000,
+      "withArabic": 13
+    },
+    "tr": {
+      "sentences": 750286,
+      "pairs": 25000,
+      "withArabic": 57
+    },
+    "ru": {
+      "sentences": 1237680,
+      "pairs": 25000,
+      "withArabic": 132
+    },
+    "zh": {
+      "sentences": 89315,
+      "pairs": 25000,
+      "withArabic": 47
+    },
+    "ja": {
+      "sentences": 248989,
+      "pairs": 25000,
+      "withArabic": 136
+    },
+    "ko": {
+      "sentences": 15970,
+      "pairs": 10168,
+      "withArabic": 67
+    },
+    "ar": {
+      "sentences": 68788,
+      "pairs": 25000,
+      "withArabic": 0
+    }
+  }
+}
