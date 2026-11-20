@@ -21,6 +21,8 @@ jobs:
     env:
       DATABASE_URL: postgres://lisan:lisan@localhost:5432/lisan
       TEST_DATABASE_URL: postgres://lisan:lisan@localhost:5432/lisan_test
+      # E2E tests exercise the admin review flow, so factory lessons start as drafts here.
+      FACTORY_STATUS: draft
       BETTER_AUTH_SECRET: ci-only-secret-not-used-anywhere-else-123456
       BETTER_AUTH_URL: http://localhost:3000
     steps:

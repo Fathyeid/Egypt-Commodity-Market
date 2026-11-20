@@ -27,12 +27,20 @@ export function readCorpus(file: string): CorpusRow[] {
     .map((line) => JSON.parse(line) as CorpusRow);
 }
 
-export async function seedFactoryCurriculum(db: Db, dir = join(process.cwd(), "data/tatoeba"), log = console.log) {
+/**
+ * FACTORY_STATUS=draft keeps new lessons hidden until an admin approves them (used by CI and tests);
+ * the default publishes them straight away, as the project owner asked.
+ */
+export function factoryStatus(env: Record<string, string | undefined> = process.env): "draft" | "published" {
+  return env.FACTORY_STATUS === "draft" ? "draft" : "published";
+}
+
+export async function seedFactoryCurriculum(db: Db, dir = join(process.cwd(), "data/tatoeba"), log = console.log, status = factoryStatus()) {
   if (!existsSync(dir)) return log("No factory corpus found (data/tatoeba); skipping");
   for (const file of readdirSync(dir).filter((f) => f.endsWith(".jsonl.gz")).sort()) {
     const language = file.replace(".jsonl.gz", "");
     const raw = readFileSync(join(dir, file));
-    const hash = createHash("sha256").update(raw).update("factory-v1").digest("hex");
+    const hash = createHash("sha256").update(raw).update(`factory-v2:${status}`).digest("hex");
     const source = `tatoeba:${language}`;
     const [prev] = await db.select().from(contentImports).where(eq(contentImports.source, source));
     if (prev?.hash === hash) {
@@ -63,7 +71,7 @@ export async function seedFactoryCurriculum(db: Db, dir = join(process.cwd(), "d
         content: l.content,
         attribution: l.attribution,
         source: "factory",
-        status: "draft",
+        status,
       }));
       for (let i = 0; i < rows.length; i += BATCH) {
         await db
@@ -78,6 +86,7 @@ export async function seedFactoryCurriculum(db: Db, dir = join(process.cwd(), "d
               attribution: sql`excluded.attribution`,
               position: sql`excluded.position`,
               unitId: sql`excluded.unit_id`,
+              status: sql`excluded.status`,
               updatedAt: new Date(),
             },
             // Only refresh untouched factory drafts.
@@ -106,6 +115,6 @@ export async function seedFactoryCurriculum(db: Db, dir = join(process.cwd(), "d
       .insert(contentImports)
       .values({ source, hash, lessons: count })
       .onConflictDoUpdate({ target: contentImports.source, set: { hash, lessons: count, importedAt: new Date() } });
-    log(`${source}: imported ${count} draft lessons in ${courses.length} levels`);
+    log(`${source}: imported ${count} ${status} lessons in ${courses.length} levels`);
   }
 }

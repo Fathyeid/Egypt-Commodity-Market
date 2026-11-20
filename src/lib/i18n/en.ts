@@ -418,7 +418,7 @@ const en: Dictionary = {
     next: "Next",
     answers: "Correct answers",
     empty: "No lessons with this status.",
-    notice: "Generated lessons stay drafts, invisible to learners, until you approve them. Review a sample before bulk publishing.",
+    notice: "Generated lessons are published to learners straight away. Review a sample of each level and reject or unpublish anything unsuitable.",
     backToAdmin: "← Admin",
     newTopic: "New topic",
     editTopic: "Edit topic",
