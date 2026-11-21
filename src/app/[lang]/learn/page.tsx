@@ -12,7 +12,8 @@ import { requireUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { getActiveTrack } from "@/lib/learner/repo";
 import { getProgress } from "@/lib/learner/study";
-import { coursesForLanguage, outlineLessonIds } from "@/lib/curriculum";
+import { outlineLessonIds } from "@/lib/curriculum";
+import { cachedCoursesForLanguage } from "@/lib/shared-cache";
 import { wordCounts } from "@/lib/learner/srs";
 import { checkpointScores } from "@/lib/learner/checkpoint";
 import { LearningPath } from "@/components/learn/LearningPath";
@@ -92,7 +93,7 @@ async function Course({ lang, dict, searchParams }: { lang: Locale; dict: Dictio
   const track = await getActiveTrack(db, user.id);
   if (!track) redirect(`/${lang}/onboarding`);
   const t = dict.learn;
-  const courses = await coursesForLanguage(db, track.targetLanguage);
+  const courses = await cachedCoursesForLanguage(track.targetLanguage);
   if (!courses.length) {
     return (
       <div className="space-y-6">
@@ -109,6 +110,7 @@ async function Course({ lang, dict, searchParams }: { lang: Locale; dict: Dictio
   const nextId = ids.find((id) => !progress.has(id));
   const nextLesson = course.units.flatMap((u) => u.lessons).find((l) => l.id === nextId) ?? null;
   const q = typeof sp.q === "string" ? sp.q.trim().slice(0, 60) : "";
+  const openId = typeof sp.open === "string" ? sp.open : null;
   const needle = q.toLowerCase();
   const shown = needle
     ? { ...course, units: course.units.filter((u) => `${u.title.ar} ${u.title.en} ${u.topicTitle?.ar ?? ""} ${u.topicTitle?.en ?? ""}`.toLowerCase().includes(needle)) }
@@ -130,7 +132,7 @@ async function Course({ lang, dict, searchParams }: { lang: Locale; dict: Dictio
       <ReviewLink lang={lang} dict={dict} userId={user.id} language={track.targetLanguage} />
       <UnitsHeader lang={lang} level={course.level} q={q} count={fmt(t.unitsHeading, { u: course.units.length, n: ids.length })} t={t} />
       {q && shown.units.length === 0 && <p className="card p-5 text-center text-muted">{t.noUnits}</p>}
-      <LearningPath lang={lang} course={shown} progress={progress} checkpoints={checkpoints} nextId={nextId} t={t} />
+      <LearningPath lang={lang} course={shown} progress={progress} checkpoints={checkpoints} nextId={nextId} t={t} openId={openId} level={course.level} searching={!!q} />
       <Centers lang={lang} dict={dict} />
       <Words lang={lang} dict={dict} userId={user.id} language={track.targetLanguage} />
       <PhotoCredit language={track.targetLanguage} label={t.photoCredit} />
