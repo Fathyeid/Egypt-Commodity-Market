@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { notFound, redirect } from "next/navigation";
 import { Award, BookOpen, BookOpenCheck, Clock, Flame, Gauge, Layers } from "lucide-react";
 import { Header } from "@/components/site/Header";
+import { ActivityWeek } from "@/components/dashboard/ActivityWeek";
 import { TrackSwitcher } from "@/components/dashboard/TrackSwitcher";
 import { getDictionary, type Dictionary } from "@/lib/i18n";
 import { isLocale, type Locale } from "@/lib/i18n/config";
@@ -10,7 +11,7 @@ import { fmt } from "@/lib/i18n/format";
 import { requireUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { getDashboardStats, getProfile, listLanguages, listTracks } from "@/lib/learner/repo";
-import { completedLessonCount, earnedBadges, levelFromXp, minutesToday, wordCounts } from "@/lib/learner/srs";
+import { completedLessonCount, earnedBadges, levelFromXp, wordCounts } from "@/lib/learner/srs";
 import { serviceStatus, type ServiceKey } from "@/lib/services";
 import { getProgress, getSkillLevels, latestPlacement } from "@/lib/learner/study";
 import { placementAvailable } from "@/lib/learner/placement-bank";
@@ -50,16 +51,15 @@ async function Dashboard({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const wantedLevel = active.placementLevel ?? active.selfLevel;
   const course = courses.find((c) => c.level === wantedLevel) ?? courses.find((c) => c.level === "A1") ?? courses[0] ?? null;
   const ids = course ? outlineLessonIds(course) : [];
-  const [progress, words, lessonsDone, todayMinutes] = await Promise.all([
+  const [progress, words, lessonsDone] = await Promise.all([
     getProgress(db, user.id, ids),
     wordCounts(db, user.id, active.targetLanguage),
     completedLessonCount(db, user.id),
-    minutesToday(db, user.id),
   ]);
   const wordsLearned = words.learned;
   const lvl = levelFromXp(stats.totalXp);
   const badges = earnedBadges({ lessons: lessonsDone, streak: stats.streak, words: words.learned, xp: stats.totalXp });
-  const goalPct = Math.min(100, Math.round((todayMinutes / active.dailyMinutes) * 100));
+  const goalPct = Math.min(100, Math.round((stats.minutesToday / active.dailyMinutes) * 100));
   const nextLessonId = ids.find((id) => !progress.has(id)) ?? null;
   const nextLesson = nextLessonId ? course!.units.flatMap((u) => u.lessons).find((l) => l.id === nextLessonId) ?? null : null;
   const SKILLS = ["vocabulary", "grammar", "reading", "listening", "writing", "speaking", "pronunciation"] as const;
@@ -99,6 +99,8 @@ async function Dashboard({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         ))}
       </section>
 
+      <ActivityWeek lang={lang} t={t} days={stats.recentDays} today={stats.today} streak={stats.streak} xpToday={stats.xpToday} activeToday={stats.activeToday} />
+
       {!hasActivity && <p className="rounded-xl bg-surface-2 px-4 py-3 text-sm text-muted">{t.emptyActivity}</p>}
 
       <section className="grid gap-3 sm:grid-cols-3" aria-label={t.progressTitle}>
@@ -115,7 +117,7 @@ async function Dashboard({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         <div className="card p-4" data-testid="daily-goal">
           <div className="flex items-baseline justify-between">
             <span className="font-semibold">{t.todayGoal}</span>
-            <span className="text-sm text-muted">{fmt(t.todayMinutes, { a: todayMinutes, b: active.dailyMinutes })}</span>
+            <span className="text-sm text-muted">{fmt(t.todayMinutes, { a: stats.minutesToday, b: active.dailyMinutes })}</span>
           </div>
           <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-2">
             <div className={`h-full rounded-full ${goalPct >= 100 ? "bg-ok" : "bg-accent"}`} style={{ width: `${goalPct}%` }} />
