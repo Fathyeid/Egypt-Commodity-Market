@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { db } from "@/lib/db";
@@ -23,6 +23,8 @@ export async function setLessonStatusAction(form: FormData) {
   await setLessonStatus(db, ids, status.parse(form.get("status")));
   revalidatePath("/[lang]/admin", "layout");
   revalidatePath("/[lang]/learn", "layout");
+  updateTag("curriculum");
+  updateTag("languages");
 }
 
 export async function setCourseStatusAction(form: FormData) {
@@ -30,6 +32,8 @@ export async function setCourseStatusAction(form: FormData) {
   await setCourseStatus(db, id.parse(form.get("courseId")), status.parse(form.get("from")), status.parse(form.get("to")));
   revalidatePath("/[lang]/admin", "layout");
   revalidatePath("/[lang]/learn", "layout");
+  updateTag("curriculum");
+  updateTag("languages");
 }
 
 const topicForm = z.object({
@@ -71,6 +75,8 @@ export async function saveTopicAction(_prev: TopicFormState, form: FormData): Pr
   });
   revalidatePath("/[lang]/admin", "layout");
   revalidatePath("/[lang]/learn", "layout");
+  updateTag("curriculum");
+  updateTag("languages");
   if (form.get("isNew") === "1") redirect(`/${langOf(form.get("lang"))}/admin/topics/${f.id}`);
   return { ok: true };
 }
@@ -80,4 +86,6 @@ export async function linkTopicAction(form: FormData) {
   await linkTopicToUnit(db, id.parse(form.get("topicId")), id.parse(form.get("unitId")));
   revalidatePath("/[lang]/admin", "layout");
   revalidatePath("/[lang]/learn", "layout");
+  updateTag("curriculum");
+  updateTag("languages");
 }
