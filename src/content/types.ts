@@ -21,6 +21,10 @@ export type PlacementItem = {
   prompt: string;
   options: string[];
   answer: number;
+  /** Hint in the learner's language (e.g. the sentence's meaning), for generated items. */
+  note?: string;
+  /** Options are meanings in the learner's language rather than target-language text. */
+  nativeOptions?: boolean;
 };
 
 export type Exercise =

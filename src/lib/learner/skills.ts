@@ -132,10 +132,11 @@ const SPEECH_MICROS_PER_SECOND = 278;
 
 export async function recordPronAttempt(db: Db, userId: string, input: { trackId: string; referenceText: string; locale: string; provider: string; result: PronResult; seconds: number }) {
   const [row] = await db.transaction(async (tx) => {
-    await tx.insert(aiUsage).values({
+    // The free browser check uses no paid service, so it doesn't count against AI limits.
+    if (input.provider !== "browser") await tx.insert(aiUsage).values({
       userId,
       feature: "pronunciation",
-      model: input.provider === "azure" ? `azure-speech:${input.locale}` : "test",
+      model: input.provider === "azure" ? `azure-speech:${input.locale}` : input.provider === "browser" ? "browser-speech" : "test",
       inputTokens: 0,
       outputTokens: 0,
       costMicros: input.provider === "azure" ? Math.ceil(input.seconds * SPEECH_MICROS_PER_SECOND) : 0,

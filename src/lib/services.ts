@@ -14,7 +14,7 @@ export function serviceStatus(): Record<ServiceKey, boolean> {
     database: has("DATABASE_URL"),
     google: has("GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"),
     email: has("RESEND_API_KEY", "EMAIL_FROM"),
-    ai: aiStatus() === "live", // live only once the owner sets ANTHROPIC_API_KEY
+    ai: aiStatus() === "live", // live once the owner sets GEMINI_API_KEY (free) or ANTHROPIC_API_KEY
     speech: speechStatus() === "live", // live once the owner sets AZURE_SPEECH_KEY + AZURE_SPEECH_REGION
     payments: false, // Phase 6 — awaiting owner approval
   };

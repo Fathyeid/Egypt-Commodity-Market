@@ -14,7 +14,8 @@ import {
   placementTests,
   skillLevels,
 } from "@/lib/db/schema";
-import { getPlacementBank, getPlacementItem, gradeExercise, placementAvailable, toPublicItem, type ExerciseAnswer } from "@/content";
+import { gradeExercise, toPublicItem, type ExerciseAnswer } from "@/content";
+import { getPlacementBank, getPlacementItem, placementAvailable } from "./placement-bank";
 import { getLesson } from "@/lib/curriculum";
 import { computeResult, nextItem, TOTAL_ITEMS, type PlacementResult, type Response } from "@/lib/placement/engine";
 import { DomainError, getActiveTrack } from "./repo";

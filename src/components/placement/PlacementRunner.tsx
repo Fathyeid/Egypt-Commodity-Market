@@ -42,10 +42,11 @@ export function PlacementRunner({ lang, language, testId, item, answered, total,
 
       <div key={item.id} className="animate-fade-up space-y-4">
         {item.passage && (
-          <blockquote lang={language} dir="ltr" className="rounded-xl bg-surface-2 p-4 text-start leading-relaxed">{item.passage}</blockquote>
+          <blockquote lang={language} dir="auto" className="rounded-xl bg-surface-2 p-4 text-start leading-relaxed">{item.passage}</blockquote>
         )}
         {item.audio && <SpeakButton text={item.audio} language={language} label={t.listen} noVoiceLabel={noVoice} />}
-        <p lang={language} dir="ltr" className="text-start text-lg font-semibold">{item.prompt}</p>
+        {item.note && <p dir="auto" className="text-start text-sm text-muted" data-testid="placement-note">{item.note}</p>}
+        <p lang={language} dir="auto" className="text-start text-lg font-semibold">{item.prompt}</p>
         <div className="grid gap-2 sm:grid-cols-2" role="radiogroup" aria-label={item.prompt}>
           {item.options.map((o, i) => (
             <button
@@ -53,8 +54,8 @@ export function PlacementRunner({ lang, language, testId, item, answered, total,
               type="button"
               role="radio"
               aria-checked={choice === i}
-              dir="ltr"
-              lang={language}
+              dir="auto"
+              lang={item.nativeOptions ? undefined : language}
               disabled={pending}
               onClick={() => setChoice(i)}
               className={`rounded-xl border-[1.5px] px-4 py-3 text-start transition-colors ${choice === i ? "border-brand bg-brand-soft" : "border-line bg-surface hover:border-faint"}`}

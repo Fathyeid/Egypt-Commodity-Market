@@ -3,6 +3,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import type { z } from "zod";
 import { costMicros } from "./pricing";
+import { generateGemini } from "./gemini";
 
 export type ChatMessage = { role: "user" | "assistant"; content: string };
 export type AIResult<T> =
@@ -13,13 +14,24 @@ export type AIStatus = "live" | "test" | "not_configured";
 
 /**
  * Status of the AI integration.
- * - live: ANTHROPIC_API_KEY is set (owner approved and configured it).
+ * - live: a provider key is set (owner approved and configured it):
+ *   GEMINI_API_KEY (Google AI Studio, free tier) or ANTHROPIC_API_KEY (paid).
  * - test: AI_PROVIDER=fake — scripted replies for automated tests, clearly labelled in the UI.
  * - not_configured: nothing is set; AI features show an honest "not configured" state.
  */
 export function aiStatus(): AIStatus {
   if (process.env.AI_PROVIDER === "fake") return "test";
-  return process.env.ANTHROPIC_API_KEY ? "live" : "not_configured";
+  return activeProvider() ? "live" : "not_configured";
+}
+
+/** Which live provider answers. AI_PROVIDER=gemini|anthropic picks one when both keys exist; otherwise the key that is set. */
+export function activeProvider(): "anthropic" | "gemini" | null {
+  const want = process.env.AI_PROVIDER;
+  const hasA = !!process.env.ANTHROPIC_API_KEY;
+  const hasG = !!process.env.GEMINI_API_KEY;
+  if (want === "gemini" && hasG) return "gemini";
+  if (want === "anthropic" && hasA) return "anthropic";
+  return hasA ? "anthropic" : hasG ? "gemini" : null;
 }
 
 const MODEL = () => process.env.AI_MODEL || "claude-opus-5-5";
@@ -39,6 +51,7 @@ export async function generate<S extends z.ZodType>(opts: {
   const status = aiStatus();
   if (status === "not_configured") return { ok: false, error: "not_configured" };
   if (status === "test") return { ok: true, data: opts.fake(), model: "test", inputTokens: 0, outputTokens: 0, costMicros: 0 };
+  if (activeProvider() === "gemini") return generateGemini(opts);
 
   try {
     const res = await getClient().beta.messages.parse({

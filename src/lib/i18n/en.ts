@@ -407,6 +407,7 @@ const en: Dictionary = {
     newWriting: "New task",
     pronSub: "Pick or type a sentence, listen to the model, then record yourself. Scores come from a real pronunciation-assessment service — never made up.",
     pronNotConfigured: "Pronunciation assessment isn't enabled yet. The platform owner needs to enable Azure Speech. You can listen to the model pronunciation now.",
+    pronBrowserMode: "Free check in your browser: press Record and say the sentence; we compare what your browser heard with it word by word. It measures how clear each word was, not individual sounds. Works in Chrome and Safari; your browser may send your voice to its provider to transcribe it.",
     pronTestMode: "Test mode: results here are scripted for automated testing, not a real assessment.",
     pickSentence: "Pick a sentence",
     ownSentence: "or type your own",

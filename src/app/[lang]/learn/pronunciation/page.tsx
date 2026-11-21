@@ -44,11 +44,11 @@ async function Coach({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         <p className="mt-1 text-muted">{t.pronSub}</p>
       </div>
       {status !== "live" && (
-        <p role="status" data-testid="speech-status" className={`rounded-xl px-4 py-3 text-sm ${status === "test" ? "bg-accent-soft" : "bg-surface-2 text-muted"}`}>
-          {status === "test" ? t.pronTestMode : t.pronNotConfigured}
+        <p role="status" data-testid="speech-status" className={`rounded-xl px-4 py-3 text-sm ${status === "test" ? "bg-accent-soft" : "bg-brand-soft/60"}`}>
+          {status === "test" ? t.pronTestMode : t.pronBrowserMode}
         </p>
       )}
-      <PronunciationCoach language={track.targetLanguage} sentences={sentences} t={t} listenLabel={dict.placement.listen} noVoice={dict.lesson.noVoice} enabled={status !== "not_configured"} />
+      <PronunciationCoach language={track.targetLanguage} sentences={sentences} t={t} listenLabel={dict.placement.listen} noVoice={dict.lesson.noVoice} mode={status === "not_configured" ? "browser" : "server"} />
       {history.length > 0 && (
         <section className="card p-5">
           <h2 className="mb-3 font-semibold">{t.pronHistory}</h2>
