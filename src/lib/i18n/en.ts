@@ -19,6 +19,9 @@ const en: Dictionary = {
     switchLang: "العربية",
     theme: "Toggle theme",
     menu: "Menu",
+    install: "Install app",
+    installIos: "To install Lisan on iPhone: tap the Share button in Safari, then choose “Add to Home Screen”.",
+    close: "Close",
   },
   common: {
     loading: "Loading…",

@@ -17,6 +17,9 @@ const ar = {
     switchLang: "English",
     theme: "تبديل المظهر",
     menu: "القائمة",
+    install: "ثبّت التطبيق",
+    installIos: "لتثبيت لسان على الآيفون: اضغط زر المشاركة في Safari، ثم اختر «إضافة إلى الشاشة الرئيسية».",
+    close: "إغلاق",
   },
   common: {
     loading: "جارٍ التحميل…",

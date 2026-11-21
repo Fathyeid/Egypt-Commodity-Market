@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { Logo } from "@/components/ui/Logo";
 import { LangSwitch, LangSwitchFallback } from "./LangSwitch";
 import { ThemeToggle } from "./ThemeToggle";
+import { InstallButton } from "./InstallButton";
 import { NavLinks } from "./NavLinks";
 import { SignOutButton } from "./SignOutButton";
 import { getSession } from "@/lib/auth/session";
@@ -15,7 +16,7 @@ export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
     <header className="sticky top-0 z-20 border-b border-line bg-bg/85 backdrop-blur-md">
       <div className="container-page flex h-16 items-center gap-3">
         <Logo href={`/${lang}`} label={dict.brand} />
-        <div className="ms-auto flex items-center gap-2">
+        <div className="ms-auto flex items-center gap-1.5 sm:gap-2">
           <Suspense fallback={<div className="h-10 w-24" aria-hidden />}>
             <UserArea lang={lang} dict={dict} />
           </Suspense>
@@ -23,6 +24,7 @@ export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
           <Suspense fallback={<LangSwitchFallback lang={lang} label={dict.nav.switchLang} />}>
             <LangSwitch lang={lang} label={dict.nav.switchLang} />
           </Suspense>
+          <InstallButton label={dict.nav.install} iosHelp={dict.nav.installIos} closeLabel={dict.nav.close} />
           <ThemeToggle label={dict.nav.theme} />
         </div>
       </div>
@@ -65,7 +67,7 @@ async function UserArea({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         <Link href={`/${lang}/sign-in`} className="hidden rounded-full px-3.5 py-2 text-sm font-semibold text-muted hover:text-text sm:inline-block">
           {dict.nav.signIn}
         </Link>
-        <Link href={`/${lang}/sign-up`} className="btn-primary px-4 py-2 text-sm">
+        <Link href={`/${lang}/sign-up`} className="btn-primary whitespace-nowrap px-3.5 py-2 text-sm">
           {dict.nav.signUp}
         </Link>
       </>
