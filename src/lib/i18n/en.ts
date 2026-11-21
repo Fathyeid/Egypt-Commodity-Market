@@ -349,7 +349,7 @@ const en: Dictionary = {
     scenarioLabel: "Scenario",
     limitsNote: "Daily limit: {n} messages.",
     errorsMap: {
-      not_configured: "The AI tutor isn't enabled yet.",
+      not_configured: "The AI tutor isn't enabled, or its AI key is invalid. The platform owner should check GEMINI_API_KEY.",
       refused: "This message can't be answered. Try rephrasing it.",
       busy: "The service is busy. Try again in a minute.",
       failed: "Couldn't get a reply. Please try again.",

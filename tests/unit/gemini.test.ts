@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 import { activeProvider, aiStatus, generate } from "@/lib/ai/provider";
-import { toGeminiSchema } from "@/lib/ai/gemini";
+import { geminiKey, geminiModels, toGeminiSchema } from "@/lib/ai/gemini";
 
 const Schema = z.object({ reply: z.string(), items: z.array(z.object({ term: z.string() })) });
 const call = () => generate({ system: "sys", messages: [{ role: "user", content: "hi" }, { role: "assistant", content: "yo" }], schema: Schema, fake: () => ({ reply: "fake", items: [] }) });
@@ -74,6 +74,42 @@ describe("Gemini generate", () => {
     expect(await call()).toEqual({ ok: false, error: "refused" });
     mockFetch(200, { candidates: [{ content: { parts: [{ text: '{"reply": 3}' }] } }] });
     expect(await call()).toEqual({ ok: false, error: "failed" });
+  });
+
+  it("treats Google's 400 API_KEY_INVALID as a configuration problem", async () => {
+    setup();
+    mockFetch(400, { error: { code: 400, message: "API key not valid. Please pass a valid API key.", status: "INVALID_ARGUMENT", details: [{ reason: "API_KEY_INVALID" }] } });
+    expect(await call()).toEqual({ ok: false, error: "not_configured" });
+  });
+
+  it("falls back to another model when the configured one doesn't exist", async () => {
+    setup();
+    const ok = { candidates: [{ content: { parts: [{ text: '{"reply":"ok","items":[]}' }] } }] };
+    const fetchFn = vi.fn(async (url: string) => (url.includes("gemini-test") ? new Response("not found", { status: 404 }) : new Response(JSON.stringify(ok), { status: 200 })));
+    vi.stubGlobal("fetch", fetchFn);
+    const r = await call();
+    expect(r.ok).toBe(true);
+    expect(String(fetchFn.mock.calls[1][0])).toContain("gemini-flash-latest");
+  });
+
+  it("retries with the schema in the instructions when strict output is rejected", async () => {
+    setup();
+    const ok = { candidates: [{ content: { parts: [{ text: '```json\n{"reply":"ok","items":[]}\n```' }] } }] };
+    const bodies: Record<string, unknown>[] = [];
+    vi.stubGlobal("fetch", vi.fn(async (_u: string, init: RequestInit) => {
+      const body = JSON.parse(String(init.body));
+      bodies.push(body);
+      return body.generationConfig.responseJsonSchema ? new Response("Invalid JSON payload", { status: 400 }) : new Response(JSON.stringify(ok), { status: 200 });
+    }));
+    expect((await call()).ok).toBe(true);
+    expect(bodies).toHaveLength(2);
+    expect(JSON.stringify(bodies[1])).toContain("JSON Schema");
+  });
+
+  it("cleans a pasted key and lists fallback models", () => {
+    expect(geminiKey('  "AIza-abc"\n')).toBe("AIza-abc");
+    expect(geminiModels(" my-model ")).toEqual(["my-model", "gemini-flash-latest", "gemini-2.5-flash", "gemini-2.0-flash"]);
+    expect(geminiModels(undefined)[0]).toBe("gemini-flash-latest");
   });
 
   it("builds a JSON schema without keys Gemini rejects", () => {
