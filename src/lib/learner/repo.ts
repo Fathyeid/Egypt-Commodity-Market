@@ -3,7 +3,9 @@
  * caller and scopes every query by it — a user can never read or change
  * another user's rows (covered by tests/learner-repo.test.ts).
  */
-import { and, asc, eq, gte, sql } from "drizzle-orm";
+import { and, asc, eq, gte, lte, sql } from "drizzle-orm";
+import { activityWeek, computeStreak, utcDayKey, utcDayStart } from "./activity";
+export { computeStreak } from "./activity";
 import type { PgDatabase } from "drizzle-orm/pg-core";
 import { activityEvents, languages, learningTracks, profiles, user } from "@/lib/db/schema";
 import type { OnboardingInput, ProfileInput, TrackInput } from "@/lib/validation";
@@ -142,52 +144,50 @@ export async function deleteTrack(db: Db, userId: string, trackId: string) {
   });
 }
 
-/** Real dashboard numbers, computed from activity_events. */
+/** Real dashboard numbers, scoped to one learner and optional track, using UTC days. */
 export async function getDashboardStats(db: Db, userId: string, trackId: string | null, now = new Date()) {
-  const weekAgo = new Date(now.getTime() - 7 * 24 * 3600 * 1000);
-  const scope = trackId
-    ? and(eq(activityEvents.userId, userId), eq(activityEvents.trackId, trackId))
-    : eq(activityEvents.userId, userId);
-
+  const weekStart = utcDayStart(now);
+  weekStart.setUTCDate(weekStart.getUTCDate() - 6);
+  const scope = and(
+    eq(activityEvents.userId, userId),
+    trackId ? eq(activityEvents.trackId, trackId) : undefined,
+    lte(activityEvents.createdAt, now),
+  );
   const [week] = await db
     .select({
       seconds: sql<number>`coalesce(sum(${activityEvents.durationSeconds}), 0)::int`,
       xp: sql<number>`coalesce(sum(${activityEvents.xp}), 0)::int`,
     })
     .from(activityEvents)
-    .where(and(scope, gte(activityEvents.createdAt, weekAgo)));
-
+    .where(and(scope, gte(activityEvents.createdAt, weekStart)));
   const [total] = await db
     .select({ xp: sql<number>`coalesce(sum(${activityEvents.xp}), 0)::int` })
     .from(activityEvents)
     .where(scope);
-
+  // Group in PostgreSQL instead of loading individual events. No 400-day cap:
+  // a long-running learner must not lose their streak at an arbitrary limit.
   const days = await db
-    .select({ day: sql<string>`to_char(date_trunc('day', ${activityEvents.createdAt} at time zone 'UTC'), 'YYYY-MM-DD')` })
+    .select({
+      day: sql<string>`to_char(${activityEvents.createdAt} at time zone 'UTC', 'YYYY-MM-DD')`,
+      xp: sql<number>`coalesce(sum(${activityEvents.xp}), 0)::int`,
+      seconds: sql<number>`coalesce(sum(${activityEvents.durationSeconds}), 0)::int`,
+      activities: sql<number>`count(*)::int`,
+    })
     .from(activityEvents)
     .where(scope)
     .groupBy(sql`1`)
-    .orderBy(sql`1 desc`)
-    .limit(400);
-
+    .orderBy(sql`1 desc`);
+  const recentDays = activityWeek(days, now);
+  const today = recentDays[6];
   return {
     minutesThisWeek: Math.round(week.seconds / 60),
     xpThisWeek: week.xp,
     totalXp: total.xp,
     streak: computeStreak(days.map((d) => d.day), now),
+    activeToday: today.activities > 0,
+    xpToday: today.xp,
+    minutesToday: Math.round(today.seconds / 60),
+    today: utcDayKey(now),
+    recentDays,
   };
-}
-
-/** Consecutive UTC days with activity, ending today or yesterday. */
-export function computeStreak(daysDesc: string[], now = new Date()): number {
-  const set = new Set(daysDesc);
-  const key = (d: Date) => d.toISOString().slice(0, 10);
-  const cursor = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-  if (!set.has(key(cursor))) cursor.setUTCDate(cursor.getUTCDate() - 1);
-  let streak = 0;
-  while (set.has(key(cursor))) {
-    streak++;
-    cursor.setUTCDate(cursor.getUTCDate() - 1);
-  }
-  return streak;
 }

@@ -5,6 +5,8 @@ test("spaced review: a saved word is due, graded, then scheduled away; dashboard
   await signUp(page, "ar", "سلمى", uniqueEmail("srs"));
   await onboard(page, { native: "العربية", target: "الإنجليزية", goal: "السفر", minutes: "15 دقيقة", level: "A2" });
 
+  await expect(page.getByTestId("activity-week").locator("li")).toHaveCount(7);
+  await expect(page.getByTestId("xp-today")).toContainText("0 نقطة");
   await page.goto("/ar/learn/review");
   await expect(page.getByTestId("review-empty")).toContainText("مجموعتك فارغة");
 
@@ -30,6 +32,10 @@ test("spaced review: a saved word is due, graded, then scheduled away; dashboard
   await expect(page.getByTestId("review-empty")).toContainText("لا توجد كلمات تحتاج مراجعة الآن");
 
   await page.goto("/ar/dashboard");
+  await expect(page.getByTestId("xp-today")).toContainText("2 نقطة");
+  await expect(page.getByTestId("activity-week").locator('[data-active="true"]')).toHaveCount(1);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(page.getByTestId("activity-week")).toBeVisible();
   await expect(page.getByTestId("xp-level")).toContainText("المستوى 1");
   await expect(page.getByTestId("daily-goal")).toContainText("/ 15 دقيقة");
   await expect(page.getByTestId("review-cta")).toContainText("1 كلمة في مجموعتك");
