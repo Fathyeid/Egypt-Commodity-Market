@@ -51,6 +51,9 @@ export const auth = betterAuth({
   session: {
     expiresIn: 60 * 60 * 24 * 30,
     updateAge: 60 * 60 * 24,
+    // Serve the session from a signed cookie for 5 minutes instead of hitting
+    // the database on every request; still signed, still revokes on expiry.
+    cookieCache: { enabled: true, maxAge: 60 * 5 },
   },
   // Brute-force protection. Only the E2E test server disables it (AUTH_RATE_LIMIT=off).
   rateLimit: { enabled: process.env.AUTH_RATE_LIMIT !== "off", window: 60, max: 30 },
