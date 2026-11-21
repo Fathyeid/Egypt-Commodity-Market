@@ -12,7 +12,7 @@ import { db } from "@/lib/db";
 import { getActiveTrack } from "@/lib/learner/repo";
 import { latestPlacement } from "@/lib/learner/study";
 import { placementAvailable } from "@/lib/learner/placement-bank";
-import { coursesForLanguage } from "@/lib/curriculum";
+import { cachedCoursesForLanguage } from "@/lib/shared-cache";
 import { TOTAL_ITEMS } from "@/lib/placement/engine";
 
 export default async function PlacementPage({ params }: PageProps<"/[lang]/placement">) {
@@ -43,7 +43,7 @@ async function Content({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const last = await latestPlacement(db, user.id, track.id);
   if (last?.status === "completed" && last.result) {
     const level = last.result.overall === "A0" ? "A1" : last.result.overall;
-    const course = (await coursesForLanguage(db, track.targetLanguage)).find((c) => c.level === level);
+    const course = (await cachedCoursesForLanguage(track.targetLanguage)).find((c) => c.level === level);
     return (
       <PlacementReport
         lang={lang}
