@@ -10,12 +10,13 @@ import { isLocale, type Locale } from "@/lib/i18n/config";
 import { fmt } from "@/lib/i18n/format";
 import { requireUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
-import { getDashboardStats, getProfile, listLanguages, listTracks } from "@/lib/learner/repo";
+import { getDashboardStats, getProfile, listTracks } from "@/lib/learner/repo";
+import { cachedCoursesForLanguage, cachedLanguages } from "@/lib/shared-cache";
 import { completedLessonCount, earnedBadges, levelFromXp, wordCounts } from "@/lib/learner/srs";
 import { serviceStatus, type ServiceKey } from "@/lib/services";
 import { getProgress, getSkillLevels, latestPlacement } from "@/lib/learner/study";
 import { placementAvailable } from "@/lib/learner/placement-bank";
-import { coursesForLanguage, outlineLessonIds } from "@/lib/curriculum";
+import { outlineLessonIds } from "@/lib/curriculum";
 import { StartPlacementButton } from "@/components/placement/StartPlacementButton";
 import { recurringErrors } from "@/lib/learner/conversations";
 
@@ -37,7 +38,7 @@ export default async function DashboardPage({ params }: PageProps<"/[lang]/dashb
 
 async function Dashboard({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const user = await requireUser(lang, `/${lang}/dashboard`);
-  const [profile, tracks, langs] = await Promise.all([getProfile(db, user.id), listTracks(db, user.id), listLanguages(db)]);
+  const [profile, tracks, langs] = await Promise.all([getProfile(db, user.id), listTracks(db, user.id), cachedLanguages()]);
   const active = tracks.find((t) => t.isActive) ?? null;
   if (!profile?.onboardedAt || !active) redirect(`/${lang}/onboarding`);
 
@@ -47,7 +48,7 @@ async function Dashboard({ lang, dict }: { lang: Locale; dict: Dictionary }) {
     latestPlacement(db, user.id, active.id),
     recurringErrors(db, user.id, active.id),
   ]);
-  const courses = await coursesForLanguage(db, active.targetLanguage);
+  const courses = await cachedCoursesForLanguage(active.targetLanguage);
   const wantedLevel = active.placementLevel ?? active.selfLevel;
   const course = courses.find((c) => c.level === wantedLevel) ?? courses.find((c) => c.level === "A1") ?? courses[0] ?? null;
   const ids = course ? outlineLessonIds(course) : [];
