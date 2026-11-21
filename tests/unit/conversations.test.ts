@@ -66,6 +66,16 @@ describe("tutor conversations", () => {
     expect((await convo.recurringErrors(db, a, c.trackId))[0]).toMatchObject({ tag: "have-has", count: 1 });
   });
 
+  it("links repeated conversation corrections into review without an extra AI call", async () => {
+    const a = await learner("alice");
+    const c = await convo.startConversation(db, a, "ar", { kind: "tutor", persona: "friendly" });
+    await convo.sendMessage(db, a, c.id, "I has a meeting", "ar");
+    expect(await db.select().from(schema.savedWords)).toHaveLength(0);
+    await convo.sendMessage(db, a, c.id, "I has another meeting", "ar");
+    expect(await db.select().from(schema.savedWords)).toEqual([expect.objectContaining({ userId: a, language: "en", term: "i have", source: "mistake:have-has" })]);
+    expect(await db.select().from(schema.aiUsage)).toHaveLength(2);
+  });
+
   it("feeds past mistakes and weak lesson rules into the tutor's prompt (memory)", async () => {
     const a = await learner("alice");
     const c = await convo.startConversation(db, a, "en", { kind: "tutor", persona: "business" });

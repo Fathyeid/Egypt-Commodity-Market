@@ -292,17 +292,17 @@ export async function submitWritingAction(lang: string, taskId: string, text: st
 
 /* ------------------------- Phase 5: spaced repetition ------------------------- */
 
-export async function reviewWordAction(id: unknown, grade: unknown): Promise<ActionResult> {
+export async function reviewWordAction(id: unknown, grade: unknown, dueAt: unknown): Promise<{ ok: true; accepted: boolean; dueAt: string } | { ok: false; error: string }> {
   const userId = await uid();
   if (!userId) return { ok: false, error: "unauthorized" };
-  const parsed = z.object({ id: z.uuid(), grade: z.enum(srs.GRADES) }).safeParse({ id, grade });
+  const parsed = z.object({ id: z.uuid(), grade: z.enum(srs.GRADES), dueAt: z.iso.datetime() }).safeParse({ id, grade, dueAt });
   if (!parsed.success) return { ok: false, error: "invalid" };
   try {
-    await srs.reviewWord(db, userId, parsed.data.id, parsed.data.grade);
+    const result = await srs.reviewWord(db, userId, parsed.data.id, parsed.data.grade, parsed.data.dueAt);
+    return { ok: true, ...result };
   } catch (e) {
-    return fail(e);
+    return fail(e) as { ok: false; error: string };
   }
-  return { ok: true };
 }
 
 export async function submitCheckpointAction(unitId: unknown, answers: unknown) {

@@ -13,6 +13,7 @@ import { RoleplayReport, RoleplayTurn, TutorReply, type Correction } from "@/lib
 import { PERSONAS, SCENARIOS, type PersonaId, type ScenarioId } from "@/lib/ai/catalog";
 import { buildMemory } from "./memory";
 import { DomainError, getActiveTrack } from "./repo";
+import { addRecurringMistakeWords } from "./mistake-review";
 import { fakeReport, fakeRoleplay, fakeTutor } from "@/lib/ai/fake";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -128,7 +129,13 @@ export async function sendMessage(db: Db, userId: string, conversationId: string
     await recordUsage(db, userId, "roleplay", r);
     ({ reply, corrections } = r.data);
   }
-  corrections = corrections.filter((x) => x.original.trim() && x.original.trim() !== x.corrected.trim()).slice(0, 5);
+  const seenCorrections = new Set<string>();
+  corrections = corrections.filter((x) => {
+    const key = JSON.stringify([x.rule_tag.toLowerCase().replace(/[^a-z0-9-]+/g, "-").slice(0, 40) || "other", x.original.trim(), x.corrected.trim()]);
+    if (!x.original.trim() || x.original.trim() === x.corrected.trim() || seenCorrections.has(key)) return false;
+    seenCorrections.add(key);
+    return true;
+  }).slice(0, 5);
 
   const [userMsg, aiMsg] = await db.transaction(async (tx) => {
     const [u] = await tx.insert(conversationMessages).values({ conversationId: c.id, role: "user", content, corrections: corrections.length ? corrections : null }).returning();
@@ -147,6 +154,7 @@ export async function sendMessage(db: Db, userId: string, conversationId: string
         })),
       );
     }
+    if (corrections.length) await addRecurringMistakeWords(tx, userId, c.trackId);
     await tx.update(conversations).set({ updatedAt: new Date() }).where(eq(conversations.id, c.id));
     await tx.insert(activityEvents).values({ userId, trackId: c.trackId, kind: c.kind, durationSeconds: 60, xp: 2 });
     return [u, a];

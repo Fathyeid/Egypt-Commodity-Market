@@ -10,67 +10,54 @@ import { getActiveTrack, DomainError } from "./repo";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Db = PgDatabase<any, any, any>;
 
-export const GRADES = ["again", "hard", "good", "easy"] as const;
-export type Grade = (typeof GRADES)[number];
-export type CardState = { intervalDays: number; ease: number; reps: number; lapses: number };
-
-const DAY = 24 * 3600 * 1000;
-const MIN_EASE = 1.3;
-
-/** Next schedule for a card. "again" brings it back in 10 minutes. */
-export function schedule(card: CardState, grade: Grade, now = new Date()): CardState & { dueAt: Date } {
-  let { intervalDays, ease, reps, lapses } = card;
-  if (grade === "again") {
-    lapses += 1;
-    reps = 0;
-    ease = Math.max(MIN_EASE, ease - 0.2);
-    intervalDays = 0;
-    return { intervalDays, ease, reps, lapses, dueAt: new Date(now.getTime() + 10 * 60 * 1000) };
-  }
-  const q = grade === "hard" ? 3 : grade === "good" ? 4 : 5;
-  ease = Math.max(MIN_EASE, ease + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02)));
-  if (reps === 0) intervalDays = grade === "easy" ? 4 : grade === "good" ? 1 : 0.5;
-  else if (reps === 1) intervalDays = grade === "easy" ? 7 : grade === "good" ? 3 : 1.5;
-  else intervalDays = Math.max(1, intervalDays * (grade === "hard" ? 1.2 : grade === "easy" ? ease * 1.3 : ease));
-  intervalDays = Math.min(365, Math.round(intervalDays * 10) / 10);
-  reps += 1;
-  return { intervalDays, ease: Math.round(ease * 100) / 100, reps, lapses, dueAt: new Date(now.getTime() + intervalDays * DAY) };
-}
+export { GRADES, schedule } from "./review-policy";
+import { schedule, type Grade } from "./review-policy";
 
 /** A word counts as "learned" once it has survived at least a one-day interval. */
 export const LEARNED_INTERVAL = 1;
 
 export async function dueWords(db: Db, userId: string, language: string, limit = 20, now = new Date()) {
   return db
-    .select({ id: savedWords.id, term: savedWords.term, meaning: savedWords.meaning, reps: savedWords.reps })
+    .select({ id: savedWords.id, term: savedWords.term, meaning: savedWords.meaning, reps: savedWords.reps, intervalDays: savedWords.intervalDays, ease: savedWords.ease, lapses: savedWords.lapses, dueAt: savedWords.dueAt, source: savedWords.source })
     .from(savedWords)
     .where(and(eq(savedWords.userId, userId), eq(savedWords.language, language), lte(savedWords.dueAt, now)))
-    .orderBy(asc(savedWords.dueAt))
-    .limit(limit);
+    .orderBy(asc(savedWords.dueAt), asc(savedWords.id))
+    .limit(Math.max(1, Math.min(40, Math.trunc(limit) || 20)));
 }
 
 export async function wordCounts(db: Db, userId: string, language: string, now = new Date()) {
   const [row] = await db
     .select({
       total: count(),
+      nextDueAt: sql<string | null>`min(${savedWords.dueAt}) filter (where ${savedWords.dueAt} > ${now.toISOString()}::timestamptz)`,
       due: sql<number>`count(*) filter (where ${savedWords.dueAt} <= ${now.toISOString()}::timestamptz)::int`,
       learned: sql<number>`count(*) filter (where ${savedWords.intervalDays} >= ${LEARNED_INTERVAL})::int`,
     })
     .from(savedWords)
     .where(and(eq(savedWords.userId, userId), eq(savedWords.language, language)));
-  return { total: row?.total ?? 0, due: row?.due ?? 0, learned: row?.learned ?? 0 };
+  return { total: row?.total ?? 0, due: row?.due ?? 0, learned: row?.learned ?? 0, nextDueAt: row?.nextDueAt ? new Date(row.nextDueAt).toISOString() : null };
 }
 
-export async function reviewWord(db: Db, userId: string, id: string, grade: Grade, now = new Date()) {
-  const [card] = await db.select().from(savedWords).where(and(eq(savedWords.id, id), eq(savedWords.userId, userId)));
-  if (!card) throw new DomainError("not_found");
-  const next = schedule(card, grade, now);
-  const track = await getActiveTrack(db, userId);
-  await db.transaction(async (tx) => {
-    await tx.update(savedWords).set({ ...next, lastReviewedAt: now }).where(eq(savedWords.id, id));
-    await tx.insert(activityEvents).values({ userId, trackId: track?.id ?? null, kind: "review", durationSeconds: 8, xp: grade === "again" ? 1 : 2 });
+/** Lock and compare the presented schedule before scheduling or rewarding.
+ * A stale tab, retry, or parallel request cannot consume the same due version twice.
+ * No schema change: dueAt is the version token already stored on each card.
+ */
+export async function reviewWord(db: Db, userId: string, id: string, grade: Grade, expectedDueAt: string, now = new Date()) {
+  return db.transaction(async (tx) => {
+    const [card] = await tx.select().from(savedWords)
+      .where(and(eq(savedWords.id, id), eq(savedWords.userId, userId))).for("update");
+    if (!card) throw new DomainError("not_found");
+    const track = await getActiveTrack(tx, userId);
+    if (!track || track.targetLanguage !== card.language) throw new DomainError("not_found");
+    if (card.dueAt.toISOString() !== expectedDueAt || card.dueAt > now) {
+      return { accepted: false as const, dueAt: card.dueAt.toISOString() };
+    }
+    const next = schedule(card, grade, now);
+    await tx.update(savedWords).set({ ...next, lastReviewedAt: now })
+      .where(and(eq(savedWords.id, id), eq(savedWords.userId, userId)));
+    await tx.insert(activityEvents).values({ userId, trackId: track.id, kind: "review", durationSeconds: 8, xp: grade === "again" ? 1 : 2 });
+    return { accepted: true as const, dueAt: next.dueAt.toISOString() };
   });
-  return next;
 }
 
 /** Adds a completed lesson's vocabulary to the learner's review deck (no duplicates). */
