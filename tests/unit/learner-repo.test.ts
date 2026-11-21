@@ -94,7 +94,7 @@ describe("isolation between users", () => {
 
   it("a new user's dashboard is all zeros (no fake data)", async () => {
     const a = await makeUser("alice");
-    expect(await repo.getDashboardStats(db, a, null)).toEqual({ minutesThisWeek: 0, xpThisWeek: 0, totalXp: 0, streak: 0 });
+    expect(await repo.getDashboardStats(db, a, null)).toMatchObject({ minutesThisWeek: 0, xpThisWeek: 0, totalXp: 0, streak: 0 });
   });
 });
 
@@ -108,5 +108,38 @@ describe("computeStreak", () => {
   });
   it("is zero when the last activity is older", () => {
     expect(repo.computeStreak(["2026-11-16"], now)).toBe(0);
+  });
+});
+
+
+describe("daily activity summary", () => {
+  it("isolates tracks and users, aggregates repeat activity, and ignores future rows", async () => {
+    const a = await makeUser("alice");
+    const b = await makeUser("bob");
+    await repo.completeOnboarding(db, a, { nativeLanguage: "ar", targetLanguage: "de", ...base }, "ar");
+    const de = (await repo.getActiveTrack(db, a))!;
+    const fr = await repo.addTrack(db, a, { targetLanguage: "fr", ...base });
+    const now = new Date("2026-11-21T12:00:00Z");
+    await db.insert(schema.activityEvents).values([
+      { userId: a, trackId: de.id, kind: "lesson", xp: 18, durationSeconds: 120, createdAt: new Date("2026-11-21T00:00:00Z") },
+      { userId: a, trackId: de.id, kind: "review", xp: 2, durationSeconds: 8, createdAt: new Date("2026-11-21T11:00:00Z") },
+      { userId: a, trackId: de.id, kind: "lesson", xp: 10, createdAt: new Date("2026-11-20T10:00:00Z") },
+      { userId: a, trackId: de.id, kind: "lesson", xp: 99, createdAt: new Date("2026-11-22T00:00:00Z") },
+      { userId: a, trackId: fr.id, kind: "lesson", xp: 50, createdAt: now },
+      { userId: b, kind: "lesson", xp: 100, createdAt: now },
+    ]);
+    const stats = await repo.getDashboardStats(db, a, de.id, now);
+    expect(stats).toMatchObject({ streak: 2, activeToday: true, xpToday: 20, minutesToday: 2, totalXp: 30, xpThisWeek: 30 });
+    expect(stats.recentDays).toHaveLength(7);
+    expect(stats.recentDays[6]).toEqual({ day: "2026-11-21", xp: 20, seconds: 128, activities: 2 });
+    expect((await repo.getDashboardStats(db, a, fr.id, now)).totalXp).toBe(50);
+  });
+
+  it("preserves yesterday's streak but leaves today empty until practice", async () => {
+    const a = await makeUser("alice");
+    await db.insert(schema.activityEvents).values({ userId: a, kind: "review", xp: 2, createdAt: new Date("2026-11-20T23:59:59Z") });
+    const stats = await repo.getDashboardStats(db, a, null, new Date("2026-11-21T00:00:00Z"));
+    expect(stats).toMatchObject({ streak: 1, activeToday: false, xpToday: 0, minutesToday: 0 });
+    expect(stats.recentDays[5].activities).toBe(1);
   });
 });
