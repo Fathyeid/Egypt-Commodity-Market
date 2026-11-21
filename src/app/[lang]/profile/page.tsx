@@ -6,7 +6,8 @@ import { getDictionary, type Dictionary } from "@/lib/i18n";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { requireUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
-import { getProfile, listLanguages, listTracks } from "@/lib/learner/repo";
+import { getProfile, listTracks } from "@/lib/learner/repo";
+import { cachedLanguages } from "@/lib/shared-cache";
 import Link from "next/link";
 import { isAdminEmail } from "@/lib/admin";
 
@@ -29,7 +30,7 @@ export default async function ProfilePage({ params }: PageProps<"/[lang]/profile
 
 async function Profile({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const user = await requireUser(lang, `/${lang}/profile`);
-  const [profile, tracks, langs] = await Promise.all([getProfile(db, user.id), listTracks(db, user.id), listLanguages(db)]);
+  const [profile, tracks, langs] = await Promise.all([getProfile(db, user.id), listTracks(db, user.id), cachedLanguages()]);
   if (!profile?.onboardedAt || !tracks.length) redirect(`/${lang}/onboarding`);
   const languages = langs.map((l) => ({ code: l.code, name: lang === "ar" ? l.nameAr : l.nameEn, glyph: l.glyph, isTarget: l.isTarget }));
   const t = { profile: dict.profile, common: dict.common, errors: dict.errors, goals: dict.goals, levels: dict.levels, dashboard: dict.dashboard, auth: dict.auth };

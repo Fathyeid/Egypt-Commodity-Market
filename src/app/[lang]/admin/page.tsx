@@ -9,7 +9,7 @@ import { db } from "@/lib/db";
 import { courseStats } from "@/lib/admin";
 import { requireAdmin } from "@/lib/admin/gate";
 import { setCourseStatusAction } from "@/lib/admin/actions";
-import { listLanguages } from "@/lib/learner/repo";
+import { cachedLanguages } from "@/lib/shared-cache";
 
 export default async function AdminPage({ params }: PageProps<"/[lang]/admin">) {
   const { lang } = await params;
@@ -30,7 +30,7 @@ export default async function AdminPage({ params }: PageProps<"/[lang]/admin">) 
 async function Overview({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   await requireAdmin(lang, `/${lang}/admin`);
   const t = dict.admin;
-  const [stats, langs] = await Promise.all([courseStats(db), listLanguages(db)]);
+  const [stats, langs] = await Promise.all([courseStats(db), cachedLanguages()]);
   const name = (code: string) => {
     const l = langs.find((x) => x.code === code);
     return l ? (lang === "ar" ? l.nameAr : l.nameEn) : code;

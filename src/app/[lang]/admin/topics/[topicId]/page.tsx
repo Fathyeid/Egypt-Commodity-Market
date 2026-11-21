@@ -10,7 +10,7 @@ import { db } from "@/lib/db";
 import { getTopic, listTopics, unitsForLanguage } from "@/lib/admin";
 import { requireAdmin } from "@/lib/admin/gate";
 import { linkTopicAction } from "@/lib/admin/actions";
-import { listLanguages } from "@/lib/learner/repo";
+import { cachedLanguages } from "@/lib/shared-cache";
 import { TopicForm } from "@/components/admin/TopicForm";
 import { TopicPanel } from "@/components/learn/TopicPanel";
 import { LANGUAGE_NAMES } from "@/lib/factory/generate";
@@ -39,7 +39,7 @@ async function EditTopic({ lang, dict, params }: { lang: Locale; dict: Dictionar
   const t = dict.admin;
   const topic = await getTopic(db, topicId);
   if (!topic) notFound();
-  const [langs, units, stats] = await Promise.all([listLanguages(db), unitsForLanguage(db, topic.language), listTopics(db, topic.language)]);
+  const [langs, units, stats] = await Promise.all([cachedLanguages(), unitsForLanguage(db, topic.language), listTopics(db, topic.language)]);
   const languages = langs.filter((l) => l.isTarget).map((l) => ({ code: l.code, name: lang === "ar" ? l.nameAr : l.nameEn }));
   const linked = stats.find((s) => s.id === topic.id)?.lessons ?? 0;
   return (

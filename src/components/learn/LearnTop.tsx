@@ -58,7 +58,7 @@ export function LanguageBanner({ language, title, done, total, t }: { language: 
       <div className="absolute inset-0 -z-10">
         {photo ? (
           // eslint-disable-next-line @next/next/no-img-element -- static, credited Commons photo
-          <img src={`/images/landmarks/${language}.jpg`} alt="" className="size-full object-cover" />
+          <img src={`/images/landmarks/${language}.webp`} alt="" className="size-full object-cover" />
         ) : (
           <div className="flex size-full items-end justify-end bg-gradient-to-b from-[#3d63b8] to-[#14234d] px-6 pb-2">
             <Landmark language={language} className="h-[80%] w-auto fill-[#f2c14e]/80" />
@@ -91,7 +91,7 @@ export function ContinueCard({ href, title, subtitle, language }: { href: string
       </span>
       <span className="relative h-20 w-28 shrink-0" aria-hidden>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/themes/continue.png" alt="" className="absolute bottom-0 start-0 h-16 w-16 drop-shadow-lg" />
+        <img src="/images/themes/continue.webp" alt="" className="absolute bottom-0 start-0 h-16 w-16 drop-shadow-lg" />
         <Flag language={language} className="absolute end-0 top-1 h-9 w-14 -rotate-12 shadow-lg" />
       </span>
     </>
@@ -109,7 +109,7 @@ export function UnitsHeader({ lang, level, q, count, t }: { lang: "ar" | "en"; l
   return (
     <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#121d40] px-4 py-3 text-white">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/images/themes/mixed.png" alt="" className="size-8" aria-hidden />
+      <img src="/images/themes/mixed.webp" alt="" className="size-8" aria-hidden />
       <span className="min-w-0 flex-1">
         <span className="block text-lg font-bold" data-testid="units-heading">{t.unitsTitle}</span>
         <span className="block text-xs text-white/70">{count}</span>
