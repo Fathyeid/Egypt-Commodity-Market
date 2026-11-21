@@ -56,8 +56,8 @@ function seededShuffle<T>(arr: T[], seed: string): T[] {
 
 export type PublicPlacementItem = Omit<PlacementItem, "answer">;
 export function toPublicItem(item: PlacementItem): PublicPlacementItem {
-  const { id, skill, level, passage, audio, prompt, options } = item;
-  return { id, skill, level, passage, audio, prompt, options };
+  const { id, skill, level, passage, audio, prompt, options, note, nativeOptions } = item;
+  return { id, skill, level, passage, audio, prompt, options, note, nativeOptions };
 }
 
 export type PublicExercise =

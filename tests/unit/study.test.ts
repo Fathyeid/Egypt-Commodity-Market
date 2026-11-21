@@ -65,9 +65,11 @@ describe("placement flow", () => {
     expect(await study.getSkillLevels(db, b, test.trackId)).toEqual([]);
   });
 
-  it("is unavailable for languages without a bank", async () => {
+  it("uses questions generated from the corpus for languages without a hand-written bank", async () => {
     const a = await learner("alice", "ja");
-    await expect(study.startPlacement(db, a)).rejects.toThrow("language_unavailable");
+    const test = await study.startPlacement(db, a);
+    const state = await study.getPlacementState(db, a, test.id);
+    expect(state.next?.id).toMatch(/^ja-auto-/);
   });
 });
 

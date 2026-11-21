@@ -7,17 +7,35 @@ import type { PronResult } from "@/lib/speech/azure";
 import { downsample, encodeWav } from "@/lib/speech/wav";
 import { fmt } from "@/lib/i18n/format";
 import { SpeakButton } from "@/components/learn/SpeakButton";
+import { scoreTranscript } from "@/lib/speech/browser-score";
+
+const BCP47: Record<string, string> = {
+  en: "en-US", de: "de-DE", fr: "fr-FR", es: "es-ES", it: "it-IT", pt: "pt-BR", ja: "ja-JP", ko: "ko-KR", zh: "zh-CN", ru: "ru-RU", tr: "tr-TR", ar: "ar-EG",
+};
+type Recognition = {
+  lang: string; interimResults: boolean; continuous: boolean; maxAlternatives: number;
+  onresult: ((e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null;
+  onerror: ((e: { error: string }) => void) | null; onend: (() => void) | null;
+  start: () => void; stop: () => void;
+};
+type RecognitionCtor = new () => Recognition;
+const recognitionCtor = (): RecognitionCtor | undefined => {
+  const w = window as unknown as { SpeechRecognition?: RecognitionCtor; webkitSpeechRecognition?: RecognitionCtor };
+  return w.SpeechRecognition ?? w.webkitSpeechRecognition;
+};
 
 const MAX_SECONDS = 15;
-type Props = { language: string; sentences: { level: string; text: string }[]; t: Dictionary["practice"]; listenLabel: string; noVoice: string; enabled: boolean };
+/** server: Azure (or the test double) scores recorded audio. browser: free check with the built-in speech recognizer. */
+type Props = { language: string; sentences: { level: string; text: string }[]; t: Dictionary["practice"]; listenLabel: string; noVoice: string; mode: "server" | "browser" };
 
-export function PronunciationCoach({ language, sentences, t, listenLabel, noVoice, enabled }: Props) {
+export function PronunciationCoach({ language, sentences, t, listenLabel, noVoice, mode }: Props) {
   const [text, setText] = useState(sentences[0]?.text ?? "");
   const [state, setState] = useState<"idle" | "recording" | "analyzing">("idle");
   const [seconds, setSeconds] = useState(0);
   const [result, setResult] = useState<(PronResult & { provider: string }) | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [openWord, setOpenWord] = useState<number | null>(null);
+  const recognizer = useRef<Recognition | null>(null);
   const rec = useRef<{ ctx: AudioContext; stream: MediaStream; node: ScriptProcessorNode; chunks: Float32Array[]; timer: ReturnType<typeof setInterval> } | null>(null);
   const errText = (code: string) => (t.errorsMap as Record<string, string>)[code] ?? t.errorsMap.generic;
 
@@ -33,9 +51,59 @@ export function PronunciationCoach({ language, sentences, t, listenLabel, noVoic
     rec.current = null;
   }
 
+  async function save(body: unknown) {
+    try {
+      await fetch("/api/pronunciation", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+    } catch {
+      /* history is best-effort; the learner already sees the result */
+    }
+  }
+
+  function startBrowser() {
+    const Ctor = recognitionCtor();
+    if (!Ctor) return setError(t.micUnsupported);
+    const r = new Ctor();
+    r.lang = BCP47[language] ?? language;
+    r.interimResults = false;
+    r.continuous = false;
+    r.maxAlternatives = 5;
+    const heard: string[] = [];
+    let failed: string | null = null;
+    const started = Date.now();
+    r.onresult = (e) => {
+      for (const res of Array.from(e.results)) for (const alt of Array.from(res)) if (alt.transcript.trim()) heard.push(alt.transcript.trim());
+    };
+    r.onerror = (e) => {
+      failed = e.error === "not-allowed" || e.error === "service-not-allowed" ? t.micDenied : e.error === "no-speech" ? errText("no_speech") : null;
+    };
+    const timer = setInterval(() => setSeconds(Math.floor((Date.now() - started) / 1000)), 250);
+    r.onend = () => {
+      clearInterval(timer);
+      recognizer.current = null;
+      setState("idle");
+      if (failed) return setError(failed);
+      if (!heard.length) return setError(errText("no_speech"));
+      const scored = scoreTranscript(text, heard, language);
+      setResult({ ...scored, provider: "browser" });
+      void save({ mode: "browser", text, seconds: Math.min(Math.round((Date.now() - started) / 1000), 30), result: scored });
+    };
+    recognizer.current = r;
+    setSeconds(0);
+    setState("recording");
+    try {
+      r.start();
+    } catch {
+      clearInterval(timer);
+      recognizer.current = null;
+      setState("idle");
+      setError(t.micUnsupported);
+    }
+  }
+
   async function start() {
     setError(null);
     setResult(null);
+    if (mode === "browser") return startBrowser();
     if (!navigator.mediaDevices?.getUserMedia) return setError(t.micUnsupported);
     let stream: MediaStream;
     try {
@@ -62,6 +130,11 @@ export function PronunciationCoach({ language, sentences, t, listenLabel, noVoic
   }
 
   async function stopAndSend() {
+    if (recognizer.current) {
+      setState("analyzing");
+      recognizer.current.stop();
+      return;
+    }
     const r = rec.current;
     if (!r) return;
     const rate = r.ctx.sampleRate;
@@ -114,7 +187,7 @@ export function PronunciationCoach({ language, sentences, t, listenLabel, noVoic
               {t.stopRec} · {fmt(t.recording, { s: seconds })}
             </button>
           ) : (
-            <button type="button" className="btn-primary" disabled={!enabled || !text.trim() || state === "analyzing"} onClick={() => void start()} data-testid="record">
+            <button type="button" className="btn-primary" disabled={!text.trim() || state === "analyzing"} onClick={() => void start()} data-testid="record">
               <Mic className="size-4" aria-hidden />
               {state === "analyzing" ? t.analyzing : t.record}
             </button>

@@ -13,7 +13,7 @@ import { getDashboardStats, getProfile, listLanguages, listTracks } from "@/lib/
 import { completedLessonCount, earnedBadges, levelFromXp, minutesToday, wordCounts } from "@/lib/learner/srs";
 import { serviceStatus, type ServiceKey } from "@/lib/services";
 import { getProgress, getSkillLevels, latestPlacement } from "@/lib/learner/study";
-import { placementAvailable } from "@/content";
+import { placementAvailable } from "@/lib/learner/placement-bank";
 import { coursesForLanguage, outlineLessonIds } from "@/lib/curriculum";
 import { StartPlacementButton } from "@/components/placement/StartPlacementButton";
 import { recurringErrors } from "@/lib/learner/conversations";

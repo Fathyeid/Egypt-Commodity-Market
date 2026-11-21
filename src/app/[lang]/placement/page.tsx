@@ -11,7 +11,7 @@ import { requireUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { getActiveTrack } from "@/lib/learner/repo";
 import { latestPlacement } from "@/lib/learner/study";
-import { placementAvailable } from "@/content";
+import { placementAvailable } from "@/lib/learner/placement-bank";
 import { coursesForLanguage } from "@/lib/curriculum";
 import { TOTAL_ITEMS } from "@/lib/placement/engine";
 
