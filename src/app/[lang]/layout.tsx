@@ -26,6 +26,8 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
     title: { default: dict.meta.title, template: `%s · ${dict.brand}` },
     description: dict.meta.description,
     metadataBase: new URL(siteUrl() ?? "http://localhost:3000"),
+    applicationName: dict.brand,
+    appleWebApp: { capable: true, title: dict.brand, statusBarStyle: "default" },
     alternates: { canonical: `/${lang}`, languages: { ar: "/ar", en: "/en", "x-default": "/ar" } },
   };
 }

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>لسان · غير متصل</title>
+<style>
+  body { margin: 0; min-height: 100dvh; display: grid; place-items: center; font-family: system-ui, sans-serif; background: #f5f7fc; color: #121a33; text-align: center; padding: 16px; }
+  img { width: 88px; height: 88px; border-radius: 22px; }
+  h1 { font-size: 1.4rem; margin: 18px 0 6px; }
+  p { color: #5b6480; margin: 0 0 20px; }
+  button { font: inherit; font-weight: 700; color: #fff; background: #1d5fd6; border: 0; border-radius: 999px; padding: 10px 22px; }
+  @media (prefers-color-scheme: dark) { body { background: #0d1838; color: #fff; } p { color: #b8c0dc; } }
+</style>
+</head>
+<body>
+  <main>
+    <img src="/icons/icon-192.png" alt="">
+    <h1>أنت غير متصل بالإنترنت</h1>
+    <p>اتصل بالإنترنت وجرّب تاني. You are offline.</p>
+    <button onclick="location.reload()">إعادة المحاولة</button>
+  </main>
+</body>
+</html>
