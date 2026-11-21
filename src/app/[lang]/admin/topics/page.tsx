@@ -8,7 +8,7 @@ import { fmt } from "@/lib/i18n/format";
 import { db } from "@/lib/db";
 import { listTopics } from "@/lib/admin";
 import { requireAdmin } from "@/lib/admin/gate";
-import { listLanguages } from "@/lib/learner/repo";
+import { cachedLanguages } from "@/lib/shared-cache";
 import { TopicForm } from "@/components/admin/TopicForm";
 
 export default async function AdminTopicsPage({ params }: PageProps<"/[lang]/admin/topics">) {
@@ -30,7 +30,7 @@ export default async function AdminTopicsPage({ params }: PageProps<"/[lang]/adm
 async function Topics({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   await requireAdmin(lang, `/${lang}/admin/topics`);
   const t = dict.admin;
-  const [topics, langs] = await Promise.all([listTopics(db), listLanguages(db)]);
+  const [topics, langs] = await Promise.all([listTopics(db), cachedLanguages()]);
   const languages = langs.filter((l) => l.isTarget).map((l) => ({ code: l.code, name: lang === "ar" ? l.nameAr : l.nameEn }));
   return (
     <div className="space-y-6">
