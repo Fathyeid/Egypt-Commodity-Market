@@ -10,6 +10,11 @@ describe("admin helpers", () => {
     expect(isAdminEmail("boss@example.com", {})).toBe(false);
     expect(isAdminEmail(null, env)).toBe(false);
   });
+  it("tolerates quotes, semicolons and new lines pasted into ADMIN_EMAILS", () => {
+    const env = { ADMIN_EMAILS: '"boss@example.com";\n <second@example.com>  third@example.com,' };
+    for (const e of ["boss@example.com", "second@example.com", "third@example.com"]) expect(isAdminEmail(e, env)).toBe(true);
+    expect(isAdminEmail("example.com", env)).toBe(false);
+  });
   it("parses YouTube links and ids", () => {
     for (const u of [
       "dQw4w9WgXcQ",
