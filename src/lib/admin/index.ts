@@ -16,10 +16,12 @@ export const VIDEO_STATUSES = ["none", "suggested", "approved", "rejected"] as c
 export const PAGE_SIZE = 50;
 
 export function adminEmails(env: Record<string, string | undefined> = process.env): string[] {
+  // Tolerant of how the value is pasted into the hosting dashboard: commas, semicolons,
+  // spaces or new lines between addresses, and stray quotes or angle brackets.
   return (env.ADMIN_EMAILS ?? "")
-    .split(",")
-    .map((e) => e.trim().toLowerCase())
-    .filter(Boolean);
+    .split(/[,;\s]+/)
+    .map((e) => e.replace(/^["'<]+|["'>]+$/g, "").trim().toLowerCase())
+    .filter((e) => e.includes("@"));
 }
 export const isAdminEmail = (email: string | null | undefined, env?: Record<string, string | undefined>) =>
   !!email && adminEmails(env).includes(email.toLowerCase());
