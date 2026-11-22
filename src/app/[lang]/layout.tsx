@@ -41,6 +41,12 @@ export const viewport: Viewport = {
 // Applies a saved dark-mode choice before first paint. Light is the default.
 const themeScript = `try{if(localStorage.getItem("lisan-theme")==="dark")document.documentElement.dataset.theme="dark"}catch(e){}`;
 
+// Self-heal after a deploy: Vercel serves only the live deployment's files, so
+// a tab still running the previous build (or a phone that dropped a chunk
+// request on a flaky network) fails to load a JS chunk and every link goes
+// dead. Reload once (60s guard against loops) to pick up the current build.
+const chunkReloadScript = `(function(){function c(m){return/ChunkLoadError|Loading chunk [\\w-]+ failed|Failed to fetch dynamically imported module|error loading dynamically imported module/i.test(String(m||""))}function r(){try{var t=+sessionStorage.getItem("lisan-cle-reload")||0;if(Date.now()-t<6e4)return;sessionStorage.setItem("lisan-cle-reload",String(Date.now()))}catch(e){}location.reload()}window.addEventListener("error",function(e){var m=e&&(e.message||(e.error&&e.error.message));if(c(m))r()},true);window.addEventListener("unhandledrejection",function(e){var j=e&&e.reason;if(c(j&&(j.message||j)))r()})})();`;
+
 export default async function RootLayout({ children, params }: LayoutProps<"/[lang]">) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
@@ -48,6 +54,7 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
     <html lang={lang} dir={dirOf(lang)} data-theme="light" className={plexArabic.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script dangerouslySetInnerHTML={{ __html: chunkReloadScript }} />
       </head>
       <body className="min-h-dvh">{children}</body>
     </html>
