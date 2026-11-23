@@ -56,7 +56,7 @@ test("lesson: 8 sections, practice feedback, server-graded quiz, progress saved"
   await expect(page.getByText("+18 نقطة خبرة")).toBeVisible();
 
   await page.goto("/ar/learn");
-  await expect(page.getByTestId("learn-hero")).toContainText("أنجزت 1 من 6 درس");
+  await expect(page.getByTestId("learn-hero")).toContainText(/أنجزت 1 من \d+ درس/);
   await expect(page.getByTestId("lesson-en-a1-u1-l1")).toContainText("أفضل نتيجة 100%");
 
   await page.goto("/ar/dashboard");

@@ -1,3 +1,4 @@
+import { WORK_SCENARIOS } from "./work-scenarios";
 import { PERSONAS, SCENARIOS, type PersonaId, type ScenarioId } from "./catalog";
 import type { LearnerMemory } from "@/lib/learner/memory";
 
@@ -33,9 +34,11 @@ ${memoryBlock(m)}`;
 
 export function roleplaySystem(scenario: ScenarioId, m: LearnerMemory) {
   const s = SCENARIOS[scenario];
+  const work = WORK_SCENARIOS[scenario as keyof typeof WORK_SCENARIOS];
   return `You are role-playing on Lisan, a language-learning platform. You play ${s.role}. Stay fully in character as a real person: react to what the learner says, ask natural follow-up questions, and adapt to their answers. Do not teach or explain during the scene; collect the learner's mistakes silently in "corrections" for the final report.
 Speak only ${m.targetName}, at the learner's level. Keep each line to 1–3 sentences.
 If this is the first turn, start the scene: ${s.opener}
+${work ? `Help the learner naturally practise these goals, one at a time: ${work.goals.en.join("; ")}. Use made-up details; never request private business or customer information.` : ""}
 
 About this learner:
 ${memoryBlock(m)}`;
@@ -49,6 +52,7 @@ Write the report in ${m.explainName}, quoting ${m.targetName} examples as needed
 - better_phrases: more natural or professional alternatives to things the learner said (max 5).
 - estimated_level: the CEFR level the transcript shows.
 - next_steps: 2–4 concrete things to practise.
+${scenario in WORK_SCENARIOS ? `In summary, explain which of these goals the transcript actually demonstrates and which need more practice: ${WORK_SCENARIOS[scenario as keyof typeof WORK_SCENARIOS].goals.en.join("; ")}. Do not award a goal without transcript evidence.` : ""}
 
 About this learner:
 ${memoryBlock(m)}`;

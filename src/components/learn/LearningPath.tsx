@@ -29,11 +29,6 @@ function themeOf(unitId: string): string {
   return theme && THEME_FILES.has(theme) ? theme : "mixed";
 }
 
-function unitIcon(unitId: string): LucideIcon {
-  const theme = unitId.split("-fu-")[1]?.replace(/-\d+$/, "");
-  return (theme && THEME_ICONS[theme]) || BookOpen;
-}
-
 type Props = {
   lang: "ar" | "en";
   course: CourseOutline;
@@ -76,7 +71,8 @@ function UnitHead({ lang, unit, ui, done, t }: { lang: "ar" | "en"; unit: Unit; 
 }
 
 function LessonRow({ lang, unit, lesson, li, ui, best, isNext, t }: { lang: "ar" | "en"; unit: Unit; lesson: LessonOutline; li: number; ui: number; best: number | undefined; isNext: boolean; t: Dictionary["learn"] }) {
-  const Icon = unitIcon(unit.id);
+  const theme = unit.id.split("-fu-")[1]?.replace(/-\d+$/, "") ?? "";
+  const Icon = THEME_ICONS[theme] ?? BookOpen;
   const completed = best !== undefined;
   return (
     <li className="relative flex gap-4 pb-6">
@@ -173,6 +169,7 @@ export function LearningPath({ lang, course, progress, checkpoints, nextId, t, o
                   </span>
                 </Link>
               </li>
+              <li className="mt-3"><Link href={`/${lang}/learn/certificate/${unit.id}`} className="btn-ghost w-full text-sm">{lang === "ar" ? "شهادة الوحدة وشروطها" : "Unit certificate and requirements"}</Link></li>
             </ol>
           </details>
         );

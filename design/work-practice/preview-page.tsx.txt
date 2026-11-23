@@ -1,0 +1,6 @@
+import { WorkPractice } from "@/components/tutor/WorkPractice";
+import { Logo } from "@/components/ui/Logo";
+export default function Preview() {
+ const control = <button className="btn-primary w-full sm:w-auto" type="button">ابدأ المحادثة</button>;
+ return <><header className="border-b border-line bg-surface"><div className="container-page flex h-16 items-center justify-between"><Logo href="/ar" label="لسان" /><span className="text-sm text-brand">المدرس</span></div></header><main className="container-page max-w-5xl py-8 sm:py-12"><div className="mb-6 text-xs text-faint">معاينة التصميم · مش محادثة حقيقية</div><WorkPractice lang="ar" startControls={{supplier_followup: control, customer_update: control, team_update: control}} /></main></>;
+}

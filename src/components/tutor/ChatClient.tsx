@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { Mic, MicOff, Send, Sparkles } from "lucide-react";
-import { finishRoleplayAction, sendMessageAction } from "@/lib/actions";
+import { finishRoleplayAction, sendMessageAction, saveConversationWordAction } from "@/lib/actions";
 import type { Correction } from "@/lib/ai/schemas";
 import type { Dictionary } from "@/lib/i18n/ar";
 import { SpeakButton } from "@/components/learn/SpeakButton";
@@ -21,6 +21,8 @@ type RecognitionCtor = new () => Recognition;
 export function ChatClient({ lang, language, conversationId, kind, initial, t, noVoice, disabled }: Props) {
   const router = useRouter();
   const [messages, setMessages] = useState<ChatMsg[]>(initial);
+  const [saved, setSaved] = useState<string[]>([]);
+  const [saving, setSaving] = useState<string | null>(null);
   const [text, setText] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, start] = useTransition();
@@ -116,9 +118,19 @@ export function ChatClient({ lang, language, conversationId, kind, initial, t, n
               <div className="mt-1.5 max-w-[88%] rounded-xl bg-brand-soft px-3 py-2 text-sm">
                 <p className="text-xs font-semibold text-brand">{t.newWords}</p>
                 <ul>
-                  {m.newWords.map((w) => (
-                    <li key={w.term}>
+                  {m.newWords.map((w, index) => (
+                    <li key={w.term} className="mt-2 flex flex-wrap items-center gap-2">
                       <b dir="auto" lang={language}>{w.term}</b>: <span dir="auto"><Bidi text={w.meaning} /></span>
+                      <button type="button" className="btn-ghost px-2 py-1 text-xs" disabled={saving !== null || saved.includes(`${m.id}:${index}`)} onClick={async () => {
+                        const key = `${m.id}:${index}`;
+                        setSaving(key);
+                        try {
+                          const r = await saveConversationWordAction(conversationId, m.id, index);
+                          if (r.ok) setSaved((v) => [...v, key]);
+                          else setError(errText(r.error));
+                        } catch { setError(t.errorsMap.generic); }
+                        finally { setSaving(null); }
+                      }}>{saved.includes(`${m.id}:${index}`) ? (lang === "ar" ? "اتحفظت للمراجعة" : "Saved for review") : (lang === "ar" ? "احفظ للمراجعة" : "Save for review")}</button>
                     </li>
                   ))}
                 </ul>

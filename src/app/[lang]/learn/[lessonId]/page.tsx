@@ -1,3 +1,4 @@
+import { OfflineDownload } from "@/components/learn/OfflineDownload";
 import Link from "next/link";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
@@ -58,6 +59,7 @@ async function Player({ lang, dict, params }: { lang: Locale; dict: Dictionary; 
       </div>
       {found.video && <LessonVideo id={found.video.id} title={found.video.title} label={dict.lesson.lessonVideo} />}
       {found.topic && (found.topic.videoId || found.topic.explanation) && <TopicPanel topic={found.topic} lang={lang} label={dict.lesson.topicVideo} />}
+      <OfflineDownload lesson={toPublicLesson(found.lesson)} language={found.language} lang={lang} attribution={found.attribution} />
       <LessonPlayer
         lang={lang}
         language={found.language}

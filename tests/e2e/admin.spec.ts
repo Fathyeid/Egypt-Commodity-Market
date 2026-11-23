@@ -1,3 +1,4 @@
+import postgres from "postgres";
 import { expect, test } from "@playwright/test";
 import { onboard, signUp, uniqueEmail } from "./helpers";
 
@@ -9,6 +10,12 @@ test("the admin panel is invisible to learners", async ({ page }) => {
 });
 
 test("admin reviews a factory lesson, publishes it and attaches a topic video", async ({ page }) => {
+  // The factory now publishes by default. Establish this test's draft fixture
+  // explicitly in the local E2E database instead of relying on seed defaults.
+  const sql = postgres(process.env.DATABASE_URL!, { max: 1 });
+  try {
+    await sql`update curriculum_lessons set status='draft' where id=(select id from curriculum_lessons where course_id='it-a1' order by position limit 1)`;
+  } finally { await sql.end(); }
   const email = process.env.E2E_ADMIN_EMAIL!;
   await signUp(page, "en", "Admin", email);
   await onboard(page, { native: "Arabic", target: "Italian", goal: "Daily life", minutes: "15 min", level: "A1" });

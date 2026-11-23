@@ -184,3 +184,10 @@ body {
 [dir="rtl"] .hero-fade {
   background: linear-gradient(to left, #0d1838 0%, rgb(13 24 56 / 0.82) 45%, rgb(13 24 56 / 0.15) 100%);
 }
+
+@media print {
+  [data-testid="certificate"] {
+    break-inside: avoid;
+    box-shadow: none;
+  }
+}

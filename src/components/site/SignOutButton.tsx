@@ -14,6 +14,13 @@ export function SignOutButton({ lang, label, compact }: { lang: string; label: s
       disabled={busy}
       onClick={async () => {
         setBusy(true);
+        try {
+          if ("caches" in window) await caches.delete("lisan-public-lessons-v1");
+        } catch {
+          setBusy(false);
+          window.alert(lang === "ar" ? "تعذّر مسح الدروس المحفوظة من الجهاز. امسحها من مكتبتك بدون نت قبل تسجيل الخروج." : "Could not clear saved lessons. Clear them in the offline library before signing out.");
+          return;
+        }
         await authClient.signOut();
         router.replace(`/${lang}`);
         router.refresh();

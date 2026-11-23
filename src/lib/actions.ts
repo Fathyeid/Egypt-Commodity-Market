@@ -318,3 +318,14 @@ export async function submitCheckpointAction(unitId: unknown, answers: unknown) 
     return fail(e) as { ok: false; error: string };
   }
 }
+
+export async function saveConversationWordAction(conversationId: string, messageId: string, index: number): Promise<ActionResult> {
+  const userId = await uid();
+  if (!userId) return { ok: false, error: "unauthorized" };
+  if (!z.uuid().safeParse(conversationId).success || !z.uuid().safeParse(messageId).success || !Number.isInteger(index) || index < 0 || index > 2) return { ok: false, error: "invalid" };
+  try {
+    await convo.saveConversationWord(db, userId, conversationId, messageId, index);
+    revalidatePath("/[lang]", "layout");
+    return { ok: true };
+  } catch (e) { return convoFail(e); }
+}

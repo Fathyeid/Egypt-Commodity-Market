@@ -3,6 +3,8 @@ import { Suspense } from "react";
 import { notFound, redirect } from "next/navigation";
 import { Briefcase, Presentation, Plane, BedDouble, Utensils, ShoppingBag, Stethoscope, Handshake, Phone, Coffee, MessagesSquare } from "lucide-react";
 import { Header } from "@/components/site/Header";
+import { WorkPractice } from "@/components/tutor/WorkPractice";
+import { WORK_SCENARIO_IDS } from "@/lib/ai/work-scenarios";
 import { StartConversationButton } from "@/components/tutor/StartConversationButton";
 import { AiStatusBanner } from "@/components/tutor/AiStatusBanner";
 import { getDictionary, type Dictionary } from "@/lib/i18n";
@@ -52,6 +54,12 @@ async function Hub({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         {!disabled && <p className="text-xs text-faint">{fmt(t.limitsNote, { n: limits().dailyMessagesPerUser })}</p>}
       </section>
 
+      <WorkPractice lang={lang} startControls={{
+        supplier_followup: <StartConversationButton lang={lang} kind="roleplay" id="supplier_followup" label={t.start} disabled={disabled} errors={errors} />,
+        customer_update: <StartConversationButton lang={lang} kind="roleplay" id="customer_update" label={t.start} disabled={disabled} errors={errors} />,
+        team_update: <StartConversationButton lang={lang} kind="roleplay" id="team_update" label={t.start} disabled={disabled} errors={errors} />,
+      }} />
+
       <section>
         <h2 className="mb-3 font-semibold">{t.pickPersona}</h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -70,7 +78,7 @@ async function Hub({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         <h2 className="text-xl font-bold">{t.roleplayTitle}</h2>
         <p className="mb-3 text-muted">{t.roleplaySub}</p>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-          {SCENARIO_IDS.map((id) => {
+          {SCENARIO_IDS.filter((id) => !(WORK_SCENARIO_IDS as readonly string[]).includes(id)).map((id) => {
             const Icon = ICONS[SCENARIOS[id].icon as keyof typeof ICONS];
             return (
               <article key={id} className="card p-4">

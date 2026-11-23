@@ -1,3 +1,4 @@
+import { WORK_SCENARIOS } from "./work-scenarios";
 import type { L10n } from "@/content/types";
 
 export const PERSONAS = {
@@ -11,6 +12,7 @@ export type PersonaId = keyof typeof PERSONAS;
 export const PERSONA_IDS = Object.keys(PERSONAS) as PersonaId[];
 
 export const SCENARIOS = {
+  ...WORK_SCENARIOS,
   job_interview: { icon: "briefcase", name: { ar: "مقابلة عمل", en: "Job interview" }, role: "a hiring manager interviewing the learner for a job they choose at the start", opener: "Greet the candidate and ask which position they are applying for." },
   business_meeting: { icon: "presentation", name: { ar: "اجتماع عمل", en: "Business meeting" }, role: "a colleague in a project status meeting", opener: "Open the meeting and ask the learner for an update on their part of the project." },
   airport: { icon: "plane", name: { ar: "السفر والمطار", en: "At the airport" }, role: "a check-in agent at an airline counter", opener: "Greet the passenger and ask for their passport and destination." },

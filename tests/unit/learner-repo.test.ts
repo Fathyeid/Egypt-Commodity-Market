@@ -85,8 +85,8 @@ describe("isolation between users", () => {
     const a = await makeUser("alice");
     const b = await makeUser("bob");
     await db.insert(schema.activityEvents).values([
-      { userId: a, kind: "lesson", durationSeconds: 600, xp: 20 },
-      { userId: b, kind: "lesson", durationSeconds: 3000, xp: 99 },
+      { userId: a, kind: "lesson", durationSeconds: 600, xp: 20, createdAt: new Date(Date.now() - 1000) },
+      { userId: b, kind: "lesson", durationSeconds: 3000, xp: 99, createdAt: new Date(Date.now() - 1000) },
     ]);
     const s = await repo.getDashboardStats(db, a, null);
     expect(s).toMatchObject({ minutesThisWeek: 10, totalXp: 20, streak: 1 });

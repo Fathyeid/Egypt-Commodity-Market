@@ -5,7 +5,7 @@
  */
 import { and, asc, desc, eq } from "drizzle-orm";
 import type { PgDatabase } from "drizzle-orm/pg-core";
-import { activityEvents, aiUsage, conversationMessages, conversations, errorLog } from "@/lib/db/schema";
+import { activityEvents, aiUsage, conversationMessages, conversations, errorLog, learningTracks, savedWords } from "@/lib/db/schema";
 import { generate, type ChatMessage } from "@/lib/ai/provider";
 import { checkLimits } from "@/lib/ai/limits";
 import { roleplayReportSystem, roleplaySystem, tutorSystem } from "@/lib/ai/prompts";
@@ -181,9 +181,13 @@ export async function finishRoleplay(db: Db, userId: string, conversationId: str
   });
   if (!r.ok) failFrom(r.error);
   await recordUsage(db, userId, "roleplay_report", r);
-  await db.update(conversations).set({ status: "completed", report: r.data, updatedAt: new Date() }).where(eq(conversations.id, c.id));
-  await db.insert(activityEvents).values({ userId, trackId: c.trackId, kind: "roleplay_report", durationSeconds: 0, xp: 15 });
-  return r.data;
+  return db.transaction(async (tx) => {
+    const [current] = await tx.select().from(conversations).where(and(eq(conversations.id, c.id), eq(conversations.userId, userId))).for("update");
+    if (current.status === "completed") return current.report as RoleplayReport;
+    await tx.update(conversations).set({ status: "completed", report: r.data, updatedAt: new Date() }).where(eq(conversations.id, c.id));
+    await tx.insert(activityEvents).values({ userId, trackId: c.trackId, kind: "roleplay_report", durationSeconds: 0, xp: 15 });
+    return r.data;
+  });
 }
 
 /** Most frequent recent mistakes for the dashboard. */
@@ -201,4 +205,17 @@ export async function recurringErrors(db: Db, userId: string, trackId: string, l
     else byTag.set(r.tag, { tag: r.tag, count: 1, example: { original: r.original, corrected: r.corrected } });
   }
   return [...byTag.values()].sort((a, b) => b.count - a.count).slice(0, limit);
+}
+
+/** Save only vocabulary already stored in this learner's conversation. */
+export async function saveConversationWord(db: Db, userId: string, conversationId: string, messageId: string, index: number) {
+  const c = await ownConversation(db, userId, conversationId);
+  const [message] = await db.select().from(conversationMessages).where(and(eq(conversationMessages.id, messageId), eq(conversationMessages.conversationId, c.id), eq(conversationMessages.role, "assistant")));
+  const words = (message?.corrections as { newWords?: unknown } | null)?.newWords;
+  if (!Number.isInteger(index) || index < 0 || index > 2 || !Array.isArray(words)) throw new DomainError("not_found");
+  const word = words[index];
+  if (!word || typeof word.term !== "string" || typeof word.meaning !== "string" || !word.term.trim()) throw new DomainError("not_found");
+  const [track] = await db.select().from(learningTracks).where(and(eq(learningTracks.id, c.trackId), eq(learningTracks.userId, userId)));
+  if (!track) throw new DomainError("not_found");
+  await db.insert(savedWords).values({ userId, language: track.targetLanguage, term: word.term.trim().toLowerCase().slice(0, 80), meaning: word.meaning.slice(0, 200), source: `conversation:${c.id}` }).onConflictDoNothing();
 }
