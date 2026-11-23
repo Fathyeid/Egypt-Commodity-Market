@@ -54,6 +54,8 @@ async function Hub({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         {!disabled && <p className="text-xs text-faint">{fmt(t.limitsNote, { n: limits().dailyMessagesPerUser })}</p>}
       </section>
 
+      <Link href={`/${lang}/tutor/voice`} className="card block border-brand bg-brand-soft p-6" data-testid="voice-cta"><h2 className="text-2xl font-bold">{lang === "ar" ? "حصة محادثة صوتية كاملة" : "A complete voice conversation session"}</h2><p className="mt-2 text-muted">{lang === "ar" ? "اتكلم، اسمع رد شريكك، وخد تقريرك في نهاية الحصة." : "Speak, hear your partner, and get feedback at the end."}</p><span className="mt-3 inline-block font-semibold text-brand">{lang === "ar" ? "اختار حصتك ←" : "Choose your session →"}</span></Link>
+
       <WorkPractice lang={lang} startControls={{
         supplier_followup: <StartConversationButton lang={lang} kind="roleplay" id="supplier_followup" label={t.start} disabled={disabled} errors={errors} />,
         customer_update: <StartConversationButton lang={lang} kind="roleplay" id="customer_update" label={t.start} disabled={disabled} errors={errors} />,

@@ -100,6 +100,8 @@ async function Dashboard({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         ))}
       </section>
 
+      <Link href={`/${lang}/learn/daily`} className="card block border-brand bg-brand-soft p-5" data-testid="daily-cta"><h2 className="text-xl font-bold">{lang === "ar" ? "مدرستي اليومية" : "My daily school"}</h2><p className="mt-1 text-sm text-muted">{lang === "ar" ? "حصة واحدة: مراجعة مستحقة، أخطاؤك، ودرس مناسب لتقدمك." : "One session: due review, your mistakes, and a lesson matched to your progress."}</p><span className="mt-3 inline-block font-semibold text-brand">{lang === "ar" ? "جهز حصتي ←" : "Build my session →"}</span></Link>
+
       <ActivityWeek lang={lang} t={t} days={stats.recentDays} today={stats.today} streak={stats.streak} xpToday={stats.xpToday} activeToday={stats.activeToday} />
 
       {!hasActivity && <p className="rounded-xl bg-surface-2 px-4 py-3 text-sm text-muted">{t.emptyActivity}</p>}

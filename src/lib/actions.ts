@@ -329,3 +329,23 @@ export async function saveConversationWordAction(conversationId: string, message
     return { ok: true };
   } catch (e) { return convoFail(e); }
 }
+
+export async function answerDailyMistakeAction(id:string,answer:string) {
+ const userId=await uid();if(!userId)return {ok:false as const,error:"unauthorized"};
+ if(!z.uuid().safeParse(id).success||typeof answer!=="string"||!answer.trim()||answer.length>300)return {ok:false as const,error:"invalid"};
+ try {const {answerDailyMistake}=await import("@/lib/learner/daily");return {ok:true as const,result:await answerDailyMistake(db,userId,id,answer)};}catch(e){return fail(e) as {ok:false;error:string};}
+}
+
+export async function startVoiceSessionAction(lang:string,scenario:string){
+ const userId=await uid();if(!userId)return {ok:false as const,error:"unauthorized"};
+ const locale:Locale=isLocale(lang)?lang:"ar";
+ const allowed=["small_talk","job_interview","airport","customer_update"];
+ if(!allowed.includes(scenario))return {ok:false as const,error:"invalid"};
+ let id:string;try{const c=await convo.startConversation(db,userId,locale,{kind:"roleplay",scenario:scenario as (typeof SCENARIO_IDS)[number]});id=c.id;}catch(e){return convoFail(e);}
+ redirect(`/${locale}/tutor/voice/${id}`);
+}
+export async function finishVoiceSessionAction(lang:string,id:string){
+ const userId=await uid();if(!userId)return {ok:false as const,error:"unauthorized"};
+ if(!z.uuid().safeParse(id).success)return {ok:false as const,error:"invalid"};
+ try{const report=await convo.finishRoleplay(db,userId,id,isLocale(lang)?lang:"ar");revalidatePath("/[lang]","layout");return {ok:true as const,report};}catch(e){return convoFail(e);}
+}

@@ -25,9 +25,10 @@ type Props = {
   backHref: string;
   nextHref: string | null;
   nextLabel: string;
+  onPass?: (score:number)=>void;
 };
 
-export function LessonPlayer({ lang, language, lesson, t, common, listenLabel, backHref, nextHref, nextLabel }: Props) {
+export function LessonPlayer({ lang, language, lesson, t, common, listenLabel, backHref, nextHref, nextLabel, onPass }: Props) {
   const [i, setI] = useState(0);
   const started = useRef(0);
   useEffect(() => {
@@ -150,7 +151,7 @@ export function LessonPlayer({ lang, language, lesson, t, common, listenLabel, b
         )}
 
         {section === "quiz" && (
-          <Quiz lesson={lesson} lang={lang} language={language} labels={labels} t={t} getStarted={() => started.current} />
+          <Quiz lesson={lesson} lang={lang} language={language} labels={labels} t={t} getStarted={() => started.current} onPass={onPass} />
         )}
 
         {section === "review" && (
@@ -229,7 +230,7 @@ function PracticeExercise({ n, ex, lessonId, lang, language, labels, t }: { n: n
 
 type QuizOutcome = { score: number; correct: number; total: number; xp: number; results: (GradeResult & { id: string })[] };
 
-function Quiz({ lesson, lang, language, labels, t, getStarted }: { lesson: PublicLesson; lang: "ar" | "en"; language: string; labels: ExerciseLabels; t: Dictionary["lesson"]; getStarted: () => number }) {
+function Quiz({ lesson, lang, language, labels, t, getStarted, onPass }: { lesson: PublicLesson; lang: "ar" | "en"; language: string; labels: ExerciseLabels; t: Dictionary["lesson"]; getStarted: () => number; onPass?: (score:number)=>void }) {
   const [values, setValues] = useState<Record<string, Answer>>({});
   const [outcome, setOutcome] = useState<QuizOutcome | null>(null);
   const [pending, start] = useTransition();
@@ -252,6 +253,7 @@ function Quiz({ lesson, lang, language, labels, t, getStarted }: { lesson: Publi
         <div role="status" className="rounded-2xl bg-brand-soft p-5 text-center">
           <p className="text-2xl font-bold">{fmt(t.score, { n: outcome.score, a: outcome.correct, b: outcome.total })}</p>
           <p className="mt-1 font-semibold text-brand">{fmt(t.xp, { n: outcome.xp })}</p>
+          {onPass && outcome.score >= 70 && <button type="button" className="btn-primary mt-3" onClick={()=>onPass(outcome.score)}>{lang === "ar" ? "كمل الحصة" : "Continue session"}</button>}
           <button type="button" className="btn-ghost mt-4" onClick={() => { setOutcome(null); setValues({}); }}>{t.retry}</button>
         </div>
       ) : (

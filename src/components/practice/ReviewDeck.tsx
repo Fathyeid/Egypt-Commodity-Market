@@ -10,7 +10,7 @@ import type { Dictionary } from "@/lib/i18n/ar";
 type Card = CardState & { id: string; term: string; meaning: string | null; dueAt: string; source: string };
 
 /** Snapshot a small session. A saved server-side due version is required to grade. */
-export function ReviewDeck({ cards: initial, emptyText, language, lang, t, listen, noVoice, nextDueAt }: { cards: Card[]; emptyText: string; language: string; lang: string; t: Dictionary["review"]; listen: string; noVoice: string; nextDueAt: string | null }) {
+export function ReviewDeck({ cards: initial, emptyText, language, lang, t, listen, noVoice, nextDueAt, onComplete }: { cards: Card[]; emptyText: string; language: string; lang: string; t: Dictionary["review"]; listen: string; noVoice: string; nextDueAt: string | null; onComplete?: (reviewed:number)=>void }) {
   const [cards] = useState(initial);
   const [i, setI] = useState(0);
   const [shown, setShown] = useState(false);
@@ -46,6 +46,7 @@ export function ReviewDeck({ cards: initial, emptyText, language, lang, t, liste
         {counts.again > 0 && <p className="text-sm">{t.againNote.replace("{n}", String(counts.again))}</p>}
         {stale && <p className="text-sm text-muted">{t.stale}</p>}
         {nextNote}
+        {onComplete && <button type="button" className="btn-primary" onClick={()=>onComplete(reviewed)}>{lang === "ar" ? "كمل الحصة" : "Continue session"}</button>}
         <div className="flex flex-wrap justify-center gap-2">
           <a href={`/${lang}/learn/review`} className="btn-ghost">{t.more}</a>
           <Link href={`/${lang}/learn`} className="btn-primary">{t.back}</Link>
