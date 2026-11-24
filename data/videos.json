@@ -167,6 +167,45 @@
   "query": "Arabic grammar The passive B2 lesson",
   "foundAt": "2026-11-23"
  },
+ "ar-c1-g-connectors": {
+  "videoId": "BaX7xwa8Vh4",
+  "title": "ALL the Grammar you need for ADVANCED (C1 Level) English in 13 minutes",
+  "channel": "English with Lucy",
+  "views": 1969828,
+  "seconds": 816,
+  "query": "Arabic grammar Discourse connectors C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ar-c1-g-hal-tamyiz": {
+  "videoId": null
+ },
+ "ar-c1-g-media-arabic": {
+  "videoId": "BIjWf1anHIU",
+  "title": "Easy Arabic Podcast: Episode 1. Listening",
+  "channel": "Learn Arabic with Khasu",
+  "views": 593968,
+  "seconds": 1208,
+  "query": "Arabic grammar Media Arabic C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ar-c1-g-msa-dialects": {
+  "videoId": "GC2yy_gI6m0",
+  "title": "How to Learn Arabic On Your Own",
+  "channel": "Brian Wiles",
+  "views": 527767,
+  "seconds": 356,
+  "query": "Arabic grammar MSA and dialects C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ar-c1-g-number-agreement": {
+  "videoId": "-nCrpemAfDg",
+  "title": "Understanding Quantifiers with Uncountable and Plural Nouns in English!",
+  "channel": "Quick & Easy English",
+  "views": 1339,
+  "seconds": 313,
+  "query": "Arabic grammar Numbers and counted nouns C1 lesson",
+  "foundAt": "2026-11-24"
+ },
  "de-a1-g-articles-gender": {
   "videoId": "IFsEX4ZY6bc",
   "title": "Der Die Das? | German Genders Explained | Tips, Tricks and Hacks",
@@ -418,6 +457,51 @@
   "seconds": 1019,
   "query": "German grammar Extended participle attributes C1 lesson",
   "foundAt": "2026-11-23"
+ },
+ "de-c2-g-complex-sentences": {
+  "videoId": "jR4XeQxwGHQ",
+  "title": "Basic Word Order in German",
+  "channel": "mugridge language",
+  "views": 375592,
+  "seconds": 510,
+  "query": "German grammar Complex sentence structure C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "de-c2-g-funktionsverbgefuege": {
+  "videoId": "Pc_KilAEq1k",
+  "title": "Nomen-Verb-Verbindungen/Beispiele/Teil 2- Deutsch lernen für die Pflege",
+  "channel": "Deutsch für die Pflege mit Stanislaw",
+  "views": 8710,
+  "seconds": 250,
+  "query": "German grammar Noun-verb collocations (Funktionsverbgefüge) C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "de-c2-g-register": {
+  "videoId": "pVuZNgB1nKY",
+  "title": "C2 Register-Meister: Formell & informell souverän wechseln – Stilistik auf höchstem Niveau",
+  "channel": "Deutsch Avenue – Learn & Explore",
+  "views": 552,
+  "seconds": 1411,
+  "query": "German grammar Register and style C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "de-c2-g-subjective-modals": {
+  "videoId": "36wG9pSYu7Q",
+  "title": "MODAL VERBS: All you need to know about CAN, COULD, MAY, MIGHT, MUST, SHOULD, SHALL, WILL and WOULD",
+  "channel": "English with Lucy",
+  "views": 1102418,
+  "seconds": 1131,
+  "query": "German grammar Subjective use of modal verbs C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "de-c2-g-word-order-nuance": {
+  "videoId": "ivrER84mTOc",
+  "title": "INVERSION - Advanced English Grammar | Learn how to INVERT your sentences and the CONDITIONALS",
+  "channel": "Arnel's Everyday English",
+  "views": 874447,
+  "seconds": 1296,
+  "query": "German grammar Word order for emphasis C2 lesson",
+  "foundAt": "2026-11-24"
  },
  "en-a1-g-articles": {
   "videoId": "3zJQoQLCeNo",
@@ -671,6 +755,51 @@
   "query": "English grammar Modals of deduction C1 lesson",
   "foundAt": "2026-11-23"
  },
+ "en-c2-g-ellipsis-substitution": {
+  "videoId": "z6Q9Cdwj0OY",
+  "title": "ELLIPSIS and SUBSTITUTION",
+  "channel": "MrSkypelessons",
+  "views": 26623,
+  "seconds": 512,
+  "query": "English grammar Ellipsis and substitution C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "en-c2-g-hedging": {
+  "videoId": "vXp0ETWXbWo",
+  "title": "THE CONDITIONALS - 0,1,2 & 3 Conditionals& QUIZ - English Grammar Lesson (+ Free PDF & Quiz)",
+  "channel": "English with Lucy",
+  "views": 2239294,
+  "seconds": 658,
+  "query": "English grammar Hedging C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "en-c2-g-idiomatic-phrasal": {
+  "videoId": "Emdc5LIhHa4",
+  "title": "The 50 Important Phrasal Verbs in English",
+  "channel": "English with Lucy",
+  "views": 993391,
+  "seconds": 1233,
+  "query": "English grammar Phrasal verbs and idioms C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "en-c2-g-nominalisation": {
+  "videoId": "FRp5Ufi2t0k",
+  "title": "Advanced English Grammar: Clauses",
+  "channel": "English with Lucy",
+  "views": 1197855,
+  "seconds": 747,
+  "query": "English grammar Nominalisation C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "en-c2-g-subjunctive": {
+  "videoId": "OUwkVFgaL5E",
+  "title": "The Subjunctive in English - Complete Advanced English Grammar Lesson",
+  "channel": "English with Lucy",
+  "views": 535986,
+  "seconds": 475,
+  "query": "English grammar The subjunctive C2 lesson",
+  "foundAt": "2026-11-24"
+ },
  "es-a1-g-gender-articles": {
   "videoId": "YeTIwDcKwZ4",
   "title": "Definite and Indefinite Articles in Spanish | The Language Tutor *Lesson 11*",
@@ -895,6 +1024,51 @@
   "seconds": 923,
   "query": "Spanish grammar Verbal periphrases C1 lesson",
   "foundAt": "2026-11-23"
+ },
+ "es-c2-g-future-of-probability": {
+  "videoId": "4H3-2smRJJY",
+  "title": "ALL CONDITIONALS | 0,1,2,3 and MIXED CONDITIONALS - English Grammar | if....",
+  "channel": "Arnel's Everyday English",
+  "views": 4863756,
+  "seconds": 1332,
+  "query": "Spanish grammar Future and conditional of probability C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "es-c2-g-idioms": {
+  "videoId": "DZJdd2ykF6k",
+  "title": "C1 Advanced & C2 Proficiency Vocabulary - Phrasal verbs and Idioms you need to know",
+  "channel": "i-Speak English",
+  "views": 7289,
+  "seconds": 1019,
+  "query": "Spanish grammar Idioms C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "es-c2-g-nominal-style": {
+  "videoId": "LfJPA8GwTdk",
+  "title": "Subject Verb Agreement  |  English Lesson  |  Common Grammar Mistakes",
+  "channel": "mmmEnglish",
+  "views": 2244965,
+  "seconds": 818,
+  "query": "Spanish grammar Nominal and academic style C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "es-c2-g-register": {
+  "videoId": "teQyF2ijv-U",
+  "title": "¿Cuál Es tu NIVEL de Español? Gramática y Vocabulario del MCER del A1 al C2",
+  "channel": "Burbuja del Español",
+  "views": 916,
+  "seconds": 1465,
+  "query": "Spanish grammar Register and regional variety C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "es-c2-g-subjunctive-nuance": {
+  "videoId": "OUwkVFgaL5E",
+  "title": "The Subjunctive in English - Complete Advanced English Grammar Lesson",
+  "channel": "English with Lucy",
+  "views": 535986,
+  "seconds": 475,
+  "query": "Spanish grammar Subjunctive nuance C2 lesson",
+  "foundAt": "2026-11-24"
  },
  "fr-a1-g-er-verbs": {
   "videoId": "I0yL_zTDOmI",
@@ -1121,6 +1295,51 @@
   "query": "French grammar Past subjunctive and advanced uses C1 lesson",
   "foundAt": "2026-11-23"
  },
+ "fr-c2-g-idioms": {
+  "videoId": "eEn2wyDZiyM",
+  "title": "Advanced Idioms (C1-C2) to Build Your Vocabulary",
+  "channel": "Interactive English",
+  "views": 266459,
+  "seconds": 1238,
+  "query": "French grammar Idiomatic expressions C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "fr-c2-g-nuance-modality": {
+  "videoId": "WQpM0NVM0CM",
+  "title": "PAST MODALS: could have | may have | might have | must have | should have | would have - GRAMMAR",
+  "channel": "Arnel's Everyday English",
+  "views": 2029892,
+  "seconds": 858,
+  "query": "French grammar Nuance and hedging C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "fr-c2-g-passe-simple": {
+  "videoId": "SApp5pEtCB4",
+  "title": "French Verbs & Tenses explained in 10 minutes!",
+  "channel": "Learn French With Alexa",
+  "views": 1677683,
+  "seconds": 615,
+  "query": "French grammar Passé simple (literary past) C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "fr-c2-g-register": {
+  "videoId": "Hm85pN2zmPg",
+  "title": "Si Tu Connais ces  15 Mots, Ton Niveau de Français est B2 🏅",
+  "channel": "Le French Club",
+  "views": 141909,
+  "seconds": 980,
+  "query": "French grammar Register: soutenu, courant, familier C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "fr-c2-g-subjonctif-imparfait": {
+  "videoId": "SApp5pEtCB4",
+  "title": "French Verbs & Tenses explained in 10 minutes!",
+  "channel": "Learn French With Alexa",
+  "views": 1677683,
+  "seconds": 615,
+  "query": "French grammar Literary subjunctive and high register C2 lesson",
+  "foundAt": "2026-11-24"
+ },
  "it-a1-g-articles": {
   "videoId": "NPKruSoFftY",
   "title": "4. Learn Italian Beginners (A1): Indefinite articles (un, uno, una, un’)",
@@ -1337,6 +1556,60 @@
   "query": "Italian grammar Gerund and participle clauses C1 lesson",
   "foundAt": "2026-11-23"
  },
+ "it-c1-g-passato-remoto": {
+  "videoId": "sYGzeuAq42w",
+  "title": "Il PASSATO REMOTO Italiano: Come si Forma? Tutte le Irregolarità, Coniugazioni e Desinenze! 😱😰😨🤯",
+  "channel": "LearnAmo",
+  "views": 183332,
+  "seconds": 603,
+  "query": "Italian grammar Passato remoto C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "it-c2-g-idioms": {
+  "videoId": "SY429L1MAhc",
+  "title": "Advanced Italian | How Italians REALLY Speak: Everyday Situations & Expressions | Italian Podcast C1",
+  "channel": "Italian Express ",
+  "views": 41312,
+  "seconds": 1432,
+  "query": "Italian grammar Idioms C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "it-c2-g-nominal-style": {
+  "videoId": "LfJPA8GwTdk",
+  "title": "Subject Verb Agreement  |  English Lesson  |  Common Grammar Mistakes",
+  "channel": "mmmEnglish",
+  "views": 2244965,
+  "seconds": 818,
+  "query": "Italian grammar Nominal style C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "it-c2-g-register": {
+  "videoId": "PZ1nkE0a1xA",
+  "title": "Daily German Essentials: Danke, Bitte, Schönen Tag noch & More (A1–B1)",
+  "channel": "Definitely German",
+  "views": 2634,
+  "seconds": 425,
+  "query": "Italian grammar Register and regional variety C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "it-c2-g-subjunctive-nuance": {
+  "videoId": "OUwkVFgaL5E",
+  "title": "The Subjunctive in English - Complete Advanced English Grammar Lesson",
+  "channel": "English with Lucy",
+  "views": 535986,
+  "seconds": 475,
+  "query": "Italian grammar Subjunctive nuance C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "it-c2-g-word-order": {
+  "videoId": "TvlqchFsgug",
+  "title": "Pronomi combinati e dislocazione a sinistra (Impara l'italiano post-intermedio!)",
+  "channel": "Italiano con Luca",
+  "views": 2920,
+  "seconds": 423,
+  "query": "Italian grammar Word order and dislocation C2 lesson",
+  "foundAt": "2026-11-24"
+ },
  "ja-a1-g-desu": {
   "videoId": "qAxpv3cCHO8",
   "title": "HOW TO INTRODUCE YOURSELF in JAPANESE | EASY for BEGINNERS | FREE TUTORIAL",
@@ -1497,6 +1770,78 @@
   "foundAt": "2026-11-23"
  },
  "ja-b2-g-you-sou-rashii": {
+  "videoId": null
+ },
+ "ja-c1-g-compound-grammar": {
+  "videoId": "PynqXukqVVU",
+  "title": "「Learn Japanese」How-to say “VERB nothing but NOUN” (NOUN + ばかり + VERB)",
+  "channel": "Learn Japanese",
+  "views": 4103,
+  "seconds": 314,
+  "query": "Japanese grammar Compound grammar patterns C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ja-c1-g-keigo-advanced": {
+  "videoId": "9UzqPTXZCnQ",
+  "title": "Must learn Japanese Vocabulary and Example Sentence | JLPT Vocabulary | JLPT Basic words | Reading",
+  "channel": "Japan Love",
+  "views": 147,
+  "seconds": 323,
+  "query": "Japanese grammar Advanced keigo C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ja-c1-g-onomatopoeia": {
+  "videoId": null
+ },
+ "ja-c1-g-sentence-endings": {
+  "videoId": "7fvCb5_Nzq4",
+  "title": "Learning Japanese Isn't Actually That Hard",
+  "channel": "Trenton",
+  "views": 5920649,
+  "seconds": 1294,
+  "query": "Japanese grammar Sentence-final particles C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ja-c1-g-written-style": {
+  "videoId": "bAe9nA0aW4s",
+  "title": "How to Teach Beginners English: 13 Fundamentals You Need to Use",
+  "channel": "Chris from The Language House ",
+  "views": 791038,
+  "seconds": 916,
+  "query": "Japanese grammar Written style: である C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ja-c2-g-indirectness": {
+  "videoId": null
+ },
+ "ja-c2-g-kanji-mastery": {
+  "videoId": "Q-7Eduz5z9g",
+  "title": "The 5 Levels of Japanese (JLPT Explained)",
+  "channel": "Jouzu Juls (上手 ジューズ)",
+  "views": 93802,
+  "seconds": 1278,
+  "query": "Japanese grammar Advanced kanji C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ja-c2-g-literary": {
+  "videoId": "bDbV_fBc2jk",
+  "title": "Epic in English Literature| Epic Books | Easy Explanation",
+  "channel": "Explained by Rubeena",
+  "views": 196489,
+  "seconds": 678,
+  "query": "Japanese grammar Literary and classical forms C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ja-c2-g-register-dialects": {
+  "videoId": "Q-7Eduz5z9g",
+  "title": "The 5 Levels of Japanese (JLPT Explained)",
+  "channel": "Jouzu Juls (上手 ジューズ)",
+  "views": 93802,
+  "seconds": 1278,
+  "query": "Japanese grammar Register and dialects C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ja-c2-g-yojijukugo": {
   "videoId": null
  },
  "ko-a1-g-ayo-present": {
@@ -1679,6 +2024,81 @@
   "query": "Korean grammar Speech levels B2 lesson",
   "foundAt": "2026-11-23"
  },
+ "ko-c1-g-advanced-connectors": {
+  "videoId": "mo0-uqoaUwc",
+  "title": "Real English Conversation Practice (C1) – Improve Your Speaking & Listening FAST!",
+  "channel": "Max & Mia Podcast",
+  "views": 261421,
+  "seconds": 1367,
+  "query": "Korean grammar Advanced connectors C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ko-c1-g-retrospective": {
+  "videoId": "423AWqvrW1U",
+  "title": "Why 던데요 ≠ 더라고요 ≠ 대요 (It's Not What You Think)",
+  "channel": "Korean Cheat Code with Lily",
+  "views": 1135,
+  "seconds": 481,
+  "query": "Korean grammar Retrospective -더- C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ko-c1-g-sentence-endings": {
+  "videoId": "m35l59tMwk8",
+  "title": "How to sound interesting in English | varied pitch vs. monotone | intonation",
+  "channel": "Accent's Way English with Hadar",
+  "views": 212230,
+  "seconds": 470,
+  "query": "Korean grammar Expressive endings C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ko-c1-g-sino-korean": {
+  "videoId": "mIBkzUdEXoQ",
+  "title": "70 Super-Common Korean Sentences : Listen Every Day to Train Your Ears and Mouth",
+  "channel": "Korean with Miss Vicky 빅키쌤",
+  "views": 630518,
+  "seconds": 1606,
+  "query": "Korean grammar Sino-Korean vocabulary C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ko-c1-g-written-style": {
+  "videoId": "t8SyjxphFJU",
+  "title": "하소서체 Explained: Prayer & Historical Drama Speech (-소서, -나이다) | Advanced Korean C1 · 높임말",
+  "channel": "Korean Ladder",
+  "views": 11,
+  "seconds": 489,
+  "query": "Korean grammar Written style: -다 endings C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ko-c2-g-formal-writing": {
+  "videoId": "vleWBCR1zV4",
+  "title": "Korean Listening Test - What’s Your Level? | A1 to C2 Placement Test 🇰🇷 (Beginner to Advanced)",
+  "channel": "Tingssam 팅쌤 | Decoding Korea",
+  "views": 265894,
+  "seconds": 1195,
+  "query": "Korean grammar Formal and academic writing C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ko-c2-g-four-char": {
+  "videoId": null
+ },
+ "ko-c2-g-idioms": {
+  "videoId": "hedeKxI0RUc",
+  "title": "Funny Korean Idioms You Should Know! - Part 1 (ft. Korean Jream)",
+  "channel": "Talk To Me In Korean",
+  "views": 103809,
+  "seconds": 654,
+  "query": "Korean grammar Proverbs and idioms C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ko-c2-g-nuance-endings": {
+  "videoId": "JSUkiwNDC2A",
+  "title": "Copy My KOREAN Speaking! (B1 Level) | How to Use -기는 한데 & -(으)니까 Like a Native",
+  "channel": "Korean Cheat Code with Lily",
+  "views": 17203,
+  "seconds": 365,
+  "query": "Korean grammar Nuanced grammar C2 lesson",
+  "foundAt": "2026-11-24"
+ },
  "pt-a1-g-articles": {
   "videoId": "Sh_cC75D0wo",
   "title": "Understanding Portuguese Articles  Definite and Indefinite 🇵🇹",
@@ -1858,6 +2278,96 @@
   "seconds": 529,
   "query": "Portuguese grammar Present subjunctive B2 lesson",
   "foundAt": "2026-11-23"
+ },
+ "pt-c1-g-br-pt-differences": {
+  "videoId": "P4rdtjUtSSI",
+  "title": "500 Common Words in 3 minutes! (European Portuguese Vocabulary)",
+  "channel": "Portuguese With Carla",
+  "views": 208815,
+  "seconds": 259,
+  "query": "Portuguese grammar Brazilian vs European Portuguese C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "pt-c1-g-connectors": {
+  "videoId": "-JqAs_vdQb8",
+  "title": "How To Connect Ideas In English [with Linking Words]",
+  "channel": "mmmEnglish",
+  "views": 1069527,
+  "seconds": 923,
+  "query": "Portuguese grammar Advanced connectors C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "pt-c1-g-mais-que-perfeito": {
+  "videoId": "pAr6_iDTZx8",
+  "title": "Estar in Portuguese Past Tense: Estive vs. Estava",
+  "channel": "Rio & Learn Portuguese School",
+  "views": 9328,
+  "seconds": 215,
+  "query": "Portuguese grammar Pluperfect C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "pt-c1-g-mesoclisis": {
+  "videoId": "sZvZftDVWEw",
+  "title": "RELATIVE CLAUSES with Who / Whom / Which / That. PART 1 Easy Grammar Explanation ADJECTIVE CLAUSES",
+  "channel": "English Speaking 360",
+  "views": 282333,
+  "seconds": 1404,
+  "query": "Portuguese grammar Advanced pronoun placement C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "pt-c1-g-subjuntivo-imperfeito": {
+  "videoId": "oGzm4ttlloQ",
+  "title": "Portugués- Nivel C1- 14- Preterito imperfecto del subjuntivo",
+  "channel": "LINGUAVID",
+  "views": 7459,
+  "seconds": 489,
+  "query": "Portuguese grammar Imperfect subjunctive C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "pt-c2-g-discourse": {
+  "videoId": "YsagocS1wGo",
+  "title": "English Grammar Tricks - Countable & Uncountable Nouns",
+  "channel": "Learn English with Rebecca · engVid",
+  "views": 762980,
+  "seconds": 358,
+  "query": "Portuguese grammar Discourse markers C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "pt-c2-g-idioms": {
+  "videoId": "HclqADvf35Y",
+  "title": "Learn 15 Common English Idioms (With Examples)",
+  "channel": "linguamarina",
+  "views": 1557122,
+  "seconds": 483,
+  "query": "Portuguese grammar Idioms C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "pt-c2-g-nominal-style": {
+  "videoId": "AWUI4WQICrk",
+  "title": "La voix active et la voix passive - La conjugaison",
+  "channel": "La conjugaison des verbes français",
+  "views": 268269,
+  "seconds": 125,
+  "query": "Portuguese grammar Nominal style C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "pt-c2-g-register": {
+  "videoId": "kyl0ovvPaxA",
+  "title": "Lesson 8 - A Apresentação (Introduction) - Learn Portuguese with Linguapol",
+  "channel": "Linguapol",
+  "views": 76,
+  "seconds": 938,
+  "query": "Portuguese grammar Register C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "pt-c2-g-subjunctive-nuance": {
+  "videoId": "-NETxLGWt20",
+  "title": "Mastering Spanish, Portuguese, Italian, and French - The Subjunctive | Learning languages",
+  "channel": "Polyglot Dreams",
+  "views": 13378,
+  "seconds": 426,
+  "query": "Portuguese grammar Subjunctive nuance C2 lesson",
+  "foundAt": "2026-11-24"
  },
  "ru-a1-g-gender": {
   "videoId": "BKjITUoLrmc",
@@ -2039,6 +2549,90 @@
   "query": "Russian grammar Reported speech B2 lesson",
   "foundAt": "2026-11-23"
  },
+ "ru-c1-g-aspect-nuance": {
+  "videoId": "RKK7wGAYP6k",
+  "title": "How Language Shapes the Way We Think | Lera Boroditsky | TED",
+  "channel": "TED",
+  "views": 16268371,
+  "seconds": 853,
+  "query": "Russian grammar Aspect nuance C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ru-c1-g-connectors": {
+  "videoId": "Kz0Oa7aBejQ",
+  "title": "60 RUSSIAN VERBS with the same ROOT",
+  "channel": "Russian with Nastya",
+  "views": 1375,
+  "seconds": 1182,
+  "query": "Russian grammar Advanced connectors C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ru-c1-g-formal-style": {
+  "videoId": "z2slOeJft9w",
+  "title": "I Used AI to Build a C1 English Course with Breaking Bad & Game of Thrones",
+  "channel": "linguAI",
+  "views": 5,
+  "seconds": 326,
+  "query": "Russian grammar Formal and official style C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ru-c1-g-impersonal": {
+  "videoId": "8GHapRkrrmw",
+  "title": "IMPERSONAL PASSIVE VOICE    Advanced English Grammar",
+  "channel": "English Speaking 360",
+  "views": 70334,
+  "seconds": 613,
+  "query": "Russian grammar Impersonal sentences C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ru-c1-g-word-order": {
+  "videoId": "lJOvoWRNLAs",
+  "title": "This is how you'll learn Russian. Complete guide A1 - C2",
+  "channel": "Nik - Russian tutor",
+  "views": 33857,
+  "seconds": 538,
+  "query": "Russian grammar Word order and focus C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ru-c2-g-aspect-pairs-irregular": {
+  "videoId": null
+ },
+ "ru-c2-g-idioms": {
+  "videoId": "r-3D-ao72ms",
+  "title": "237. Russian A1-C2 Level Vocabulary | Day 7 | Russian З letter",
+  "channel": "Russian with Nastya",
+  "views": 4504,
+  "seconds": 1300,
+  "query": "Russian grammar Idioms C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ru-c2-g-literary": {
+  "videoId": "VxM-jU-DsWc",
+  "title": "Podcasts VS Textbooks: Do you need to learn Russian GRAMMAR?",
+  "channel": "Yaroslava Russian",
+  "views": 5784,
+  "seconds": 504,
+  "query": "Russian grammar Literary language C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ru-c2-g-particles": {
+  "videoId": "wjOEJGsmwvo",
+  "title": "Learn German Grammar for Beginners (A1 / A2) -  Introduction and Outline",
+  "channel": "German Pro (Bitte auf DEUTSCH!) ",
+  "views": 89707,
+  "seconds": 1037,
+  "query": "Russian grammar Modal particles C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "ru-c2-g-register": {
+  "videoId": "FtCfbxNmkUw",
+  "title": "Russian Course, Lesson 1: Hi, how are you? (Informal greetings)",
+  "channel": "Easy Russian with Yula",
+  "views": 34170,
+  "seconds": 897,
+  "query": "Russian grammar Register C2 lesson",
+  "foundAt": "2026-11-24"
+ },
  "tr-a1-g-present-continuous": {
   "videoId": "8i6pLMMn4U4",
   "title": "Learn Turkish Lesson 35 - Simple Present Tense (Geniş Zaman)",
@@ -2219,6 +2813,78 @@
   "query": "Turkish grammar Unreal conditionals B2 lesson",
   "foundAt": "2026-11-23"
  },
+ "tr-c1-g-complex-participles": {
+  "videoId": "WQpM0NVM0CM",
+  "title": "PAST MODALS: could have | may have | might have | must have | should have | would have - GRAMMAR",
+  "channel": "Arnel's Everyday English",
+  "views": 2029892,
+  "seconds": 858,
+  "query": "Turkish grammar Complex participle clauses C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "tr-c1-g-connectors": {
+  "videoId": "uxMRF2GMZSM",
+  "title": "72. DERS - SENTENCE CONNECTORS 1 (TRANSITIONS)",
+  "channel": "Bahar Şahin",
+  "views": 12198,
+  "seconds": 1421,
+  "query": "Turkish grammar Advanced connectors C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "tr-c1-g-formal-register": {
+  "videoId": "BuVtBJUaXcI",
+  "title": "How I Reached B2 in Turkish From Scratch",
+  "channel": "Saniiat",
+  "views": 128813,
+  "seconds": 1001,
+  "query": "Turkish grammar Formal register C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "tr-c1-g-modality-suffixes": {
+  "videoId": "WQpM0NVM0CM",
+  "title": "PAST MODALS: could have | may have | might have | must have | should have | would have - GRAMMAR",
+  "channel": "Arnel's Everyday English",
+  "views": 2029892,
+  "seconds": 858,
+  "query": "Turkish grammar Probability and modality C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "tr-c1-g-reduplication": {
+  "videoId": null
+ },
+ "tr-c2-g-discourse-particles": {
+  "videoId": "UeJdL3XIP4E",
+  "title": "Why You Can't Understand Fast Turkish (Fix This)",
+  "channel": "Turkishle",
+  "views": 179701,
+  "seconds": 1180,
+  "query": "Turkish grammar Discourse particles C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "tr-c2-g-evidentiality": {
+  "videoId": null
+ },
+ "tr-c2-g-idioms": {
+  "videoId": "XCRsiJttIAQ",
+  "title": "The Coolest Turkish Expression!",
+  "channel": "human1011",
+  "views": 662897,
+  "seconds": 151,
+  "query": "Turkish grammar Idioms C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "tr-c2-g-literary-style": {
+  "videoId": "XCRsiJttIAQ",
+  "title": "The Coolest Turkish Expression!",
+  "channel": "human1011",
+  "views": 662883,
+  "seconds": 151,
+  "query": "Turkish grammar Literary style C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "tr-c2-g-register-variety": {
+  "videoId": null
+ },
  "zh-a1-g-ma-questions": {
   "videoId": "uSlZVM2VaFE",
   "title": "12 Basic Chinese Grammar Points You Need to Know (HSK 1) - Beginner Chinese Grammar",
@@ -2392,5 +3058,83 @@
   "seconds": 337,
   "query": "Chinese grammar The 是…的 construction B2 lesson",
   "foundAt": "2026-11-23"
+ },
+ "zh-c1-g-advanced-connectors": {
+  "videoId": "DSjddtqsG14",
+  "title": "French Lessons For Chinese I The sequential connectors  I  À la fin",
+  "channel": "LEARN FRENCH WITH VINCENT & FRIENDS",
+  "views": 0,
+  "seconds": 226,
+  "query": "Chinese grammar Advanced connectors C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "zh-c1-g-chengyu": {
+  "videoId": "hC57azBWFzI",
+  "title": "Chinese People Trying HSK 6 Exam Challenge & Pass HSK 6 Tips",
+  "channel": "Everyday Chinese",
+  "views": 84585,
+  "seconds": 530,
+  "query": "Chinese grammar Using chengyu C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "zh-c1-g-measure-nuance": {
+  "videoId": "0Jw1p6_HNOE",
+  "title": "Answering Your English Questions Part 2!",
+  "channel": "Smashing English! Free and Fun English Lessons!",
+  "views": 8601,
+  "seconds": 608,
+  "query": "Chinese grammar Precise measure words C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "zh-c1-g-topic-comment": {
+  "videoId": "ctR1jrI42uc",
+  "title": "Chinese Podcast | Speak Chinese Better: What Pro Teachers Do & Practice Tips (CC SUB)",
+  "channel": "Chloe Chinese Class",
+  "views": 380439,
+  "seconds": 1756,
+  "query": "Chinese grammar Topic-comment structure C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "zh-c1-g-written-style": {
+  "videoId": "WyehfFj72zY",
+  "title": "How to Learn Chinese (Mandarin) On Your Own for FREE",
+  "channel": "Brian Wiles",
+  "views": 1137273,
+  "seconds": 709,
+  "query": "Chinese grammar Written vs spoken style C1 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "zh-c2-g-classical": {
+  "videoId": "aCVglIZ2hk0",
+  "title": "Mandarin Chinese short article reading and listening | B1-B2 | Traditional Chinese | 中文學習 | 工作與生活的平衡",
+  "channel": "Unlock Your Chinese",
+  "views": 286,
+  "seconds": 329,
+  "query": "Chinese grammar Classical Chinese elements C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "zh-c2-g-discourse": {
+  "videoId": "z960ck7wBBs",
+  "title": "CAUSATIVE VERBS - HAVE | GET | MAKE | LET - English grammar lesson",
+  "channel": "Arnel's Everyday English",
+  "views": 1618199,
+  "seconds": 818,
+  "query": "Chinese grammar Discourse particles C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "zh-c2-g-regional": {
+  "videoId": null
+ },
+ "zh-c2-g-register": {
+  "videoId": "jr56TIbJIdI",
+  "title": "TestDaF Tips You MUST Know Before Your Exam",
+  "channel": "Learn German with Herr Antrim",
+  "views": 7950,
+  "seconds": 395,
+  "query": "Chinese grammar Register and politeness C2 lesson",
+  "foundAt": "2026-11-24"
+ },
+ "zh-c2-g-xiehouyu": {
+  "videoId": null
  }
 }
