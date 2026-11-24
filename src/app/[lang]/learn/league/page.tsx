@@ -1,3 +1,6 @@
+import {lang as rootLang} from "next/root-params";
+import {getDictionary} from "@/lib/i18n";
+import {Header} from "@/components/site/Header";
 import {Suspense} from "react";
 import Link from "next/link";
 import {notFound} from "next/navigation";
@@ -6,7 +9,7 @@ import {requireUser} from "@/lib/auth/session";
 import {db} from "@/lib/db";
 import {leagueBoard} from "@/lib/learner/leagues";
 import {LeagueControls} from "@/components/league/LeagueControls";
-export default function Page(p:PageProps<"/[lang]/learn/league">){return <main className="container-page max-w-3xl py-8 pb-28"><Suspense fallback={<p>…</p>}><Board {...p}/></Suspense></main>;}
+export default async function Page(p:PageProps<"/[lang]/learn/league">){const lang=await rootLang();if(!isLocale(lang))notFound();const dict=await getDictionary(lang);return <><Header lang={lang} dict={dict}/><main className="container-page max-w-3xl py-8 pb-28"><Suspense fallback={<p>…</p>}><Board {...p}/></Suspense></main></>;}
 async function Board({params}:PageProps<"/[lang]/learn/league">){
  const {lang}=await params;if(!isLocale(lang))notFound();const ar=lang==="ar",u=await requireUser(lang);const b=await leagueBoard(db,u.id);
  return <div className="space-y-6"><Link className="text-brand" href={`/${lang}/learn`}>{ar?"رجوع للدروس":"Back to lessons"}</Link><div className="rounded-3xl bg-brand-soft p-7"><p className="text-sm font-semibold text-brand">{ar?"منافسة خفيفة · مشاركة اختيارية":"Friendly competition · opt in"}</p><h1 className="mt-2 text-3xl font-bold">{ar?"الدوري الأسبوعي":"Weekly league"}</h1><p className="mt-3 text-muted">{ar?"اتعلم على مهلك، وكل يوم يفرق. نافس متعلمين حقيقيين في نفس اللغة من غير ما تكشف بيانات حسابك.":"Learn at your pace. Compete with real learners of the same language without revealing your account details."}</p></div>

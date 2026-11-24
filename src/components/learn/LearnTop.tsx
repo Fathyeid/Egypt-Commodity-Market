@@ -41,8 +41,8 @@ function Ring({ pct }: { pct: number }) {
   return (
     <svg viewBox="0 0 100 100" className="size-24 shrink-0 -rotate-90 sm:size-28" role="img" aria-label={`${pct}%`}>
       <circle cx="50" cy="50" r={r} fill="none" stroke="rgb(255 255 255 / 0.15)" strokeWidth="9" />
-      <circle cx="50" cy="50" r={r} fill="none" stroke="#f2c14e" strokeWidth="9" strokeLinecap="round" strokeDasharray={`${Math.max((pct / 100) * c, 6)} ${c}`} />
-      <text x="50" y="50" textAnchor="middle" dominantBaseline="central" className="rotate-90 fill-white text-[22px] font-bold" transform="rotate(90 50 50)">
+      <circle cx="50" cy="50" r={r} fill="none" stroke="#f2c14e" strokeWidth="9" strokeLinecap="round" strokeDasharray={`${(pct / 100) * c} ${c}`} />
+      <text x="50" y="50" textAnchor="middle" dominantBaseline="central" className="fill-white text-[22px] font-bold" transform="rotate(90 50 50)">
         {pct}%
       </text>
     </svg>

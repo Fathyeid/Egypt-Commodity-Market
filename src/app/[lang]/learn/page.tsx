@@ -106,7 +106,8 @@ async function Course({ lang, dict, searchParams }: { lang: Locale; dict: Dictio
   const wanted = typeof sp.level === "string" ? sp.level : (track.placementLevel ?? track.selfLevel);
   const course = courses.find((c) => c.level === wanted) ?? courses.find((c) => c.level === "A1") ?? courses[0];
   const ids = outlineLessonIds(course);
-  const [progress, checkpoints] = await Promise.all([getProgress(db, user.id, ids), checkpointScores(db, user.id, course.units.map((u) => u.id))]);
+  const [attemptedProgress, checkpoints] = await Promise.all([getProgress(db, user.id, ids), checkpointScores(db, user.id, course.units.map((u) => u.id))]);
+  const progress = new Map([...attemptedProgress].filter(([, score]) => score >= 70));
   const nextId = ids.find((id) => !progress.has(id));
   const nextLesson = course.units.flatMap((u) => u.lessons).find((l) => l.id === nextId) ?? null;
   const q = typeof sp.q === "string" ? sp.q.trim().slice(0, 60) : "";

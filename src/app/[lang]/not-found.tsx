@@ -1,0 +1,3 @@
+import Link from "next/link";
+import {lang as rootLang} from "next/root-params";
+export default async function NotFound(){const lang=await rootLang(),ar=lang!=="en";return <main className="container-page max-w-xl py-16"><section className="card space-y-4 p-7 text-center"><p className="font-bold text-brand">404</p><h1 className="text-2xl font-bold">{ar?"الصفحة مش موجودة":"Page not found"}</h1><p className="text-muted">{ar?"الرابط ممكن يكون قديم أو المحتوى غير متاح. تقدمك محفوظ.":"The link may be old or this content is unavailable. Your learning progress is safe."}</p><Link className="btn-primary" href={`/${ar?"ar":"en"}/learn`}>{ar?"ارجع للدروس":"Back to lessons"}</Link></section></main>;}

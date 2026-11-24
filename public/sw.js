@@ -1,5 +1,5 @@
 // Public curriculum only. No authenticated pages, requests or learner data cached.
-const CACHE = "lisan-v3";
+const CACHE = "lisan-v4";
 const LESSONS = "lisan-public-lessons-v1";
 const OFFLINE = "/offline.html";
 self.addEventListener("install", (event) => {

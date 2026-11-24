@@ -74,6 +74,6 @@ test("lessons of another language are refused; unknown lessons show not-found", 
   // The page shell streams first, so the status can't change mid-stream; Next renders the
   // not-found UI and marks the page noindex instead.
   await page.goto("/en/learn/does-not-exist");
-  await expect(page.getByRole("heading", { name: "This page could not be found." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Page not found" })).toBeVisible();
   expect(await page.locator('meta[name="robots"][content*="noindex"]').count()).toBeGreaterThan(0);
 });

@@ -59,6 +59,7 @@ async function Player({ lang, dict, params }: { lang: Locale; dict: Dictionary; 
       </div>
       {found.video && <LessonVideo id={found.video.id} title={found.video.title} label={dict.lesson.lessonVideo} />}
       {found.topic && (found.topic.videoId || found.topic.explanation) && <TopicPanel topic={found.topic} lang={lang} label={dict.lesson.topicVideo} />}
+      {found.source === "factory" && lang === "ar" && found.language !== "en" && <p className="mx-auto mb-5 max-w-3xl rounded-xl bg-accent-soft p-4 text-sm text-muted">بعض الجمل المصدرية ليس لها ترجمة عربية، فيظهر معناها بالإنجليزية بدلًا منها. المحتوى التدريبي مصنّف تقديريًا حسب الصعوبة، وليس تقييم CEFR معتمدًا.</p>}
       <OfflineDownload lesson={toPublicLesson(found.lesson)} language={found.language} lang={lang} attribution={found.attribution} />
       <LessonPlayer
         lang={lang}

@@ -1,7 +1,8 @@
 /* Offline public study reader. All curriculum text is inserted as text, never HTML. */
 (() => {
   const CACHE = "lisan-public-lessons-v1";
-  let lang = "ar";
+  let lang = new URLSearchParams(location.search).get("lang") === "en" ? "en" : "ar";
+  try { if(localStorage.getItem("lisan-theme")==="dark")document.documentElement.dataset.theme="dark"; } catch {}
   const $ = (id) => document.getElementById(id);
   const text = (ar, en) => lang === "ar" ? ar : en;
   const local = (value) => typeof value === "string" ? value : value?.[lang] ?? "";
@@ -9,6 +10,7 @@
   const PRIVATE = "lisan-private-offline-v1";
   async function render() {
     document.documentElement.lang = lang;
+    document.title = text("لسان · مكتبتي بدون نت", "Lisan · My offline library");
     document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
     $("lang").textContent = text("English", "العربية");
     $("title").textContent = text("مكتبتي من غير نت", "My offline library");
@@ -96,7 +98,7 @@
     }
     reader.scrollIntoView({behavior:"smooth"});
   }
-  $("lang").onclick = () => {lang = lang === "ar" ? "en" : "ar"; render();};
+  $("lang").onclick = () => {lang = lang === "ar" ? "en" : "ar"; history.replaceState(null,"",`?lang=${lang}`); render();};
   // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- standalone offline page, outside React
   $("reload").onclick = () => { location.href = `/${lang}/learn`; };
   $("clear").onclick = async () => { try {if(!confirm(text("مسح الدروس وكل الإجابات المنتظرة من الجهاز؟","Clear lessons and all pending answers from this device?")))return;await caches.delete(CACHE);await caches.delete(PRIVATE);await render();} catch {$("status").textContent=text("المسح ما اكتملش.","Could not clear storage.");} };
