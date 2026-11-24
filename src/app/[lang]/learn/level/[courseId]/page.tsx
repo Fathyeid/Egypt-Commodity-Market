@@ -1,0 +1,17 @@
+import {Suspense} from "react";
+import Link from "next/link";
+import {notFound} from "next/navigation";
+import {isLocale} from "@/lib/i18n/config";
+import {getDictionary} from "@/lib/i18n";
+import {requireUser} from "@/lib/auth/session";
+import {db} from "@/lib/db";
+import {DomainError} from "@/lib/learner/repo";
+import {levelOverview,levelCertificate,signLevelCertificate} from "@/lib/learner/level-completion";
+import {LevelExam} from "@/components/learn/LevelExam";
+import {LevelCertificateView} from "@/components/learn/LevelCertificateView";
+export default function Page(p:PageProps<"/[lang]/learn/level/[courseId]">){return <main className="container-page max-w-3xl py-8 pb-28"><Suspense fallback={<p>…</p>}><Overview {...p}/></Suspense></main>;}
+async function Overview({params}:PageProps<"/[lang]/learn/level/[courseId]">){const {lang,courseId}=await params;if(!isLocale(lang))notFound();const ar=lang==="ar",u=await requireUser(lang),dict=await getDictionary(lang);let overview,c;try{[overview,c]=await Promise.all([levelOverview(db,u.id,courseId),levelCertificate(db,u.id,courseId)]);}catch(e){if(e instanceof DomainError)notFound();throw e;}const l=dict.lesson;return <div className="space-y-6"><Link className="text-brand print:hidden" href={`/${lang}/learn?level=${overview.course.level}`}>{ar?"رجوع للدروس":"Back to lessons"}</Link><section className="rounded-3xl bg-brand-soft p-7 print:hidden"><p className="text-sm font-semibold text-brand">{ar?"رحلتك لختام المستوى":"Your path to level completion"}</p><h1 className="mt-2 text-3xl font-bold">{overview.course.title[lang]}</h1><p className="mt-4 text-muted">{ar?"اجتز كل درس واختبار وحدة بنسبة 70%، ثم اختبار ختام المستوى لفتح شهادة إتمام المحتوى.":"Pass every lesson and unit checkpoint with 70%, then pass the level final to unlock your content completion certificate."}</p><p className="mt-3 font-bold">{overview.done} / {overview.units.reduce((n,u)=>n+u.total,0)} {ar?"درس ناجح":"lessons passed"}</p></section>
+ {c&&<LevelCertificateView c={c} token={signLevelCertificate(c)} lang={lang}/>}
+ <section className="card space-y-3 p-5 print:hidden"><h2 className="text-xl font-bold">{ar?"خريطة الإتمام":"Completion checklist"}</h2>{overview.units.map(unit=><div key={unit.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-surface-2 p-4"><div><h3 className="font-semibold">{unit.title[lang]}</h3><p className="mt-1 text-xs text-muted">{unit.done}/{unit.total} {ar?"دروس":"lessons"} · {unit.checkpoint?(ar?"اختبار الوحدة ناجح":"Checkpoint passed"):(ar?"اختبار الوحدة متبقٍ":"Checkpoint remaining")}</p></div><Link className="text-sm font-semibold text-brand" href={unit.nextId?`/${lang}/learn/${unit.nextId}`:`/${lang}/learn/checkpoint/${unit.id}`}>{unit.nextId?(ar?"كمل الدروس":"Continue lessons"):(ar?"اختبار الوحدة":"Unit checkpoint")}</Link></div>)}</section>
+ <div className="print:hidden">{overview.eligible?<LevelExam courseId={courseId} language={overview.course.language} lang={lang} labels={{typeHere:l.typeHere,tapWords:l.tapWords,clear:l.clear,pickMeaning:l.pickMeaning,listen:dict.placement.listen,noVoice:l.noVoice}}/>:<div className="card p-6"><h2 className="text-xl font-bold">{ar?"اختبار ختام المستوى مقفول مؤقتًا":"Level final is locked"}</h2><p className="mt-3 text-muted">{ar?"كمّل العناصر المتبقية في الخريطة أولًا. تقدمك الحالي محفوظ ولا يتغير.":"Complete the remaining checklist first. Your existing progress stays unchanged."}</p></div>}</div>
+ </div>;}

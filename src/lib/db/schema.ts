@@ -518,3 +518,13 @@ export const learningReceipts = pgTable("learning_receipts", {
   result: jsonb("result").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 }, t => [uniqueIndex("learning_receipts_user_attempt").on(t.userId, t.attemptId)]);
+
+/** Explicit per-week opt-in. No emails or account names are shown in leagues. */
+export const leagueMembers = pgTable("league_members", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+  week: text("week").notNull(),
+  language: text("language").notNull(),
+  alias: text("alias").notNull(),
+  joinedAt: timestamp("joined_at", { withTimezone: true }).defaultNow().notNull(),
+}, t => [uniqueIndex("league_user_week_uq").on(t.userId, t.week), index("league_week_language_idx").on(t.week, t.language)]);
