@@ -18,15 +18,15 @@ test("work practice, saved conversation words and offline study copies", async (
  await expect(page.getByRole("button",{name:"اتحفظت للمراجعة"})).toBeDisabled();
  await page.goto("/ar/learn");await expect(page.getByText("weekend",{exact:true})).toBeVisible();
  await page.goto("/ar/learn/en-a1-u1-l1");
- await page.getByRole("button",{name:"تنزيل للمذاكرة"}).click();
+ await page.getByRole("button",{name:"تنزيل الدرس والاختبار"}).click();
  await expect(page.getByRole("button",{name:"اتحفظ على الجهاز"})).toBeVisible();
- await page.getByRole("link",{name:"افتح مكتبتي من غير نت"}).click();
- await expect(page.getByRole("button",{name:"افتح للمذاكرة"})).toBeVisible();
- const stored = await page.evaluate(async()=>{ const c=await caches.open("lisan-public-lessons-v1");const [key]=await c.keys();return await (await c.match(key))!.json(); });
- expect(stored.lesson.quiz).toBeUndefined();expect(stored.lesson.exercises).toBeUndefined();
+ await page.getByRole("link",{name:"افتح مدرستي من غير نت"}).click();
+ await expect(page.getByRole("button",{name:"افتح الدرس والاختبار"})).toBeVisible();
+ const stored = await page.evaluate(async()=>{ const c=await caches.open("lisan-private-offline-v1");const [key]=await c.keys();return await (await c.match(key))!.json(); });
+ expect(stored.lesson.quiz.length).toBeGreaterThan(0);expect(stored.lesson.quiz.some((q:Record<string,unknown>)=>"answer" in q||"answers" in q)).toBe(false);
  expect(stored.userId).toBeUndefined();expect(stored.progress).toBeUndefined();
  await context.setOffline(true);await page.reload();
- await page.getByRole("button",{name:"افتح للمذاكرة"}).click();
+ await page.getByRole("button",{name:"افتح الدرس والاختبار"}).click();
  await expect(page.locator("#reader")).toBeVisible();
  await page.setViewportSize({width:390,height:844});
  await page.screenshot({path:testInfo.outputPath("offline-mobile.png"),fullPage:true});
@@ -34,7 +34,7 @@ test("work practice, saved conversation words and offline study copies", async (
  await context.setOffline(false);await page.goto("/ar/learn");
  await page.getByRole("button",{name:"تسجيل الخروج"}).click();
  await page.waitForURL("**/ar");
- expect(await page.evaluate(async()=>{const c=await caches.open("lisan-public-lessons-v1");return(await c.keys()).length;})).toBe(0);
+ expect(await page.evaluate(async()=>{const c=await caches.open("lisan-private-offline-v1");return(await c.keys()).length;})).toBe(0);
 });
 
 test("certificate gates completion, signed verification and tamper rejection",async({page},testInfo)=>{

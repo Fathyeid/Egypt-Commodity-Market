@@ -507,3 +507,14 @@ export const contentImports = pgTable("content_imports", {
 });
 
 export const authSchema = { user, session, account, verification };
+
+/** Durable idempotency receipts for offline submissions and story completions. */
+export const learningReceipts = pgTable("learning_receipts", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+  attemptId: uuid("attempt_id").notNull(),
+  kind: text("kind").notNull(),
+  resourceId: text("resource_id").notNull(),
+  result: jsonb("result").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+}, t => [uniqueIndex("learning_receipts_user_attempt").on(t.userId, t.attemptId)]);

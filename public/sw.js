@@ -1,5 +1,5 @@
 // Public curriculum only. No authenticated pages, requests or learner data cached.
-const CACHE = "lisan-v2";
+const CACHE = "lisan-v3";
 const LESSONS = "lisan-public-lessons-v1";
 const OFFLINE = "/offline.html";
 self.addEventListener("install", (event) => {
@@ -7,7 +7,7 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
 self.addEventListener("activate", (event) => {
-  event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((k) => k.startsWith("lisan-") && ![CACHE, LESSONS].includes(k)).map((k) => caches.delete(k)))).then(() => self.clients.claim()));
+  event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((k) => k.startsWith("lisan-") && ![CACHE, LESSONS, "lisan-private-offline-v1"].includes(k)).map((k) => caches.delete(k)))).then(() => self.clients.claim()));
 });
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);

@@ -14,7 +14,7 @@ import type { OnboardingInput, ProfileInput, TrackInput } from "@/lib/validation
 type Db = PgDatabase<any, any, any>;
 
 export class DomainError extends Error {
-  constructor(public code: "not_found" | "language_unavailable" | "duplicate_track" | "same_language" | "last_track") {
+  constructor(public code: "not_found" | "language_unavailable" | "duplicate_track" | "same_language" | "last_track" | "invalid" | "package_expired" | "track_changed" | "content_changed") {
     super(code);
   }
 }

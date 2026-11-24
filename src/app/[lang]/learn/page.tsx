@@ -129,6 +129,7 @@ async function Course({ lang, dict, searchParams }: { lang: Locale; dict: Dictio
           language={track.targetLanguage}
         />
       </div>
+      <Link href={`/${lang}/learn/stories`} className="card block border-brand/30 bg-brand-soft p-5"><h2 className="text-xl font-bold">{lang === "ar" ? "حكايات إنت بطلها" : "Stories you shape"}</h2><p className="mt-2 text-sm text-muted">{lang === "ar" ? "اسمع الحوار، اختار ردك، وغيّر مسار الحكاية. اختبار فهم ونتيجة محفوظة في النهاية." : "Listen, choose a reply and change the story. Finish with a comprehension quiz and saved result."}</p></Link>
       <ReviewLink lang={lang} dict={dict} userId={user.id} language={track.targetLanguage} />
       <UnitsHeader lang={lang} level={course.level} q={q} count={fmt(t.unitsHeading, { u: course.units.length, n: ids.length })} t={t} />
       {q && shown.units.length === 0 && <p className="card p-5 text-center text-muted">{t.noUnits}</p>}

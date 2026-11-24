@@ -349,3 +349,10 @@ export async function finishVoiceSessionAction(lang:string,id:string){
  if(!z.uuid().safeParse(id).success)return {ok:false as const,error:"invalid"};
  try{const report=await convo.finishRoleplay(db,userId,id,isLocale(lang)?lang:"ar");revalidatePath("/[lang]","layout");return {ok:true as const,report};}catch(e){return convoFail(e);}
 }
+
+export async function completeStoryAction(id:string,path:string[],answers:unknown,attemptId:string){
+ const userId=await uid();if(!userId)return {ok:false as const,error:"unauthorized"};
+ const parsed=z.record(z.string().max(10),z.number().int().min(0).max(20)).safeParse(answers);
+ if(!parsed.success||Object.keys(parsed.data).length>10||!z.uuid().safeParse(attemptId).success||typeof id!=="string"||!Array.isArray(path)||path.length>20||path.some(x=>typeof x!=="string"||x.length>20))return {ok:false as const,error:"invalid"};
+ try{const {completeStory}=await import("@/lib/stories/server");const result=await completeStory(db,userId,id,path,parsed.data,attemptId);revalidatePath("/[lang]","layout");return {ok:true as const,result};}catch(e){return fail(e) as {ok:false;error:string};}
+}

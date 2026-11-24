@@ -1,0 +1,13 @@
+import {Suspense} from "react";
+import Link from "next/link";
+import {notFound,redirect} from "next/navigation";
+import {Header} from "@/components/site/Header";
+import {getDictionary} from "@/lib/i18n";
+import {isLocale,type Locale} from "@/lib/i18n/config";
+import {requireUser} from "@/lib/auth/session";
+import {getActiveTrack} from "@/lib/learner/repo";
+import {db} from "@/lib/db";
+import {STORIES} from "@/lib/stories/catalog";
+import {storyScores} from "@/lib/stories/server";
+export default async function Page({params}:PageProps<"/[lang]/learn/stories">){const {lang}=await params;if(!isLocale(lang))notFound();const dict=await getDictionary(lang);return <><Header lang={lang} dict={dict}/><main className="container-page max-w-4xl py-8 pb-28"><Suspense fallback={<p>…</p>}><Stories lang={lang}/></Suspense></main></>;}
+async function Stories({lang}:{lang:Locale}){const user=await requireUser(lang,`/${lang}/learn/stories`),track=await getActiveTrack(db,user.id);if(!track)redirect(`/${lang}/onboarding`);const items=STORIES.filter(s=>s.language===track.targetLanguage),scores=await storyScores(db,user.id),ar=lang==="ar";return <div className="space-y-6"><header className="rounded-2xl bg-brand-soft p-6"><span className="text-sm font-semibold text-brand">{ar?"اسمع. اختار. عيش الموقف.":"Listen. Choose. Live the scene."}</span><h1 className="mt-2 text-3xl font-bold">{ar?"حكايات إنت بطلها":"Stories you shape"}</h1><p className="mt-3 text-muted">{ar?"اختار ردك وشوف الحوار بيتغيّر، وبعد النهاية اختبر فهمك. حكايات أصلية للمبتدئين والمستوى التالي، بصوت المتصفح أو قراءة.":"Choose a reply and watch the dialogue change. At the end, check your understanding. Original beginner and elementary stories, with browser speech or reading."}</p></header>{!items.length?<p className="card p-6">{ar?"الحكايات متاحة حاليًا للإنجليزية والألمانية A1 وA2. باقي لغاتك تحتفظ بمركز القراءة والاستماع.":"Stories currently cover English and German A1 and A2. Reading and listening centers remain available for your language."}</p>:<div className="grid gap-4 sm:grid-cols-2">{items.map((s,i)=><Link key={s.id} href={`/${lang}/learn/stories/${s.id}`} className="card p-6 hover:border-brand"><div className="flex justify-between"><span className="chip">{s.level}</span><span className="font-bold text-brand">0{i+1}</span></div><h2 className="mt-4 text-xl font-bold">{s.title[lang]}</h2><p className="mt-2 text-sm text-muted">{s.summary[lang]}</p><p className="mt-4 text-sm font-semibold text-brand">{scores[s.id]!==undefined?`${scores[s.id]}% · `:""}{ar?"افتح الحكاية ←":"Open story →"}</p></Link>)}</div>}<Link href={`/${lang}/learn`} className="text-brand">{ar?"ارجع للدروس":"Back to lessons"}</Link></div>;}

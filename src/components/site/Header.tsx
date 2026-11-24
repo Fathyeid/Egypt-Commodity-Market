@@ -1,4 +1,5 @@
 import Link from "next/link";
+import {OfflineAccount} from "./OfflineAccount";
 import { Suspense } from "react";
 import { Logo } from "@/components/ui/Logo";
 import { LangSwitch, LangSwitchFallback } from "./LangSwitch";
@@ -64,6 +65,7 @@ async function UserArea({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   if (!session) {
     return (
       <>
+        <OfflineAccount owner={null} />
         <Link href={`/${lang}/sign-in`} className="hidden rounded-full px-3.5 py-2 text-sm font-semibold text-muted hover:text-text sm:inline-block">
           {dict.nav.signIn}
         </Link>
@@ -84,6 +86,7 @@ async function UserArea({ lang, dict }: { lang: Locale; dict: Dictionary }) {
       <nav className="hidden items-center gap-1 sm:flex" aria-label={dict.nav.menu}>
         <NavLinks items={items} variant="top" />
       </nav>
+      <OfflineAccount owner={session.user.id} />
       <SignOutButton lang={lang} label={dict.nav.signOut} compact />
     </>
   );

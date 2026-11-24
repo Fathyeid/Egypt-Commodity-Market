@@ -57,6 +57,13 @@
       "when": 1795212484454,
       "tag": "0007_lesson_video",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1795478084488,
+      "tag": "0008_learning_receipts",
+      "breakpoints": true
     }
   ]
 }

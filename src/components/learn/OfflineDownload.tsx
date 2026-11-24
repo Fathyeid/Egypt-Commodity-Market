@@ -1,36 +1,8 @@
 "use client";
-import { useState } from "react";
-import type { LessonAttribution } from "@/lib/curriculum";
-import type { PublicLesson } from "@/content";
-
-export function OfflineDownload({ lesson, language, lang, attribution }: { lesson: PublicLesson; language: string; lang: "ar" | "en"; attribution: LessonAttribution | null }) {
-  const [state, setState] = useState<"idle" | "saving" | "saved" | "error">("idle");
-  const ar = lang === "ar";
-  return <aside className="card mx-auto mb-5 max-w-3xl p-4 print:hidden">
-    <div className="flex flex-wrap items-center justify-between gap-3">
-      <div><h2 className="font-semibold">{ar ? "خد الدرس معاك من غير نت" : "Take this lesson offline"}</h2><p className="mt-1 text-xs text-muted">{ar ? "شرح وكلمات وأمثلة وقواعد للمذاكرة. الاختبارات والنقاط والفيديو تحتاج اتصالًا." : "Study explanations, words, examples and grammar. Quizzes, points and videos need a connection."}</p></div>
-      <button type="button" className="btn-ghost text-sm" disabled={state === "saving"} onClick={async () => {
-        setState("saving");
-        try {
-          if (!("serviceWorker" in navigator)) throw new Error("unsupported");
-          const registration = await navigator.serviceWorker.register("/sw.js");
-          await navigator.serviceWorker.ready;
-          const worker = registration.active ?? navigator.serviceWorker.controller;
-          if (!worker) throw new Error("not_ready");
-          const channel = new MessageChannel();
-          await new Promise<void>((resolve, reject) => {
-            const timeout = setTimeout(() => reject(new Error("timeout")), 10000);
-            channel.port1.onmessage = (event) => { clearTimeout(timeout); channel.port1.close(); if (event.data?.ok) resolve(); else reject(new Error("storage")); };
-            // Downloaded material is public curriculum only, never a user profile,
-            // learner progress, answers, session, tutor message or other private data.
-            worker.postMessage({ type: "SAVE_LESSON", lesson: { id: lesson.id, title: lesson.title, goal: lesson.goal, explanation: lesson.explanation, vocabulary: lesson.vocabulary, pronunciation: lesson.pronunciation, examples: lesson.examples, grammar: lesson.grammar, review: lesson.review }, attribution, language }, [channel.port2]);
-          });
-          setState("saved");
-        } catch { setState("error"); }
-      }}>{state === "saving" ? (ar ? "جارٍ الحفظ…" : "Saving…") : state === "saved" ? (ar ? "اتحفظ على الجهاز" : "Saved on device") : (ar ? "تنزيل للمذاكرة" : "Download for study")}</button>
-    </div>
-    <p className="mt-2 text-xs text-faint">{ar ? "محتوى الدرس عام. النسخ المحفوظة متاحة لمستخدمي هذا المتصفح وتُمسح عند تسجيل الخروج. حد أقصى 20 درسًا." : "Lesson content is public. Saved copies are available to users of this browser and cleared on sign-out. Maximum 20 lessons."}</p>
-    {state === "saved" && <a href="/offline.html" className="mt-2 inline-block text-sm font-semibold text-brand">{ar ? "افتح مكتبتي من غير نت" : "Open offline library"}</a>}
-    {state === "error" && <p role="alert" className="mt-2 text-sm text-danger">{ar ? "الحفظ ما اكتملش. اتأكد إن المتصفح بيسمح بالتخزين وجرّب تاني." : "Could not save. Check browser storage access and try again."}</p>}
-  </aside>;
+import {useState} from "react";
+import type {PublicLesson} from "@/content";
+import type {LessonAttribution} from "@/lib/curriculum";
+export function OfflineDownload({lesson,lang}:{lesson:PublicLesson;language:string;lang:"ar"|"en";attribution:LessonAttribution|null}){
+ const [state,setState]=useState("idle");const ar=lang==="ar";
+ return <aside className="card mx-auto mb-5 max-w-3xl p-4 print:hidden"><div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="font-semibold">{ar?"مدرستك تكمل من غير نت":"Your school continues offline"}</h2><p className="mt-1 text-xs text-muted">{ar?"نزّل الشرح والتدريبات والاختبار. إجاباتك تنتظر المزامنة والتصحيح عند رجوع النت، بدون نقاط مكررة.":"Download study material, exercises and quiz. Answers wait for server grading and one-time score sync when online."}</p></div><button className="btn-ghost text-sm" disabled={state==="saving"} onClick={async()=>{setState("saving");try{await navigator.serviceWorker.register("/sw.js");await navigator.serviceWorker.ready;const r=await fetch(`/api/offline/package?lessonId=${encodeURIComponent(lesson.id)}`,{cache:"no-store"});if(!r.ok)throw Error();const data=await r.json();const owner=localStorage.getItem("lisan-offline-owner");if(owner&&owner!==data.owner)await caches.delete("lisan-private-offline-v1");localStorage.setItem("lisan-offline-owner",data.owner);const c=await caches.open("lisan-private-offline-v1");const k=`/__offline_package__/${encodeURIComponent(lesson.id)}`;await c.delete(k);await c.put(k,new Response(JSON.stringify(data)));const keys=(await c.keys()).filter(x=>new URL(x.url).pathname.startsWith("/__offline_package__/"));await Promise.all(keys.slice(0,Math.max(0,keys.length-20)).map(x=>c.delete(x)));setState("saved");}catch{setState("error");}}}>{state==="saving"?(ar?"جارٍ التنزيل…":"Downloading…"):state==="saved"?(ar?"اتحفظ على الجهاز":"Saved on device"):(ar?"تنزيل الدرس والاختبار":"Download lesson and quiz")}</button></div><p className="mt-2 text-xs text-faint">{ar?"حتى 20 درسًا. الإجابات محفوظة في هذا المتصفح للحساب الحالي، وتُمسح عند الخروج أو تبديل الحساب. لا تستخدمها على جهاز مشترك. الصوت قد يحتاج نت حسب الجهاز، والفيديو غير متاح أوفلاين. النقاط تُحسب يوم المزامنة. صلاحية النسخة 30 يومًا.":"Up to 20 lessons. Answers stay in this browser for the current account and are cleared on sign-out or account change. Avoid shared devices. Speech may need internet; video is online only. XP counts on sync day. Packages expire after 30 days."}</p><a href="/offline.html" className="mt-2 inline-block text-sm font-semibold text-brand">{ar?"افتح مدرستي من غير نت":"Open offline school"}</a>{state==="error"&&<p role="alert" className="text-danger">{ar?"التنزيل لم يكتمل. تحقق من الاتصال والتخزين.":"Download failed. Check connection and storage."}</p>}</aside>;
 }
