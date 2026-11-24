@@ -10,7 +10,14 @@ import { LessonPlayer } from "@/components/learn/LessonPlayer";
 import { answerDailyMistakeAction } from "@/lib/actions";
 type Mistake={id:string;original:string;corrected:string;explanation:string;tag:string};
 type Props={lang:"ar"|"en";language:string;level:string;minutes:number;repair:boolean;cards:ComponentProps<typeof ReviewDeck>["cards"];nextDueAt:string|null;mistakes:Mistake[];lesson:PublicLesson|null;dict:Dictionary;attribution:LessonAttribution|null};
-export function DailySession({lang,language,level,minutes,repair,cards,nextDueAt,mistakes,lesson,dict,attribution}:Props){
+// Keep the plan stable during a session. Server-action revalidation may return
+// fewer due cards or a new next lesson after an answer. Apply those only when
+// opening a new session, not while the learner is clicking Continue.
+export function DailySession(props:Props){
+ const [snapshot]=useState(props);
+ return <DailySessionRun {...snapshot}/>;
+}
+function DailySessionRun({lang,language,level,minutes,repair,cards,nextDueAt,mistakes,lesson,dict,attribution}:Props){
  const ar=lang==="ar";const [step,setStep]=useState(-1);const [reviewed,setReviewed]=useState(0);const [fixed,setFixed]=useState(0);const [score,setScore]=useState<number|null>(null);
  const stages=[...(cards.length?["review"]:[]),...(mistakes.length?["mistakes"]:[]),...(lesson?["lesson"]:[])];
  const labels:Record<string,string>={review:ar?"مراجعة في وقتها":"Due review",mistakes:ar?"مختبر أخطائي":"My mistake lab",lesson:ar?(repair?"نقوّي الدرس الضعيف":"خطوة جديدة في مسارك"):(repair?"Strengthen a weak lesson":"Your next lesson")};
