@@ -19,6 +19,9 @@ export type CorpusRow = {
   enId: number;
   ar?: string;
   arId?: number;
+  /** Lisan layer, separate from original Tatoeba translation. */
+  editorialAr?: string;
+  arabicMethod?: "editorial" | "opus-mt-de-ar";
   alt?: string[];
   d: number;
 };
@@ -72,7 +75,7 @@ function shuffle<T>(xs: T[], rand: () => number): T[] {
 /** What a learner sees as the meaning of a sentence, in each interface language. */
 export function meaningOf(row: CorpusRow, language: string): L10n {
   if (language === "en") return { ar: row.ar ?? row.en, en: row.ar ?? row.en };
-  return { ar: row.ar ?? row.en, en: row.en };
+  return { ar: row.editorialAr ?? row.ar ?? row.en, en: row.en };
 }
 
 const TERMINAL = /[\s.!?…。！？]+$/u;

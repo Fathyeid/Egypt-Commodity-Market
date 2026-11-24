@@ -1,0 +1,682 @@
+{
+  "language": "de",
+  "translationLanguage": "ar",
+  "status": "draft-not-loaded-by-app",
+  "date": "2026-11-24",
+  "priorityBasis": "Beginner display order. No non-test German lesson_progress rows found in live aggregate check. Not a measured popularity ranking.",
+  "provenance": "German and original translations remain attributed to Tatoeba. New Arabic text is a separate Lisan editorial draft, not a Tatoeba translation.",
+  "records": [
+    {
+      "sourceId": 13930333,
+      "sourceText": "Tom ist ein Name.",
+      "english": "Tom is a name.",
+      "originalArabic": "توم اسم.",
+      "arabic": "توم اسم.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-1"
+      ]
+    },
+    {
+      "sourceId": 444710,
+      "sourceText": "Wie ist Ihr Name?",
+      "english": "What's your name?",
+      "originalArabic": "ما اسمُك؟",
+      "arabic": "ما اسم حضرتك؟",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-1"
+      ]
+    },
+    {
+      "sourceId": 353086,
+      "sourceText": "Sein Name ist Ken.",
+      "english": "His name is Ken.",
+      "originalArabic": null,
+      "arabic": "اسمه كين.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-1"
+      ]
+    },
+    {
+      "sourceId": 11599133,
+      "sourceText": "Sein Name ist Muhammad.",
+      "english": "His name is Muhammad.",
+      "originalArabic": "اسمه محمد.",
+      "arabic": "اسمه محمد.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-1"
+      ]
+    },
+    {
+      "sourceId": 356290,
+      "sourceText": "Mein Name ist Hashimoto.",
+      "english": "My name is Hashimoto.",
+      "originalArabic": null,
+      "arabic": "اسمي هاشيموتو.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-1"
+      ]
+    },
+    {
+      "sourceId": 367345,
+      "sourceText": "Mein Name ist Hopkins.",
+      "english": "My name is Hopkins.",
+      "originalArabic": null,
+      "arabic": "اسمي هوبكنز.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-1"
+      ]
+    },
+    {
+      "sourceId": 435972,
+      "sourceText": "Mein Name ist Ludwig.",
+      "english": "My name is Ludwig.",
+      "originalArabic": null,
+      "arabic": "اسمي لودفيغ.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-1"
+      ]
+    },
+    {
+      "sourceId": 553765,
+      "sourceText": "Mein Name ist Henry.",
+      "english": "My name is Henry.",
+      "originalArabic": "اسمي هنري.",
+      "arabic": "اسمي هنري.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-1"
+      ]
+    },
+    {
+      "sourceId": 778559,
+      "sourceText": "Mein Name ist Sally.",
+      "english": "My name is Sally.",
+      "originalArabic": "اسمي سالي.",
+      "arabic": "اسمي سالي.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-1"
+      ]
+    },
+    {
+      "sourceId": 1088933,
+      "sourceText": "Mein Name ist Yamada.",
+      "english": "My name is Yamada.",
+      "originalArabic": "اسمي يامادا.",
+      "arabic": "اسمي يامادا.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-1"
+      ]
+    },
+    {
+      "sourceId": 1736787,
+      "sourceText": "Mein Name ist Jack.",
+      "english": "My name is Jack.",
+      "originalArabic": "اسمي جاك.",
+      "arabic": "اسمي جاك.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-1"
+      ]
+    },
+    {
+      "sourceId": 3761262,
+      "sourceText": "Tom ist mein Name.",
+      "english": "Tom is my name.",
+      "originalArabic": "توم هو اسمي.",
+      "arabic": "توم هو اسمي.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-1"
+      ]
+    },
+    {
+      "sourceId": 6677670,
+      "sourceText": "Mein Name ist Tom.",
+      "english": "My name is Tom.",
+      "originalArabic": "إسمي توم.",
+      "arabic": "اسمي توم.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-1"
+      ]
+    },
+    {
+      "sourceId": 8329759,
+      "sourceText": "Mein Name ist Wang.",
+      "english": "My name is Wang.",
+      "originalArabic": "اسمي وانج.",
+      "arabic": "اسمي وانغ.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-1"
+      ]
+    },
+    {
+      "sourceId": 13183662,
+      "sourceText": "Mein Name ist Mary.",
+      "english": "My name is Mary.",
+      "originalArabic": "اسمي ماري.",
+      "arabic": "اسمي ماري.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-2"
+      ]
+    },
+    {
+      "sourceId": 2658354,
+      "sourceText": "Mein Name ist nicht Tom.",
+      "english": "My name is not Tom!",
+      "originalArabic": "اسمي ليس سامي!",
+      "arabic": "اسمي ليس توم.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-2"
+      ]
+    },
+    {
+      "sourceId": 403067,
+      "sourceText": "Bitte schön.",
+      "english": "You're welcome.",
+      "originalArabic": "عفوًا.",
+      "arabic": "عفوًا.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-2"
+      ]
+    },
+    {
+      "sourceId": 438752,
+      "sourceText": "Gute Nacht!",
+      "english": "Good night!",
+      "originalArabic": "تصبح على خير.",
+      "arabic": "تصبح على خير!",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-2"
+      ]
+    },
+    {
+      "sourceId": 783561,
+      "sourceText": "Wie ist dein Name?",
+      "english": "What's your name?",
+      "originalArabic": "ما اسمُك؟",
+      "arabic": "ما اسمك؟",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-2"
+      ]
+    },
+    {
+      "sourceId": 1244881,
+      "sourceText": "Was ist dein Name?",
+      "english": "What's your name?",
+      "originalArabic": "ما اسمُك؟",
+      "arabic": "ما اسمك؟",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-2"
+      ]
+    },
+    {
+      "sourceId": 613633,
+      "sourceText": "Es ist 20 Uhr.",
+      "english": "It's eight o'clock at night.",
+      "originalArabic": null,
+      "arabic": "الساعة الثامنة مساءً.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-2"
+      ]
+    },
+    {
+      "sourceId": 442553,
+      "sourceText": "Sicher ist sicher.",
+      "english": "Better safe than sorry.",
+      "originalArabic": "السلامة ولا الندامة.",
+      "arabic": "السلامة خير من الندامة.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-2"
+      ]
+    },
+    {
+      "sourceId": 3977591,
+      "sourceText": "Mein Name ist Mary und das ist Tom.",
+      "english": "My name is Mary and this is Tom.",
+      "originalArabic": "اسمي ليلى وهذا سامي.",
+      "arabic": "اسمي ماري وهذا توم.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-2"
+      ]
+    },
+    {
+      "sourceId": 460099,
+      "sourceText": "Gute Nacht, Timmy.",
+      "english": "Good night, Timmy!",
+      "originalArabic": "أتمنى لك نومًا هادئًا يا تِمِي.‏‏",
+      "arabic": "تصبح على خير يا تيمي.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-2"
+      ]
+    },
+    {
+      "sourceId": 560082,
+      "sourceText": "Ich habe heute Morgen viel vor.",
+      "english": "I have a lot of things to do this morning.",
+      "originalArabic": null,
+      "arabic": "لديّ الكثير لأفعله هذا الصباح.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-2"
+      ]
+    },
+    {
+      "sourceId": 799788,
+      "sourceText": "Es war Nacht.",
+      "english": "It was night.",
+      "originalArabic": "إنه المساء",
+      "arabic": "كان الوقت ليلًا.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-2"
+      ]
+    },
+    {
+      "sourceId": 358356,
+      "sourceText": "Nein, danke.",
+      "english": "No, thank you.",
+      "originalArabic": "لا، شكراً لك.",
+      "arabic": "لا، شكرًا.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-2"
+      ]
+    },
+    {
+      "sourceId": 477014,
+      "sourceText": "Danke sehr!",
+      "english": "Thank you very much!",
+      "originalArabic": "شكراً جزيلاً!",
+      "arabic": "شكرًا جزيلًا!",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-greetings-2"
+      ]
+    },
+    {
+      "sourceId": 1998295,
+      "sourceText": "Das ist mein Baby.",
+      "english": "This is my baby.",
+      "originalArabic": "هذا طفلي.",
+      "arabic": "هذا طفلي الرضيع.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-1"
+      ]
+    },
+    {
+      "sourceId": 344612,
+      "sourceText": "Er ist nicht mein Cousin.",
+      "english": "He isn't my cousin.",
+      "originalArabic": null,
+      "arabic": "هو ليس ابن عمي أو عمتي أو خالي أو خالتي.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-1"
+      ]
+    },
+    {
+      "sourceId": 370137,
+      "sourceText": "Hat er Kinder?",
+      "english": "Does he have any children?",
+      "originalArabic": null,
+      "arabic": "هل لديه أطفال؟",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-1"
+      ]
+    },
+    {
+      "sourceId": 370330,
+      "sourceText": "Habt ihr Kinder?",
+      "english": "Do you have children?",
+      "originalArabic": "هل لديك أطفال؟",
+      "arabic": "هل لديكم أطفال؟",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-1"
+      ]
+    },
+    {
+      "sourceId": 370331,
+      "sourceText": "Haben Sie Kinder?",
+      "english": "Do you have children?",
+      "originalArabic": "هل لديك أطفال؟",
+      "arabic": "هل لدى حضرتك أطفال؟",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-1"
+      ]
+    },
+    {
+      "sourceId": 765106,
+      "sourceText": "Hast du Kinder?",
+      "english": "Do you have children?",
+      "originalArabic": "هل لديك أطفال؟",
+      "arabic": "هل لديك أطفال؟",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-1"
+      ]
+    },
+    {
+      "sourceId": 10298248,
+      "sourceText": "Ziri hat Kinder.",
+      "english": "Ziri has children.",
+      "originalArabic": "لدى زيري أطفال.",
+      "arabic": "لدى زيري أطفال.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-1"
+      ]
+    },
+    {
+      "sourceId": 431401,
+      "sourceText": "Du bist kein Baby mehr.",
+      "english": "You are no longer a baby.",
+      "originalArabic": null,
+      "arabic": "لم تعد طفلًا رضيعًا.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-1"
+      ]
+    },
+    {
+      "sourceId": 1325181,
+      "sourceText": "Sie ist meine Frau.",
+      "english": "She's my wife.",
+      "originalArabic": "هي زوجتي.",
+      "arabic": "هي زوجتي.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-1"
+      ]
+    },
+    {
+      "sourceId": 1384628,
+      "sourceText": "Das ist meine Frau.",
+      "english": "That's my wife.",
+      "originalArabic": "هذه زوجتي.",
+      "arabic": "هذه زوجتي.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-1"
+      ]
+    },
+    {
+      "sourceId": 4420555,
+      "sourceText": "Maria ist meine Frau.",
+      "english": "Mary is my wife.",
+      "originalArabic": "تكون ماري زوجتي.",
+      "arabic": "ماريا زوجتي.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-1"
+      ]
+    },
+    {
+      "sourceId": 458629,
+      "sourceText": "Wo ist Vater?",
+      "english": "Where is Father?",
+      "originalArabic": null,
+      "arabic": "أين أبي؟",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-1"
+      ]
+    },
+    {
+      "sourceId": 8501553,
+      "sourceText": "Ich bin Mutter.",
+      "english": "I am a mother.",
+      "originalArabic": "أنا أم.",
+      "arabic": "أنا أم.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-1"
+      ]
+    },
+    {
+      "sourceId": 13260806,
+      "sourceText": "Er ist mein Mann.",
+      "english": "He is my husband.",
+      "originalArabic": "هو زوجي.",
+      "arabic": "هو زوجي.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-1"
+      ]
+    },
+    {
+      "sourceId": 7771338,
+      "sourceText": "Dem Baby geht es gut.",
+      "english": "The baby is fine.",
+      "originalArabic": "الرضيع بخير.",
+      "arabic": "الطفل الرضيع بخير.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-2"
+      ]
+    },
+    {
+      "sourceId": 3036904,
+      "sourceText": "Mein Baby will sprechen.",
+      "english": "My baby wants to talk.",
+      "originalArabic": "يريد طفلي أن يتحدث.",
+      "arabic": "يريد طفلي الرضيع أن يتكلم.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-2"
+      ]
+    },
+    {
+      "sourceId": 370046,
+      "sourceText": "Er hat keine Kinder.",
+      "english": "He has no children.",
+      "originalArabic": null,
+      "arabic": "ليس لديه أطفال.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-2"
+      ]
+    },
+    {
+      "sourceId": 403831,
+      "sourceText": "Ich habe keine Kinder.",
+      "english": "I don't have any children.",
+      "originalArabic": null,
+      "arabic": "ليس لديّ أطفال.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-2"
+      ]
+    },
+    {
+      "sourceId": 591946,
+      "sourceText": "Wir sind seine Kinder.",
+      "english": "We are his children.",
+      "originalArabic": null,
+      "arabic": "نحن أطفاله.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-2"
+      ]
+    },
+    {
+      "sourceId": 946129,
+      "sourceText": "Bring deine Kinder mit.",
+      "english": "Bring your children along.",
+      "originalArabic": "أحضر أولادك معك.",
+      "arabic": "أحضر أطفالك معك.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-2"
+      ]
+    },
+    {
+      "sourceId": 3579727,
+      "sourceText": "Sie sind noch Kinder.",
+      "english": "They are still children.",
+      "originalArabic": "ما زالوا صغارًا.",
+      "arabic": "ما زالوا أطفالًا.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-2"
+      ]
+    },
+    {
+      "sourceId": 1879780,
+      "sourceText": "Das ist nicht meine Frau.",
+      "english": "That's not my wife.",
+      "originalArabic": "هذه ليست زوجتي.",
+      "arabic": "هذه ليست زوجتي.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-2"
+      ]
+    },
+    {
+      "sourceId": 6387736,
+      "sourceText": "Ich bin deine Frau, oder?",
+      "english": "I'm your wife, aren't I?",
+      "originalArabic": "أنا زوجتك، أليس كذلك؟",
+      "arabic": "أنا زوجتك، أليس كذلك؟",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-2"
+      ]
+    },
+    {
+      "sourceId": 349907,
+      "sourceText": "Wo ist dein Vater?",
+      "english": "Where is your father?",
+      "originalArabic": "أين والدك؟",
+      "arabic": "أين والدك؟",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-2"
+      ]
+    },
+    {
+      "sourceId": 353843,
+      "sourceText": "Er ist mein Vater.",
+      "english": "He's my father.",
+      "originalArabic": "إنه والدي.",
+      "arabic": "هو والدي.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-2"
+      ]
+    },
+    {
+      "sourceId": 442192,
+      "sourceText": "Das ist mein Vater.",
+      "english": "This is my father.",
+      "originalArabic": "هذا هو والدي",
+      "arabic": "هذا والدي.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-2"
+      ]
+    },
+    {
+      "sourceId": 466480,
+      "sourceText": "Was macht dein Vater?",
+      "english": "What does your father do?",
+      "originalArabic": null,
+      "arabic": "ماذا يعمل والدك؟",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-2"
+      ]
+    },
+    {
+      "sourceId": 1126608,
+      "sourceText": "Du bist mein Vater.",
+      "english": "You are my father.",
+      "originalArabic": "أنت أبي.",
+      "arabic": "أنت والدي.",
+      "status": "draft",
+      "method": "direct German-to-Arabic editorial draft; not teacher-certified",
+      "lessons": [
+        "de-a1-f-family-2"
+      ]
+    }
+  ]
+}

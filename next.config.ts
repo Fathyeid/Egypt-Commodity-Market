@@ -18,8 +18,8 @@ const nextConfig: NextConfig = {
   },
   // Factory lessons are built on demand from the shipped sentence corpus.
   outputFileTracingIncludes: {
-    "/*": ["./data/tatoeba/*.jsonl.gz"],
-    "/**": ["./data/tatoeba/*.jsonl.gz"],
+    "/*": ["./data/tatoeba/*.jsonl.gz", "./data/translations/*.jsonl.gz"],
+    "/**": ["./data/tatoeba/*.jsonl.gz", "./data/translations/*.jsonl.gz"],
   },
   partialPrefetching: true,
   turbopack: {
