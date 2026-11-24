@@ -4,7 +4,7 @@
 
 - All 40,802 previously missing German Arabic meanings now have an Arabic entry.
 - 44 existing source meanings were also edited in the reviewed beginner sample.
-- Total: 40,846 entries: 40,704 locally machine-translated, 142 editorial entries.
+- Total: 40,846 entries: 40,694 locally machine-translated, 152 editorial entries.
 - Machine translations are **not all teacher-reviewed** and can omit or mistranslate meaning. Coverage is not a quality certification. A learner-facing notice states this.
 - German source text and English meanings, sentence IDs, answer keys, exercise order, attribution and original Arabic stay unchanged.
 - An ID plus source-text hash prevents applying an edit to a different sentence.
